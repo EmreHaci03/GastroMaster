@@ -3,7 +3,7 @@
 
 namespace GastroMaster.BusinessLayer.Abstract
 {
-    internal interface IAboutService : IGenericService<About>
+    public interface IAboutService : IGenericService<About>
     {
     }
 }

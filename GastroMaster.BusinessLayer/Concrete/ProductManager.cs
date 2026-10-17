@@ -28,6 +28,16 @@ namespace GastroMaster.BusinessLayer.Concrete
             return await _productDal.GetByIdAsync(id);
         }
 
+        public async Task<List<Product>> TGetProductListWithCategoryAsync()
+        {
+            return await _productDal.GetProductListWithCategoryAsync();
+        }
+
+        public async Task<Product?> TGetProductWithCategoryByIdAsync(int id)
+        {
+            return await _productDal.GetProductWithCategoryByIdAsync(id);
+        }
+
         public async Task TInsertAsync(Product t)
         {
             await _productDal.InsertAsync(t);

@@ -65,6 +65,12 @@ namespace GastroMaster.DtoLayer.Mapping
             CreateMap<Product, CreateProductDto>().ReverseMap();
             CreateMap<Product, UpdateProductDto>().ReverseMap();
             CreateMap<Product, GetProductByIdDto>().ReverseMap();
+            CreateMap<Product, ResultProductWithCategoryDto>()
+                .ForMember(dest => dest.Category, opt => opt.MapFrom(src => src.Category.CategoryName))
+                .ReverseMap();
+            CreateMap<Product, GetProductWithCategoryByIdDto>()
+                .ForMember(dest => dest.Category, opt => opt.MapFrom(src => src.Category.CategoryName))
+                .ReverseMap();
             //Product//
 
             //SocialMedia//

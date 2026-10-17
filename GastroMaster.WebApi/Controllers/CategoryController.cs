@@ -1,0 +1,63 @@
+﻿using AutoMapper;
+using GastroMaster.BusinessLayer.Abstract;
+using GastroMaster.DtoLayer.DTOS.CategoryDtos;
+using GastroMaster.EntityLayer.Entities;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+
+namespace GastroMaster.WebApi.Controllers
+{
+    [Route("api/[controller]")]
+    [ApiController]
+    public class CategoryController : ControllerBase
+    {
+        private readonly ICategoryService categoryService;
+        private readonly IMapper mapper;
+
+        public CategoryController(ICategoryService categoryService, IMapper mapper)
+        {
+            this.categoryService = categoryService;
+            this.mapper = mapper;
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> CategoryList()
+        {
+            var values = await categoryService.TGetAllAsync();
+            var result = mapper.Map<List<ResultCategoryDto>>(values);
+            return Ok(result);
+        }
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetCategoryById(int id)
+        {
+            var value = await categoryService.TGetByIdAsync(id);
+            var result = mapper.Map<GetCategoryByIdDto>(value);
+            return Ok(result);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CreateCategory(CreateCategoryDto createCategoryDto)
+        {
+            var value = mapper.Map<Category>(createCategoryDto);
+            await categoryService.TInsertAsync(value);
+            return Ok("Kategori eklendi");
+        }
+
+        [HttpPut]
+        public async Task<IActionResult> UpdateCategory(UpdateCategoryDto updateCategoryDto)
+        {
+            var value = mapper.Map<Category>(updateCategoryDto);
+            await categoryService.TUpdateAsync(value);
+            return Ok("Kategori güncellendi");
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteCategory(int id)
+        {
+            var value = await categoryService.TGetByIdAsync(id);
+            await categoryService.TDeleteAsync(value);
+            return Ok("Kategori silindi");
+        }
+    }
+}
