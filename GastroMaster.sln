@@ -5,6 +5,16 @@ VisualStudioVersion = 17.14.37614.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GastroMaster.EntityLayer", "GastroMaster.EntityLayer\GastroMaster.EntityLayer.csproj", "{BDB0DAD5-5698-4488-B97B-EB76937AE5B2}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GastroMaster.DataAccessLayer", "GastroMaster.DataAccessLayer\GastroMaster.DataAccessLayer.csproj", "{979CA169-72E3-48B9-8CFA-79B7727301CD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GastroMaster.BusinessLayer", "GastroMaster.BusinessLayer\GastroMaster.BusinessLayer.csproj", "{9446B7DC-E350-4D30-B6DF-6D33BB23235F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GastroMaster.DtoLayer", "GastroMaster.DtoLayer\GastroMaster.DtoLayer.csproj", "{7BC9B576-2F2A-4E6A-98D6-1D5514A86419}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GastroMaster.WebApi", "GastroMaster.WebApi\GastroMaster.WebApi.csproj", "{B61947F8-6A75-493A-B921-155AD4C9DC63}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GastroMaster.WebUI", "GastroMaster.WebUI\GastroMaster.WebUI.csproj", "{976B49F8-08C7-4279-8F94-50F98546BC88}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +25,26 @@ Global
 		{BDB0DAD5-5698-4488-B97B-EB76937AE5B2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BDB0DAD5-5698-4488-B97B-EB76937AE5B2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BDB0DAD5-5698-4488-B97B-EB76937AE5B2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{979CA169-72E3-48B9-8CFA-79B7727301CD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{979CA169-72E3-48B9-8CFA-79B7727301CD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{979CA169-72E3-48B9-8CFA-79B7727301CD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{979CA169-72E3-48B9-8CFA-79B7727301CD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9446B7DC-E350-4D30-B6DF-6D33BB23235F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9446B7DC-E350-4D30-B6DF-6D33BB23235F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9446B7DC-E350-4D30-B6DF-6D33BB23235F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9446B7DC-E350-4D30-B6DF-6D33BB23235F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7BC9B576-2F2A-4E6A-98D6-1D5514A86419}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7BC9B576-2F2A-4E6A-98D6-1D5514A86419}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7BC9B576-2F2A-4E6A-98D6-1D5514A86419}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7BC9B576-2F2A-4E6A-98D6-1D5514A86419}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B61947F8-6A75-493A-B921-155AD4C9DC63}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B61947F8-6A75-493A-B921-155AD4C9DC63}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B61947F8-6A75-493A-B921-155AD4C9DC63}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B61947F8-6A75-493A-B921-155AD4C9DC63}.Release|Any CPU.Build.0 = Release|Any CPU
+		{976B49F8-08C7-4279-8F94-50F98546BC88}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{976B49F8-08C7-4279-8F94-50F98546BC88}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{976B49F8-08C7-4279-8F94-50F98546BC88}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{976B49F8-08C7-4279-8F94-50F98546BC88}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

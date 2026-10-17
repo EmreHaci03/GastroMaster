@@ -1,0 +1,86 @@
+﻿using AutoMapper;
+using GastroMaster.DtoLayer.DTOS.AboutDtos;
+using GastroMaster.DtoLayer.DTOS.BookingDtos;
+using GastroMaster.DtoLayer.DTOS.CategoryDtos;
+using GastroMaster.DtoLayer.DTOS.ContactDtos;
+using GastroMaster.DtoLayer.DTOS.DiscountDtos;
+using GastroMaster.DtoLayer.DTOS.FeatureDtos;
+using GastroMaster.DtoLayer.DTOS.ProductDtos;
+using GastroMaster.DtoLayer.DTOS.SocialMediaDtos;
+using GastroMaster.DtoLayer.DTOS.TestimonialDtos;
+using GastroMaster.EntityLayer.Entities;
+
+namespace GastroMaster.DtoLayer.Mapping
+{
+    public class GeneralMapping : Profile
+    {
+
+        public GeneralMapping()
+        {
+
+            //About//
+            CreateMap<About, ResultAboutDto>().ReverseMap();
+            CreateMap<About, CreateAboutDto>().ReverseMap();
+            CreateMap<About, UpdateAboutDto>().ReverseMap();
+            CreateMap<About, GetAboutByIdDto>().ReverseMap();
+            //About//
+
+            //Booking//
+            CreateMap<Booking, ResultBookingDto>().ReverseMap();
+            CreateMap<Booking, CreateBookingDto>().ReverseMap();
+            CreateMap<Booking, UpdateBookingDto>().ReverseMap();
+            CreateMap<Booking, GetBookingByIdDto>().ReverseMap();
+            //Booking//
+
+            //Category//
+            CreateMap<Category, ResultCategoryDto>().ReverseMap();
+            CreateMap<Category, CreateCategoryDto>().ReverseMap();
+            CreateMap<Category, UpdateCategoryDto>().ReverseMap();
+            CreateMap<Category, GetCategoryByIdDto>().ReverseMap();
+            //Category//
+
+            //Contact//
+            CreateMap<Contact, ResultContactDto>().ReverseMap();
+            CreateMap<Contact, CreateContactDto>().ReverseMap();
+            CreateMap<Contact, UpdateContactDto>().ReverseMap();
+            CreateMap<Contact, GetContactByIdDto>().ReverseMap();
+            //Contact//
+
+            //Discount//
+            CreateMap<Discount, ResultDiscountDto>().ReverseMap();
+            CreateMap<Discount, CreateDiscountDto>().ReverseMap();
+            CreateMap<Discount, UpdateDiscountDto>().ReverseMap();
+            CreateMap<Discount, GetDiscountByIdDto>().ReverseMap();
+            //Discount//
+
+            //Feature//
+            CreateMap<Feature, ResultFeatureDto>().ReverseMap();
+            CreateMap<Feature, CreateFeatureDto>().ReverseMap();
+            CreateMap<Feature, UpdateFeatureDto>().ReverseMap();
+            CreateMap<Feature, GetFeatureByIdDto>().ReverseMap();
+            //Feature//
+
+            //Product//
+            CreateMap<Product, ResultProductDto>().ReverseMap();
+            CreateMap<Product, CreateProductDto>().ReverseMap();
+            CreateMap<Product, UpdateProductDto>().ReverseMap();
+            CreateMap<Product, GetProductByIdDto>().ReverseMap();
+            //Product//
+
+            //SocialMedia//
+            CreateMap<SocialMedia, ResultSocialMediaDto>().ReverseMap();
+            CreateMap<SocialMedia, CreateSocialMediaDto>().ReverseMap();
+            CreateMap<SocialMedia, UpdateSocialMediaDto>().ReverseMap();
+            CreateMap<SocialMedia, GetSocialMediaByIdDto>().ReverseMap();
+            //SocialMedia//
+
+            //Testimonial//
+            CreateMap<Testimonial, ResultTestimonialDto>().ReverseMap();
+            CreateMap<Testimonial, CreateTestimonialDto>().ReverseMap();
+            CreateMap<Testimonial, UpdateTestimonialDto>().ReverseMap();
+            CreateMap<Testimonial, GetTestimonialByIdDto>().ReverseMap();
+            //Testimonial//
+        }
+
+    }
+}

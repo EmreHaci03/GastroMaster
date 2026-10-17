@@ -1,0 +1,15 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace GastroMaster.DtoLayer.DTOS.DiscountDtos
+{
+    public class ResultDiscountDto
+    {
+        public int DiscountId { get; set; }
+        public string Title { get; set; }
+        public string Amount { get; set; }
+        public string Description { get; set; }
+        public string ImageUrl { get; set; }
+    }
+}
