@@ -1,0 +1,111 @@
+﻿@model CreateBookingDto
+
+@{
+    ViewData["Title"] = "Yeni Rezervasyon";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="content">
+    <div class="container-fluid">
+        <h4 class="page-title">Yeni Rezervasyon</h4>
+        <div class="row">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">Rezervasyon Ekle</div>
+                        <div class="card-category">Müşteri bilgilerini ve rezervasyon tarihini girin</div>
+                    </div>
+                    <form method="post">
+                        <div class="card-body">
+                            <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label asp-for="Name">Ad Soyad</label>
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text"><i class="la la-user"></i></span>
+                                            </div>
+                                            <input asp-for="Name" class="form-control" placeholder="Müşteri adı" />
+                                        </div>
+                                        <span asp-validation-for="Name" class="text-danger small"></span>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label asp-for="Phone">Telefon</label>
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text"><i class="la la-phone"></i></span>
+                                            </div>
+                                            <input asp-for="Phone" class="form-control" placeholder="05xx xxx xx xx" />
+                                        </div>
+                                        <span asp-validation-for="Phone" class="text-danger small"></span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label asp-for="Mail">E-posta</label>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="la la-envelope"></i></span>
+                                    </div>
+                                    <input asp-for="Mail" type="email" class="form-control" placeholder="ornek@mail.com" />
+                                </div>
+                                <span asp-validation-for="Mail" class="text-danger small"></span>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label asp-for="PersonCount">Kişi Sayısı</label>
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text"><i class="la la-users"></i></span>
+                                            </div>
+                                            <input asp-for="PersonCount" type="number" min="1" max="20" class="form-control" />
+                                        </div>
+                                        <span asp-validation-for="PersonCount" class="text-danger small"></span>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label asp-for="Date">Tarih ve Saat</label>
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text"><i class="la la-calendar"></i></span>
+                                            </div>
+                                            <input asp-for="Date" type="datetime-local" class="form-control" />
+                                        </div>
+                                        <span asp-validation-for="Date" class="text-danger small"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-action">
+                            <button type="submit" class="btn btn-success">
+                                <i class="la la-save"></i> Kaydet
+                            </button>
+                            <a href="/Admin/Booking/Index" class="btn btn-default">
+                                <i class="la la-arrow-left"></i> Listeye Dön
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title"><i class="la la-info-circle"></i> Bilgi</div>
+                    </div>
+                    <div class="card-body">
+                        <p class="text-muted mb-2">Telefonla gelen rezervasyonları buradan ekleyebilirsiniz.</p>
+                        <p class="text-muted mb-0">Siteden yapılan rezervasyonlar listeye otomatik düşer.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

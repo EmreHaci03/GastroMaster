@@ -1,0 +1,158 @@
+﻿@model CreateContactDto
+
+@{
+    ViewData["Title"] = "İletişim Bilgisi Ekle";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<style>
+    .footer-preview {
+        border-radius: 12px;
+        background: #000;
+        color: #fff;
+        padding: 28px 24px;
+    }
+
+        .footer-preview h5 {
+            font-family: 'Dancing Script', cursive, sans-serif;
+            font-weight: 700;
+            font-size: 24px;
+            margin-bottom: 14px;
+        }
+
+        .footer-preview .preview-line {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 10px;
+            font-size: 13px;
+            word-break: break-word;
+        }
+
+            .footer-preview .preview-line i {
+                color: #ffbe33;
+                font-size: 18px;
+                margin-right: 10px;
+                min-width: 18px;
+            }
+
+        .footer-preview .preview-desc {
+            font-size: 13px;
+            opacity: .75;
+            margin: 16px 0 0;
+            padding-top: 14px;
+            border-top: 1px solid rgba(255, 255, 255, .15);
+            white-space: pre-line;
+            word-break: break-word;
+        }
+</style>
+
+<div class="content">
+    <div class="container-fluid">
+        <h4 class="page-title">İletişim Bilgisi Ekle</h4>
+        <div class="row">
+            <div class="col-md-7">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">İletişim Bilgileri</div>
+                        <div class="card-category">Sitenin footer kısmında gösterilecek bilgiler</div>
+                    </div>
+                    <form method="post">
+                        <div class="card-body">
+                            <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+
+                            <div class="form-group">
+                                <label asp-for="Location">Adres</label>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="la la-map-marker"></i></span>
+                                    </div>
+                                    <input asp-for="Location" id="locationInput" class="form-control" placeholder="Örn: Kadıköy, İstanbul" />
+                                </div>
+                                <span asp-validation-for="Location" class="text-danger small"></span>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label asp-for="Phone">Telefon</label>
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text"><i class="la la-phone"></i></span>
+                                            </div>
+                                            <input asp-for="Phone" id="phoneInput" class="form-control" placeholder="0216 xxx xx xx" />
+                                        </div>
+                                        <span asp-validation-for="Phone" class="text-danger small"></span>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label asp-for="Mail">E-posta</label>
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text"><i class="la la-envelope"></i></span>
+                                            </div>
+                                            <input asp-for="Mail" id="mailInput" type="email" class="form-control" placeholder="info@gastromaster.com" />
+                                        </div>
+                                        <span asp-validation-for="Mail" class="text-danger small"></span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label asp-for="FooterDescription">Footer Açıklaması</label>
+                                <textarea asp-for="FooterDescription" id="descriptionInput" class="form-control" rows="4" maxlength="250" placeholder="Footer'da logonun altında görünecek kısa metin"></textarea>
+                                <small class="form-text text-muted"><span id="descriptionCount">0</span>/250 karakter</small>
+                                <span asp-validation-for="FooterDescription" class="text-danger small"></span>
+                            </div>
+                        </div>
+                        <div class="card-action">
+                            <button type="submit" class="btn btn-success">
+                                <i class="la la-save"></i> Kaydet
+                            </button>
+                            <a href="/Admin/Contact/Index" class="btn btn-default">
+                                <i class="la la-arrow-left"></i> Geri Dön
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="col-md-5">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title"><i class="la la-eye"></i> Önizleme</div>
+                        <div class="card-category">Footer'da yaklaşık böyle görünecek</div>
+                    </div>
+                    <div class="card-body">
+                        <div class="footer-preview">
+                            <h5>Contact Us</h5>
+                            <div class="preview-line"><i class="la la-map-marker"></i><span id="previewLocation">Adres</span></div>
+                            <div class="preview-line"><i class="la la-phone"></i><span id="previewPhone">Telefon</span></div>
+                            <div class="preview-line"><i class="la la-envelope"></i><span id="previewMail">E-posta</span></div>
+                            <p class="preview-desc" id="previewDescription">Footer açıklaması burada görünecek.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function bindPreview(inputId, targetId, fallback) {
+        var input = document.getElementById(inputId);
+        var target = document.getElementById(targetId);
+        var update = function () { target.innerText = input.value || fallback; };
+        input.addEventListener("input", update);
+        update();
+    }
+
+    bindPreview("locationInput", "previewLocation", "Adres");
+    bindPreview("phoneInput", "previewPhone", "Telefon");
+    bindPreview("mailInput", "previewMail", "E-posta");
+    bindPreview("descriptionInput", "previewDescription", "Footer açıklaması burada görünecek.");
+
+    var descriptionInput = document.getElementById("descriptionInput");
+    var descriptionCount = document.getElementById("descriptionCount");
+    descriptionInput.addEventListener("input", function () { descriptionCount.innerText = descriptionInput.value.length; });
+    descriptionCount.innerText = descriptionInput.value.length;
+</script>

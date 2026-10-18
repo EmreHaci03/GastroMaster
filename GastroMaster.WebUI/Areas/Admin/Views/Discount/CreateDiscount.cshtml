@@ -1,0 +1,146 @@
+﻿@model CreateDiscountDto
+
+@{
+    ViewData["Title"] = "Yeni İndirim";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<style>
+    .preview-card {
+        border-radius: 12px;
+        overflow: hidden;
+        background: #222831;
+        color: #fff;
+    }
+
+        .preview-card img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            background: #333;
+        }
+
+        .preview-card .preview-body {
+            padding: 18px 20px;
+        }
+
+        .preview-card h5 {
+            margin: 0 0 6px;
+            font-weight: 600;
+        }
+
+        .preview-card .preview-amount {
+            font-size: 28px;
+            font-weight: 700;
+            color: #ffbe33;
+        }
+</style>
+
+<div class="content">
+    <div class="container-fluid">
+        <h4 class="page-title">Yeni İndirim</h4>
+        <div class="row">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">İndirim Ekle</div>
+                        <div class="card-category">Ana sayfada gösterilecek kampanya bilgilerini girin</div>
+                    </div>
+                    <form method="post">
+                        <div class="card-body">
+                            <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <div class="form-group">
+                                        <label asp-for="Title">Başlık</label>
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text"><i class="la la-tag"></i></span>
+                                            </div>
+                                            <input asp-for="Title" id="titleInput" class="form-control" placeholder="Örn: Lezzetli Perşembeler" />
+                                        </div>
+                                        <span asp-validation-for="Title" class="text-danger small"></span>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label asp-for="Amount">İndirim Oranı</label>
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text"><i class="la la-percent"></i></span>
+                                            </div>
+                                            <input asp-for="Amount" id="amountInput" type="number" min="1" max="100" class="form-control" placeholder="20" />
+                                        </div>
+                                        <span asp-validation-for="Amount" class="text-danger small"></span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label asp-for="Description">Açıklama</label>
+                                <textarea asp-for="Description" id="descriptionInput" class="form-control" rows="4" placeholder="Kampanya detaylarını yazın"></textarea>
+                                <span asp-validation-for="Description" class="text-danger small"></span>
+                            </div>
+
+                            <div class="form-group">
+                                <label asp-for="ImageUrl">Görsel Yolu</label>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="la la-image"></i></span>
+                                    </div>
+                                    <input asp-for="ImageUrl" id="imageInput" class="form-control" placeholder="/feane/images/o1.jpg" />
+                                </div>
+                                <span asp-validation-for="ImageUrl" class="text-danger small"></span>
+                            </div>
+                        </div>
+                        <div class="card-action">
+                            <button type="submit" class="btn btn-success">
+                                <i class="la la-save"></i> Kaydet
+                            </button>
+                            <a href="/Admin/Discount/Index" class="btn btn-default">
+                                <i class="la la-arrow-left"></i> Listeye Dön
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title"><i class="la la-eye"></i> Önizleme</div>
+                        <div class="card-category">Sitede yaklaşık böyle görünecek</div>
+                    </div>
+                    <div class="card-body">
+                        <div class="preview-card">
+                            <img id="previewImage" src="" alt="" />
+                            <div class="preview-body">
+                                <h5 id="previewTitle">Başlık</h5>
+                                <div class="preview-amount">%<span id="previewAmount">0</span> İndirim</div>
+                                <p class="mb-0 mt-2" id="previewDescription" style="font-size:13px; opacity:.8;"></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function bindPreview(inputId, targetId, attr, fallback) {
+        var input = document.getElementById(inputId);
+        var target = document.getElementById(targetId);
+        var update = function () {
+            var value = input.value || fallback;
+            if (attr) { target.setAttribute(attr, value); } else { target.innerText = value; }
+        };
+        input.addEventListener("input", update);
+        update();
+    }
+
+    bindPreview("titleInput", "previewTitle", null, "Başlık");
+    bindPreview("amountInput", "previewAmount", null, "0");
+    bindPreview("descriptionInput", "previewDescription", null, "");
+    bindPreview("imageInput", "previewImage", "src", "");
+</script>

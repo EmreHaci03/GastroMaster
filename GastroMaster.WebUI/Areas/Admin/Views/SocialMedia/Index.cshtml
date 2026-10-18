@@ -1,0 +1,233 @@
+﻿@model List<ResultSocialMediaDto>
+
+@{
+    ViewData["Title"] = "Sosyal Medya";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+
+<style>
+    .social-card {
+        border-radius: 12px;
+        text-align: center;
+        padding: 26px 18px 20px;
+        height: 100%;
+        transition: transform .2s, box-shadow .2s;
+    }
+
+        .social-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, .08);
+        }
+
+        .social-card .social-icon {
+            width: 64px;
+            height: 64px;
+            margin: 0 auto 14px;
+            border-radius: 50%;
+            background: #222831;
+            color: #ffbe33;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+        }
+
+        .social-card .social-title {
+            font-weight: 600;
+            font-size: 16px;
+            margin-bottom: 4px;
+        }
+
+        .social-card .social-url {
+            font-size: 12px;
+            color: #8d9498;
+            word-break: break-all;
+            margin-bottom: 4px;
+        }
+
+        .social-card .social-class {
+            font-size: 11px;
+            color: #b0b4b8;
+            margin-bottom: 14px;
+        }
+
+    .delete-modal .modal-content {
+        border: none;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 15px 40px rgba(0, 0, 0, .2);
+    }
+
+    .delete-modal .modal-body {
+        padding: 35px 30px 25px;
+        text-align: center;
+    }
+
+    .delete-modal .delete-icon {
+        width: 80px;
+        height: 80px;
+        margin: 0 auto 20px;
+        border-radius: 50%;
+        background: rgba(243, 84, 93, .12);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        animation: deletePulse 1.6s infinite;
+    }
+
+        .delete-modal .delete-icon i {
+            font-size: 40px;
+            color: #f3545d;
+        }
+
+    .delete-modal h4 {
+        font-weight: 600;
+        margin-bottom: 10px;
+    }
+
+    .delete-modal .delete-name {
+        display: inline-block;
+        margin: 6px 0 14px;
+        padding: 4px 14px;
+        border-radius: 20px;
+        background: #f4f5f8;
+        font-weight: 600;
+        color: #333;
+    }
+
+    .delete-modal .delete-warning {
+        font-size: 13px;
+        color: #8d9498;
+        margin-bottom: 0;
+    }
+
+    .delete-modal .modal-footer {
+        border-top: none;
+        justify-content: center;
+        padding: 0 30px 30px;
+    }
+
+        .delete-modal .modal-footer .btn {
+            min-width: 130px;
+            border-radius: 25px;
+            font-weight: 500;
+        }
+
+    @@keyframes deletePulse {
+        0% {
+            box-shadow: 0 0 0 0 rgba(243, 84, 93, .35);
+        }
+
+        70% {
+            box-shadow: 0 0 0 15px rgba(243, 84, 93, 0);
+        }
+
+        100% {
+            box-shadow: 0 0 0 0 rgba(243, 84, 93, 0);
+        }
+    }
+</style>
+
+<div class="content">
+    <div class="container-fluid">
+        <h4 class="page-title">Sosyal Medya</h4>
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <div>
+                            <div class="card-title">Sosyal Medya Hesapları <span class="badge badge-count ml-1">@Model.Count</span></div>
+                            <div class="card-category">Sitenin footer kısmındaki sosyal medya ikonları</div>
+                        </div>
+                        <a href="/Admin/SocialMedia/CreateSocialMedia" class="btn btn-primary">
+                            <i class="la la-plus"></i> Yeni Hesap
+                        </a>
+                    </div>
+                    <div class="card-body">
+                        @if (Model.Any())
+                        {
+                            <div class="row">
+                                @foreach (var item in Model)
+                                {
+                                    <div class="col-sm-6 col-md-4 col-lg-3 mb-4">
+                                        <div class="card social-card mb-0">
+                                            <div class="social-icon"><i class="@item.Icon"></i></div>
+                                            <div class="social-title">@item.Title</div>
+                                            <div class="social-url">
+                                                <a href="@item.Url" target="_blank" class="text-muted">@item.Url</a>
+                                            </div>
+                                            <div class="social-class"><code>@item.Icon</code></div>
+                                            <div>
+                                                <a href="/Admin/SocialMedia/UpdateSocialMedia/@item.SocialMediaId" class="btn btn-warning btn-sm" title="Güncelle">
+                                                    <i class="la la-edit"></i>
+                                                </a>
+                                                <a href="@item.Url" target="_blank" class="btn btn-info btn-sm" title="Linke Git">
+                                                    <i class="la la-external-link"></i>
+                                                </a>
+                                                <button type="button" class="btn btn-danger btn-sm" title="Sil"
+                                                        data-toggle="modal" data-target="#deleteModal"
+                                                        data-name="@item.Title"
+                                                        data-url="/Admin/SocialMedia/DeleteSocialMedia/@item.SocialMediaId"
+                                                        onclick="setDeleteModal(this)">
+                                                    <i class="la la-trash"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="text-center text-muted py-5">
+                                <i class="la la-share-alt" style="font-size:48px;"></i>
+                                <h5 class="mt-3">Henüz sosyal medya hesabı eklenmemiş</h5>
+                                <p class="mb-3">Footer'daki sosyal medya alanı boş görünecek.</p>
+                                <a href="/Admin/SocialMedia/CreateSocialMedia" class="btn btn-primary">
+                                    <i class="la la-plus"></i> Şimdi Ekle
+                                </a>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade delete-modal" id="deleteModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="delete-icon">
+                    <i class="la la-trash"></i>
+                </div>
+                <h4>Hesabı Sil</h4>
+                <p class="mb-0">Aşağıdaki sosyal medya hesabını silmek üzeresiniz:</p>
+                <span class="delete-name" id="deleteName"></span>
+                <p class="delete-warning">
+                    <i class="la la-exclamation-triangle"></i>
+                    Bu işlem geri alınamaz. İkon footer'dan kaldırılır.
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">
+                    <i class="la la-close"></i> Vazgeç
+                </button>
+                <a href="#" id="deleteConfirm" class="btn btn-danger">
+                    <i class="la la-trash"></i> Evet, Sil
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function setDeleteModal(button) {
+        document.getElementById("deleteName").innerText = button.getAttribute("data-name");
+        document.getElementById("deleteConfirm").setAttribute("href", button.getAttribute("data-url"));
+    }
+</script>

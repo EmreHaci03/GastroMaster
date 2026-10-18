@@ -1,0 +1,252 @@
+﻿@model List<ResultFeatureDto>
+
+@{
+    ViewData["Title"] = "Slider";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<style>
+    .slide-no {
+        width: 34px;
+        height: 34px;
+        border-radius: 50%;
+        background: #ffbe33;
+        color: #222831;
+        font-weight: 700;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .delete-modal .modal-content {
+        border: none;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 15px 40px rgba(0, 0, 0, .2);
+    }
+
+    .delete-modal .modal-body {
+        padding: 35px 30px 25px;
+        text-align: center;
+    }
+
+    .delete-modal .delete-icon {
+        width: 80px;
+        height: 80px;
+        margin: 0 auto 20px;
+        border-radius: 50%;
+        background: rgba(243, 84, 93, .12);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        animation: deletePulse 1.6s infinite;
+    }
+
+        .delete-modal .delete-icon i {
+            font-size: 40px;
+            color: #f3545d;
+        }
+
+    .delete-modal h4 {
+        font-weight: 600;
+        margin-bottom: 10px;
+    }
+
+    .delete-modal .delete-name {
+        display: inline-block;
+        margin: 6px 0 14px;
+        padding: 4px 14px;
+        border-radius: 20px;
+        background: #f4f5f8;
+        font-weight: 600;
+        color: #333;
+    }
+
+    .delete-modal .delete-warning {
+        font-size: 13px;
+        color: #8d9498;
+        margin-bottom: 0;
+    }
+
+    .delete-modal .modal-footer {
+        border-top: none;
+        justify-content: center;
+        padding: 0 30px 30px;
+    }
+
+        .delete-modal .modal-footer .btn {
+            min-width: 130px;
+            border-radius: 25px;
+            font-weight: 500;
+        }
+
+    @@keyframes deletePulse {
+        0% {
+            box-shadow: 0 0 0 0 rgba(243, 84, 93, .35);
+        }
+
+        70% {
+            box-shadow: 0 0 0 15px rgba(243, 84, 93, 0);
+        }
+
+        100% {
+            box-shadow: 0 0 0 0 rgba(243, 84, 93, 0);
+        }
+    }
+</style>
+
+<div class="content">
+    <div class="container-fluid">
+        <h4 class="page-title">Slider</h4>
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card card-stats card-primary">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-5">
+                                <div class="icon-big text-center">
+                                    <i class="la la-image"></i>
+                                </div>
+                            </div>
+                            <div class="col-7 d-flex align-items-center">
+                                <div class="numbers">
+                                    <p class="card-category">Toplam Slide</p>
+                                    <h4 class="card-title">@Model.Count</h4>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card card-stats @(Model.Count > 3 ? "card-warning" : "card-success")">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-5">
+                                <div class="icon-big text-center">
+                                    <i class="la la-desktop"></i>
+                                </div>
+                            </div>
+                            <div class="col-7 d-flex align-items-center">
+                                <div class="numbers">
+                                    <p class="card-category">Sitede Gösterilen</p>
+                                    <h4 class="card-title">@Math.Min(Model.Count, 3) / 3</h4>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <div>
+                            <div class="card-title">Slide Listesi</div>
+                            <div class="card-category">Ana sayfanın üstündeki slider'da dönen başlık ve açıklamalar</div>
+                        </div>
+                        <a href="/Admin/Feature/CreateFeature" class="btn btn-primary">
+                            <i class="la la-plus"></i> Yeni Slide
+                        </a>
+                    </div>
+                    <div class="card-body">
+                        @if (Model.Count > 3)
+                        {
+                            <div class="alert alert-warning">
+                                <i class="la la-exclamation-triangle"></i>
+                                Sitede sadece ilk 3 slide gösterilir. Fazla olanlar listede soluk görünüyor.
+                            </div>
+                        }
+                        <div class="table-responsive">
+                            <table class="table table-striped table-hover mt-3">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Sıra</th>
+                                        <th scope="col">Başlık</th>
+                                        <th scope="col">Açıklama</th>
+                                        <th scope="col" class="text-center">İşlemler</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @if (Model.Any())
+                                    {
+                                        int order = 1;
+                                        @foreach (var item in Model)
+                                        {
+                                            <tr style="@(order > 3 ? "opacity:.5;" : "")">
+                                                <td><span class="slide-no">@order</span></td>
+                                                <td><strong>@item.Title</strong></td>
+                                                <td class="text-muted">
+                                                    @(item.Description?.Length > 80 ? item.Description.Substring(0, 80) + "..." : item.Description)
+                                                </td>
+                                                <td class="text-center" style="white-space:nowrap;">
+                                                    <a href="/Admin/Feature/UpdateFeature/@item.FeatureId" class="btn btn-warning btn-sm" title="Güncelle">
+                                                        <i class="la la-edit"></i> Güncelle
+                                                    </a>
+                                                    <button type="button" class="btn btn-danger btn-sm" title="Sil"
+                                                            data-toggle="modal" data-target="#deleteModal"
+                                                            data-name="@item.Title"
+                                                            data-url="/Admin/Feature/DeleteFeature/@item.FeatureId"
+                                                            onclick="setDeleteModal(this)">
+                                                        <i class="la la-trash"></i> Sil
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                            order++;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <tr>
+                                            <td colspan="4" class="text-center text-muted py-4">
+                                                <i class="la la-inbox" style="font-size:32px;"></i>
+                                                <p class="mb-0">Henüz slide eklenmemiş.</p>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade delete-modal" id="deleteModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="delete-icon">
+                    <i class="la la-trash"></i>
+                </div>
+                <h4>Slide'ı Sil</h4>
+                <p class="mb-0">Aşağıdaki slide'ı silmek üzeresiniz:</p>
+                <span class="delete-name" id="deleteName"></span>
+                <p class="delete-warning">
+                    <i class="la la-exclamation-triangle"></i>
+                    Bu işlem geri alınamaz. Slide ana sayfadan kaldırılır.
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">
+                    <i class="la la-close"></i> Vazgeç
+                </button>
+                <a href="#" id="deleteConfirm" class="btn btn-danger">
+                    <i class="la la-trash"></i> Evet, Sil
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function setDeleteModal(button) {
+        document.getElementById("deleteName").innerText = button.getAttribute("data-name");
+        document.getElementById("deleteConfirm").setAttribute("href", button.getAttribute("data-url"));
+    }
+</script>

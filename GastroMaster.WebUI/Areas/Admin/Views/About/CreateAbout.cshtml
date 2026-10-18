@@ -1,0 +1,149 @@
+﻿@model CreateAboutDto
+
+@{
+    ViewData["Title"] = "Hakkımızda Ekle";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<style>
+    .about-preview {
+        border-radius: 12px;
+        overflow: hidden;
+        background: #222831;
+        color: #fff;
+    }
+
+        .about-preview img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            background: #333;
+        }
+
+        .about-preview .preview-body {
+            padding: 22px 24px 26px;
+        }
+
+        .about-preview h3 {
+            font-family: 'Dancing Script', cursive, sans-serif;
+            font-weight: 700;
+            font-size: 28px;
+            margin-bottom: 12px;
+            word-break: break-word;
+        }
+
+        .about-preview p {
+            font-size: 13px;
+            opacity: .85;
+            margin-bottom: 18px;
+            white-space: pre-line;
+            word-break: break-word;
+        }
+
+        .about-preview .preview-btn {
+            display: inline-block;
+            padding: 8px 26px;
+            border-radius: 45px;
+            background: #ffbe33;
+            color: #fff;
+            font-size: 13px;
+        }
+</style>
+
+<div class="content">
+    <div class="container-fluid">
+        <h4 class="page-title">Hakkımızda Ekle</h4>
+        <div class="row">
+            <div class="col-md-7">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">Hakkımızda Bilgileri</div>
+                        <div class="card-category">Ana sayfadaki "About Us" bölümünde gösterilecek içerik</div>
+                    </div>
+                    <form method="post">
+                        <div class="card-body">
+                            <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+
+                            <div class="form-group">
+                                <label asp-for="Title">Başlık</label>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="la la-header"></i></span>
+                                    </div>
+                                    <input asp-for="Title" id="titleInput" class="form-control" placeholder="Örn: Biz GastroMaster'ız" />
+                                </div>
+                                <span asp-validation-for="Title" class="text-danger small"></span>
+                            </div>
+
+                            <div class="form-group">
+                                <label asp-for="Description">Açıklama</label>
+                                <textarea asp-for="Description" id="descriptionInput" class="form-control" rows="7" placeholder="Restoranınızın hikâyesi, değerleri, farkı..."></textarea>
+                                <small class="form-text text-muted"><span id="descriptionCount">0</span> karakter</small>
+                                <span asp-validation-for="Description" class="text-danger small"></span>
+                            </div>
+
+                            <div class="form-group">
+                                <label asp-for="ImageUrl">Görsel Yolu</label>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="la la-image"></i></span>
+                                    </div>
+                                    <input asp-for="ImageUrl" id="imageInput" class="form-control" placeholder="/feane/images/about-img.png" />
+                                </div>
+                                <span asp-validation-for="ImageUrl" class="text-danger small"></span>
+                            </div>
+                        </div>
+                        <div class="card-action">
+                            <button type="submit" class="btn btn-success">
+                                <i class="la la-save"></i> Kaydet
+                            </button>
+                            <a href="/Admin/About/Index" class="btn btn-default">
+                                <i class="la la-arrow-left"></i> Geri Dön
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="col-md-5">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title"><i class="la la-eye"></i> Önizleme</div>
+                        <div class="card-category">Sitede yaklaşık böyle görünecek</div>
+                    </div>
+                    <div class="card-body">
+                        <div class="about-preview">
+                            <img id="previewImage" src="" alt="" />
+                            <div class="preview-body">
+                                <h3 id="previewTitle">Başlık</h3>
+                                <p id="previewDescription">Açıklama burada görünecek.</p>
+                                <span class="preview-btn">Read More</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function bindPreview(inputId, targetId, attr, fallback) {
+        var input = document.getElementById(inputId);
+        var target = document.getElementById(targetId);
+        var update = function () {
+            var value = input.value || fallback;
+            if (attr) { target.setAttribute(attr, value); } else { target.innerText = value; }
+        };
+        input.addEventListener("input", update);
+        update();
+    }
+
+    bindPreview("titleInput", "previewTitle", null, "Başlık");
+    bindPreview("descriptionInput", "previewDescription", null, "Açıklama burada görünecek.");
+    bindPreview("imageInput", "previewImage", "src", "");
+
+    var descriptionInput = document.getElementById("descriptionInput");
+    var descriptionCount = document.getElementById("descriptionCount");
+    descriptionInput.addEventListener("input", function () { descriptionCount.innerText = descriptionInput.value.length; });
+    descriptionCount.innerText = descriptionInput.value.length;
+</script>

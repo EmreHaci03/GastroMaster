@@ -1,0 +1,123 @@
+﻿@model UpdateBookingDto
+
+@{
+    ViewData["Title"] = "Rezervasyon Güncelle";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="content">
+    <div class="container-fluid">
+        <h4 class="page-title">Rezervasyon Güncelle</h4>
+        <div class="row">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">@Model.Name</div>
+                        <div class="card-category">Rezervasyon bilgilerini düzenleyip kaydedin</div>
+                    </div>
+                    <form method="post">
+                        <input type="hidden" asp-for="BookingId" />
+                        <div class="card-body">
+                            <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label asp-for="Name">Ad Soyad</label>
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text"><i class="la la-user"></i></span>
+                                            </div>
+                                            <input asp-for="Name" class="form-control" />
+                                        </div>
+                                        <span asp-validation-for="Name" class="text-danger small"></span>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label asp-for="Phone">Telefon</label>
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text"><i class="la la-phone"></i></span>
+                                            </div>
+                                            <input asp-for="Phone" class="form-control" />
+                                        </div>
+                                        <span asp-validation-for="Phone" class="text-danger small"></span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label asp-for="Mail">E-posta</label>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="la la-envelope"></i></span>
+                                    </div>
+                                    <input asp-for="Mail" type="email" class="form-control" />
+                                </div>
+                                <span asp-validation-for="Mail" class="text-danger small"></span>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label asp-for="PersonCount">Kişi Sayısı</label>
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text"><i class="la la-users"></i></span>
+                                            </div>
+                                            <input asp-for="PersonCount" type="number" min="1" max="20" class="form-control" />
+                                        </div>
+                                        <span asp-validation-for="PersonCount" class="text-danger small"></span>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label asp-for="Date">Tarih ve Saat</label>
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text"><i class="la la-calendar"></i></span>
+                                            </div>
+                                            <input asp-for="Date" type="datetime-local" class="form-control" />
+                                        </div>
+                                        <span asp-validation-for="Date" class="text-danger small"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-action">
+                            <button type="submit" class="btn btn-success">
+                                <i class="la la-save"></i> Güncelle
+                            </button>
+                            <a href="/Admin/Booking/Index" class="btn btn-default">
+                                <i class="la la-arrow-left"></i> Listeye Dön
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title"><i class="la la-info-circle"></i> Kayıt Bilgisi</div>
+                    </div>
+                    <div class="card-body">
+                        <p class="mb-2"><strong>Rezervasyon No:</strong> @Model.BookingId</p>
+                        <p class="mb-2"><strong>Kişi:</strong> @Model.PersonCount</p>
+                        <p class="mb-0">
+                            <strong>Tarih:</strong> @Model.Date.ToString("dd.MM.yyyy HH:mm")
+                            @if (Model.Date < DateTime.Now)
+                            {
+                                <span class="badge badge-default">Geçmiş</span>
+                            }
+                            else
+                            {
+                                <span class="badge badge-success">Yaklaşan</span>
+                            }
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

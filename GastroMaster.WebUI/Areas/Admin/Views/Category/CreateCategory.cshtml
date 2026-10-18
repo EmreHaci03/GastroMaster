@@ -1,0 +1,65 @@
+﻿@model CreateCategoryDto
+
+@{
+    ViewData["Title"] = "Yeni Kategori";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="content">
+    <div class="container-fluid">
+        <h4 class="page-title">Yeni Kategori</h4>
+        <div class="row">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">Kategori Ekle</div>
+                        <div class="card-category">Menüye yeni bir kategori eklemek için bilgileri doldurun</div>
+                    </div>
+                    <form method="post">
+                        <div class="card-body">
+                            <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+
+                            <div class="form-group">
+                                <label asp-for="CategoryName">Kategori Adı</label>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="la la-tag"></i></span>
+                                    </div>
+                                    <input asp-for="CategoryName" class="form-control" placeholder="Örn: Burger, Pizza, İçecek" />
+                                </div>
+                                <span asp-validation-for="CategoryName" class="text-danger small"></span>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Durum</label>
+                                <div>
+                                    <input asp-for="CategoryStatus" type="checkbox" data-toggle="toggle" data-on="Aktif" data-off="Pasif" data-onstyle="success" data-offstyle="danger" checked />
+                                </div>
+                                <small class="form-text text-muted">Pasif kategoriler sitede gösterilmez.</small>
+                            </div>
+                        </div>
+                        <div class="card-action">
+                            <button type="submit" class="btn btn-success">
+                                <i class="la la-save"></i> Kaydet
+                            </button>
+                            <a href="/Admin/Category/Index" class="btn btn-default">
+                                <i class="la la-arrow-left"></i> Listeye Dön
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title"><i class="la la-info-circle"></i> Bilgi</div>
+                    </div>
+                    <div class="card-body">
+                        <p class="text-muted mb-2">Kategori adı kısa ve anlaşılır olmalı.</p>
+                        <p class="text-muted mb-0">Ürün eklerken bu kategorilerden birini seçeceksiniz.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

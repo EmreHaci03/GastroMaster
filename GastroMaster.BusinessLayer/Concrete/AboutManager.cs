@@ -5,7 +5,7 @@ using GastroMaster.EntityLayer.Entities;
 
 namespace GastroMaster.BusinessLayer.Concrete
 {
-    public class AboutManager:IGenericService<About>
+    public class AboutManager:IAboutService
     {
         private readonly IAboutDal _aboutDal;
 

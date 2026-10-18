@@ -1,0 +1,188 @@
+﻿@model CreateSocialMediaDto
+
+@{
+    ViewData["Title"] = "Yeni Sosyal Medya";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+
+<style>
+    .icon-picker {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-top: 10px;
+    }
+
+        .icon-picker button {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            border: 1px solid #e3e6ea;
+            background: #fff;
+            font-size: 18px;
+            color: #555;
+            cursor: pointer;
+            transition: all .2s;
+        }
+
+            .icon-picker button:hover,
+            .icon-picker button.selected {
+                background: #222831;
+                border-color: #222831;
+                color: #ffbe33;
+            }
+
+    .social-preview {
+        border-radius: 12px;
+        background: #000;
+        color: #fff;
+        padding: 30px 24px;
+        text-align: center;
+    }
+
+        .social-preview .preview-icon {
+            width: 56px;
+            height: 56px;
+            margin: 0 auto 14px;
+            border-radius: 50%;
+            background: #fff;
+            color: #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+
+        .social-preview .preview-title {
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .social-preview .preview-url {
+            font-size: 12px;
+            opacity: .6;
+            word-break: break-all;
+        }
+</style>
+
+<div class="content">
+    <div class="container-fluid">
+        <h4 class="page-title">Yeni Sosyal Medya</h4>
+        <div class="row">
+            <div class="col-md-7">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">Hesap Ekle</div>
+                        <div class="card-category">Footer'da gösterilecek sosyal medya hesabını girin</div>
+                    </div>
+                    <form method="post">
+                        <div class="card-body">
+                            <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+
+                            <div class="form-group">
+                                <label asp-for="Title">Platform Adı</label>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="la la-tag"></i></span>
+                                    </div>
+                                    <input asp-for="Title" id="titleInput" class="form-control" placeholder="Örn: Instagram" />
+                                </div>
+                                <span asp-validation-for="Title" class="text-danger small"></span>
+                            </div>
+
+                            <div class="form-group">
+                                <label asp-for="Url">Profil Linki</label>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="la la-link"></i></span>
+                                    </div>
+                                    <input asp-for="Url" id="urlInput" type="url" class="form-control" placeholder="https://instagram.com/gastromaster" />
+                                </div>
+                                <span asp-validation-for="Url" class="text-danger small"></span>
+                            </div>
+
+                            <div class="form-group">
+                                <label asp-for="Icon">İkon Sınıfı</label>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="la la-star"></i></span>
+                                    </div>
+                                    <input asp-for="Icon" id="iconInput" class="form-control" placeholder="fa fa-instagram" />
+                                </div>
+                                <small class="form-text text-muted">Hazır ikonlardan birine tıklayın ya da Font Awesome sınıfını kendiniz yazın.</small>
+                                <div class="icon-picker">
+                                    <button type="button" data-icon="fa fa-facebook" data-title="Facebook"><i class="fa fa-facebook"></i></button>
+                                    <button type="button" data-icon="fa fa-instagram" data-title="Instagram"><i class="fa fa-instagram"></i></button>
+                                    <button type="button" data-icon="fa fa-twitter" data-title="Twitter"><i class="fa fa-twitter"></i></button>
+                                    <button type="button" data-icon="fa fa-linkedin" data-title="LinkedIn"><i class="fa fa-linkedin"></i></button>
+                                    <button type="button" data-icon="fa fa-youtube-play" data-title="YouTube"><i class="fa fa-youtube-play"></i></button>
+                                    <button type="button" data-icon="fa fa-pinterest" data-title="Pinterest"><i class="fa fa-pinterest"></i></button>
+                                    <button type="button" data-icon="fa fa-whatsapp" data-title="WhatsApp"><i class="fa fa-whatsapp"></i></button>
+                                    <button type="button" data-icon="fa fa-tripadvisor" data-title="TripAdvisor"><i class="fa fa-tripadvisor"></i></button>
+                                </div>
+                                <span asp-validation-for="Icon" class="text-danger small"></span>
+                            </div>
+                        </div>
+                        <div class="card-action">
+                            <button type="submit" class="btn btn-success">
+                                <i class="la la-save"></i> Kaydet
+                            </button>
+                            <a href="/Admin/SocialMedia/Index" class="btn btn-default">
+                                <i class="la la-arrow-left"></i> Listeye Dön
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="col-md-5">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title"><i class="la la-eye"></i> Önizleme</div>
+                        <div class="card-category">Footer'da yaklaşık böyle görünecek</div>
+                    </div>
+                    <div class="card-body">
+                        <div class="social-preview">
+                            <div class="preview-icon"><i id="previewIcon" class="fa fa-question"></i></div>
+                            <div class="preview-title" id="previewTitle">Platform</div>
+                            <div class="preview-url" id="previewUrl">https://...</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    var titleInput = document.getElementById("titleInput");
+    var urlInput = document.getElementById("urlInput");
+    var iconInput = document.getElementById("iconInput");
+    var previewTitle = document.getElementById("previewTitle");
+    var previewUrl = document.getElementById("previewUrl");
+    var previewIcon = document.getElementById("previewIcon");
+    var pickerButtons = document.querySelectorAll(".icon-picker button");
+
+    function updatePreview() {
+        previewTitle.innerText = titleInput.value || "Platform";
+        previewUrl.innerText = urlInput.value || "https://...";
+        previewIcon.className = iconInput.value || "fa fa-question";
+        pickerButtons.forEach(function (b) {
+            b.classList.toggle("selected", b.getAttribute("data-icon") === iconInput.value);
+        });
+    }
+
+    pickerButtons.forEach(function (button) {
+        button.addEventListener("click", function () {
+            iconInput.value = button.getAttribute("data-icon");
+            if (!titleInput.value) { titleInput.value = button.getAttribute("data-title"); }
+            updatePreview();
+        });
+    });
+
+    titleInput.addEventListener("input", updatePreview);
+    urlInput.addEventListener("input", updatePreview);
+    iconInput.addEventListener("input", updatePreview);
+    updatePreview();
+</script>

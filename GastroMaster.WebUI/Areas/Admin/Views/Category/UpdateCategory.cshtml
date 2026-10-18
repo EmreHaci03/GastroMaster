@@ -1,0 +1,76 @@
+﻿@model UpdateCategoryDto
+
+@{
+    ViewData["Title"] = "Kategori Güncelle";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="content">
+    <div class="container-fluid">
+        <h4 class="page-title">Kategori Güncelle</h4>
+        <div class="row">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">@Model.CategoryName</div>
+                        <div class="card-category">Kategori bilgilerini düzenleyip kaydedin</div>
+                    </div>
+                    <form method="post">
+                        <input type="hidden" asp-for="CategoryId" />
+                        <div class="card-body">
+                            <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+
+                            <div class="form-group">
+                                <label asp-for="CategoryName">Kategori Adı</label>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="la la-tag"></i></span>
+                                    </div>
+                                    <input asp-for="CategoryName" class="form-control" />
+                                </div>
+                                <span asp-validation-for="CategoryName" class="text-danger small"></span>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Durum</label>
+                                <div>
+                                    <input asp-for="CategoryStatus" type="checkbox" data-toggle="toggle" data-on="Aktif" data-off="Pasif" data-onstyle="success" data-offstyle="danger" />
+                                </div>
+                                <small class="form-text text-muted">Pasif kategoriler sitede gösterilmez.</small>
+                            </div>
+                        </div>
+                        <div class="card-action">
+                            <button type="submit" class="btn btn-success">
+                                <i class="la la-save"></i> Güncelle
+                            </button>
+                            <a href="/Admin/Category/Index" class="btn btn-default">
+                                <i class="la la-arrow-left"></i> Listeye Dön
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title"><i class="la la-info-circle"></i> Kayıt Bilgisi</div>
+                    </div>
+                    <div class="card-body">
+                        <p class="mb-2"><strong>Kategori No:</strong> @Model.CategoryId</p>
+                        <p class="mb-0">
+                            <strong>Mevcut Durum:</strong>
+                            @if (Model.CategoryStatus)
+                            {
+                                <span class="badge badge-success">Aktif</span>
+                            }
+                            else
+                            {
+                                <span class="badge badge-danger">Pasif</span>
+                            }
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

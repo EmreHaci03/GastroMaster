@@ -1,0 +1,177 @@
+﻿@model UpdateTestimonialDto
+
+@{
+    ViewData["Title"] = "Yorum Güncelle";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<style>
+    .testimonial-preview {
+        border-radius: 12px;
+        background: #222831;
+        color: #fff;
+        padding: 28px 26px;
+    }
+
+        .testimonial-preview .preview-comment {
+            font-size: 14px;
+            line-height: 1.7;
+            opacity: .9;
+            position: relative;
+            padding-left: 26px;
+            margin-bottom: 22px;
+            white-space: pre-line;
+            word-break: break-word;
+        }
+
+            .testimonial-preview .preview-comment i {
+                position: absolute;
+                left: 0;
+                top: 0;
+                font-size: 20px;
+                color: #ffbe33;
+            }
+
+        .testimonial-preview .preview-person {
+            display: flex;
+            align-items: center;
+        }
+
+        .testimonial-preview img {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid #ffbe33;
+            background: #333;
+            margin-right: 14px;
+        }
+
+        .testimonial-preview h6 {
+            margin: 0;
+            font-weight: 600;
+        }
+
+        .testimonial-preview small {
+            opacity: .7;
+        }
+</style>
+
+<div class="content">
+    <div class="container-fluid">
+        <h4 class="page-title">Yorum Güncelle</h4>
+        <div class="row">
+            <div class="col-md-7">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">@Model.Name</div>
+                        <div class="card-category">Yorum bilgilerini düzenleyip kaydedin</div>
+                    </div>
+                    <form method="post">
+                        <input type="hidden" asp-for="TestimonialId" />
+                        <div class="card-body">
+                            <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label asp-for="Name">Ad Soyad</label>
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text"><i class="la la-user"></i></span>
+                                            </div>
+                                            <input asp-for="Name" id="nameInput" class="form-control" />
+                                        </div>
+                                        <span asp-validation-for="Name" class="text-danger small"></span>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label asp-for="Title">Ünvan</label>
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text"><i class="la la-briefcase"></i></span>
+                                            </div>
+                                            <input asp-for="Title" id="titleInput" class="form-control" />
+                                        </div>
+                                        <span asp-validation-for="Title" class="text-danger small"></span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label asp-for="Comment">Yorum</label>
+                                <textarea asp-for="Comment" id="commentInput" class="form-control" rows="5" maxlength="400"></textarea>
+                                <small class="form-text text-muted"><span id="commentCount">0</span>/400 karakter</small>
+                                <span asp-validation-for="Comment" class="text-danger small"></span>
+                            </div>
+
+                            <div class="form-group">
+                                <label asp-for="ImageUrl">Fotoğraf Yolu</label>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="la la-image"></i></span>
+                                    </div>
+                                    <input asp-for="ImageUrl" id="imageInput" class="form-control" />
+                                </div>
+                                <span asp-validation-for="ImageUrl" class="text-danger small"></span>
+                            </div>
+                        </div>
+                        <div class="card-action">
+                            <button type="submit" class="btn btn-success">
+                                <i class="la la-save"></i> Güncelle
+                            </button>
+                            <a href="/Admin/Testimonial/Index" class="btn btn-default">
+                                <i class="la la-arrow-left"></i> Listeye Dön
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="col-md-5">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title"><i class="la la-eye"></i> Önizleme</div>
+                        <div class="card-category">Değişiklikler anlık yansır</div>
+                    </div>
+                    <div class="card-body">
+                        <div class="testimonial-preview">
+                            <p class="preview-comment"><i class="la la-quote-left"></i><span id="previewComment"></span></p>
+                            <div class="preview-person">
+                                <img id="previewImage" src="" alt="" />
+                                <div>
+                                    <h6 id="previewName"></h6>
+                                    <small id="previewTitle"></small>
+                                </div>
+                            </div>
+                        </div>
+                        <p class="mt-3 mb-0 text-muted small"><strong>Yorum No:</strong> @Model.TestimonialId</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function bindPreview(inputId, targetId, attr, fallback) {
+        var input = document.getElementById(inputId);
+        var target = document.getElementById(targetId);
+        var update = function () {
+            var value = input.value || fallback;
+            if (attr) { target.setAttribute(attr, value); } else { target.innerText = value; }
+        };
+        input.addEventListener("input", update);
+        update();
+    }
+
+    bindPreview("nameInput", "previewName", null, "Ad Soyad");
+    bindPreview("titleInput", "previewTitle", null, "Ünvan");
+    bindPreview("commentInput", "previewComment", null, "Yorum burada görünecek.");
+    bindPreview("imageInput", "previewImage", "src", "");
+
+    var commentInput = document.getElementById("commentInput");
+    var commentCount = document.getElementById("commentCount");
+    commentInput.addEventListener("input", function () { commentCount.innerText = commentInput.value.length; });
+    commentCount.innerText = commentInput.value.length;
+</script>

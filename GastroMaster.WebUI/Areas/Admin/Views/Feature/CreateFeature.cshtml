@@ -1,0 +1,121 @@
+﻿@model CreateFeatureDto
+
+@{
+    ViewData["Title"] = "Yeni Slide";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<style>
+    .slider-preview {
+        border-radius: 12px;
+        overflow: hidden;
+        background: linear-gradient(rgba(0, 0, 0, .55), rgba(0, 0, 0, .55)), #222831;
+        color: #fff;
+        padding: 35px 28px;
+        min-height: 230px;
+    }
+
+        .slider-preview h3 {
+            font-family: 'Dancing Script', cursive, sans-serif;
+            font-weight: 700;
+            font-size: 30px;
+            margin-bottom: 12px;
+            word-break: break-word;
+        }
+
+        .slider-preview p {
+            font-size: 13px;
+            opacity: .85;
+            margin-bottom: 18px;
+            word-break: break-word;
+        }
+
+        .slider-preview .preview-btn {
+            display: inline-block;
+            padding: 8px 26px;
+            border-radius: 45px;
+            background: #ffbe33;
+            color: #fff;
+            font-size: 13px;
+        }
+</style>
+
+<div class="content">
+    <div class="container-fluid">
+        <h4 class="page-title">Yeni Slide</h4>
+        <div class="row">
+            <div class="col-md-7">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">Slide Ekle</div>
+                        <div class="card-category">Ana sayfa slider'ında gösterilecek başlık ve açıklamayı girin</div>
+                    </div>
+                    <form method="post">
+                        <div class="card-body">
+                            <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+
+                            <div class="form-group">
+                                <label asp-for="Title">Başlık</label>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="la la-header"></i></span>
+                                    </div>
+                                    <input asp-for="Title" id="titleInput" class="form-control" maxlength="60" placeholder="Örn: Fast Food Restaurant" />
+                                </div>
+                                <small class="form-text text-muted"><span id="titleCount">0</span>/60 karakter</small>
+                                <span asp-validation-for="Title" class="text-danger small"></span>
+                            </div>
+
+                            <div class="form-group">
+                                <label asp-for="Description">Açıklama</label>
+                                <textarea asp-for="Description" id="descriptionInput" class="form-control" rows="5" maxlength="250" placeholder="Slide altında görünecek kısa açıklama"></textarea>
+                                <small class="form-text text-muted"><span id="descriptionCount">0</span>/250 karakter</small>
+                                <span asp-validation-for="Description" class="text-danger small"></span>
+                            </div>
+                        </div>
+                        <div class="card-action">
+                            <button type="submit" class="btn btn-success">
+                                <i class="la la-save"></i> Kaydet
+                            </button>
+                            <a href="/Admin/Feature/Index" class="btn btn-default">
+                                <i class="la la-arrow-left"></i> Listeye Dön
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="col-md-5">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title"><i class="la la-eye"></i> Önizleme</div>
+                        <div class="card-category">Slider'da yaklaşık böyle görünecek</div>
+                    </div>
+                    <div class="card-body">
+                        <div class="slider-preview">
+                            <h3 id="previewTitle">Başlık</h3>
+                            <p id="previewDescription">Açıklama burada görünecek.</p>
+                            <span class="preview-btn">Order Now</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function bindPreview(inputId, targetId, countId, fallback) {
+        var input = document.getElementById(inputId);
+        var target = document.getElementById(targetId);
+        var counter = document.getElementById(countId);
+        var update = function () {
+            target.innerText = input.value || fallback;
+            counter.innerText = input.value.length;
+        };
+        input.addEventListener("input", update);
+        update();
+    }
+
+    bindPreview("titleInput", "previewTitle", "titleCount", "Başlık");
+    bindPreview("descriptionInput", "previewDescription", "descriptionCount", "Açıklama burada görünecek.");
+</script>

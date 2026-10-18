@@ -1,0 +1,275 @@
+﻿@model UpdateProductDto
+
+@{
+    ViewData["Title"] = "Ürün Güncelle";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+    var categories = ViewBag.Categories as List<ResultCategoryDto> ?? new List<ResultCategoryDto>();
+    var categoryList = new SelectList(categories, "CategoryId", "CategoryName");
+}
+
+<style>
+    .product-preview {
+        border-radius: 15px;
+        overflow: hidden;
+        background: #222831;
+        color: #fff;
+    }
+
+        .product-preview .preview-img-box {
+            background: #f1f2f3;
+            height: 210px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 0 0 0 45px;
+            overflow: hidden;
+        }
+
+            .product-preview .preview-img-box img {
+                max-width: 75%;
+                max-height: 80%;
+                object-fit: contain;
+            }
+
+        .product-preview .preview-body {
+            padding: 22px 24px 24px;
+        }
+
+        .product-preview .preview-category {
+            display: inline-block;
+            padding: 3px 12px;
+            border-radius: 20px;
+            background: rgba(255, 190, 51, .2);
+            color: #ffbe33;
+            font-size: 11px;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .product-preview h5 {
+            font-weight: 600;
+            margin-bottom: 8px;
+            word-break: break-word;
+        }
+
+        .product-preview p {
+            font-size: 13px;
+            opacity: .8;
+            margin-bottom: 16px;
+            word-break: break-word;
+        }
+
+        .product-preview .preview-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .product-preview .preview-price {
+            font-size: 20px;
+            font-weight: 700;
+        }
+
+        .product-preview .preview-cart {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #ffbe33;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+        }
+
+        .product-preview .preview-status {
+            font-size: 11px;
+            padding: 3px 10px;
+            border-radius: 20px;
+            margin-left: 6px;
+        }
+</style>
+
+<div class="content">
+    <div class="container-fluid">
+        <h4 class="page-title">Ürün Güncelle</h4>
+        <div class="row">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">@Model.ProductName</div>
+                        <div class="card-category">Ürün bilgilerini düzenleyip kaydedin</div>
+                    </div>
+                    <form method="post">
+                        <input type="hidden" asp-for="ProductId" />
+                        <div class="card-body">
+                            <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+
+                            @if (!categories.Any())
+                            {
+                                <div class="alert alert-warning">
+                                    <i class="la la-exclamation-triangle"></i>
+                                    Kategori listesi alınamadı. API'nin çalıştığından emin olun.
+                                </div>
+                            }
+
+                            <div class="row">
+                                <div class="col-md-7">
+                                    <div class="form-group">
+                                        <label asp-for="ProductName">Ürün Adı</label>
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text"><i class="la la-cutlery"></i></span>
+                                            </div>
+                                            <input asp-for="ProductName" id="nameInput" class="form-control" />
+                                        </div>
+                                        <span asp-validation-for="ProductName" class="text-danger small"></span>
+                                    </div>
+                                </div>
+                                <div class="col-md-5">
+                                    <div class="form-group">
+                                        <label asp-for="CategoryId">Kategori</label>
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text"><i class="la la-list"></i></span>
+                                            </div>
+                                            <select asp-for="CategoryId" asp-items="categoryList" id="categoryInput" class="form-control">
+                                                <option value="">Kategori seçin</option>
+                                            </select>
+                                        </div>
+                                        <span asp-validation-for="CategoryId" class="text-danger small"></span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label asp-for="Description">Açıklama</label>
+                                <textarea asp-for="Description" id="descriptionInput" class="form-control" rows="4" maxlength="300"></textarea>
+                                <small class="form-text text-muted"><span id="descriptionCount">0</span>/300 karakter</small>
+                                <span asp-validation-for="Description" class="text-danger small"></span>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label asp-for="Price">Fiyat</label>
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text">₺</span>
+                                            </div>
+                                            <input asp-for="Price" id="priceInput" type="number" step="0.01" min="0" class="form-control" />
+                                        </div>
+                                        <span asp-validation-for="Price" class="text-danger small"></span>
+                                    </div>
+                                </div>
+                                <div class="col-md-8">
+                                    <div class="form-group">
+                                        <label asp-for="ImageUrl">Görsel Yolu</label>
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text"><i class="la la-image"></i></span>
+                                            </div>
+                                            <input asp-for="ImageUrl" id="imageInput" class="form-control" />
+                                        </div>
+                                        <span asp-validation-for="ImageUrl" class="text-danger small"></span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Durum</label>
+                                <div>
+                                    <input asp-for="ProductStatus" id="statusInput" type="checkbox" data-toggle="toggle" data-on="Aktif" data-off="Pasif" data-onstyle="success" data-offstyle="danger" />
+                                </div>
+                                <small class="form-text text-muted">Pasif ürünler menüde gösterilmez.</small>
+                            </div>
+                        </div>
+                        <div class="card-action">
+                            <button type="submit" class="btn btn-success">
+                                <i class="la la-save"></i> Güncelle
+                            </button>
+                            <a href="/Admin/Product/Index" class="btn btn-default">
+                                <i class="la la-arrow-left"></i> Listeye Dön
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title"><i class="la la-eye"></i> Önizleme</div>
+                        <div class="card-category">Değişiklikler anlık yansır</div>
+                    </div>
+                    <div class="card-body">
+                        <div class="product-preview">
+                            <div class="preview-img-box">
+                                <img id="previewImage" src="" alt="" />
+                            </div>
+                            <div class="preview-body">
+                                <span class="preview-category" id="previewCategory">Kategori</span>
+                                <span class="preview-status badge badge-success" id="previewStatus">Aktif</span>
+                                <h5 id="previewName"></h5>
+                                <p id="previewDescription"></p>
+                                <div class="preview-footer">
+                                    <span class="preview-price">₺<span id="previewPrice">0,00</span></span>
+                                    <span class="preview-cart"><i class="la la-shopping-cart"></i></span>
+                                </div>
+                            </div>
+                        </div>
+                        <p class="mt-3 mb-0 text-muted small"><strong>Ürün No:</strong> @Model.ProductId</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function bindPreview(inputId, targetId, attr, fallback) {
+        var input = document.getElementById(inputId);
+        var target = document.getElementById(targetId);
+        var update = function () {
+            var value = input.value || fallback;
+            if (attr) { target.setAttribute(attr, value); } else { target.innerText = value; }
+        };
+        input.addEventListener("input", update);
+        update();
+    }
+
+    bindPreview("nameInput", "previewName", null, "Ürün Adı");
+    bindPreview("descriptionInput", "previewDescription", null, "Ürün açıklaması burada görünecek.");
+    bindPreview("imageInput", "previewImage", "src", "");
+
+    var priceInput = document.getElementById("priceInput");
+    var previewPrice = document.getElementById("previewPrice");
+    function updatePrice() {
+        var value = parseFloat(priceInput.value);
+        previewPrice.innerText = isNaN(value) ? "0,00" : value.toLocaleString("tr-TR", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    }
+    priceInput.addEventListener("input", updatePrice);
+    updatePrice();
+
+    var categoryInput = document.getElementById("categoryInput");
+    var previewCategory = document.getElementById("previewCategory");
+    function updateCategory() {
+        var option = categoryInput.options[categoryInput.selectedIndex];
+        previewCategory.innerText = categoryInput.value ? option.text : "Kategori";
+    }
+    categoryInput.addEventListener("change", updateCategory);
+    updateCategory();
+
+    var descriptionInput = document.getElementById("descriptionInput");
+    var descriptionCount = document.getElementById("descriptionCount");
+    descriptionInput.addEventListener("input", function () { descriptionCount.innerText = descriptionInput.value.length; });
+    descriptionCount.innerText = descriptionInput.value.length;
+
+    var statusInput = document.getElementById("statusInput");
+    var previewStatus = document.getElementById("previewStatus");
+    function updateStatus() {
+        var active = statusInput.checked;
+        previewStatus.innerText = active ? "Aktif" : "Pasif";
+        previewStatus.className = "preview-status badge " + (active ? "badge-success" : "badge-danger");
+    }
+    statusInput.addEventListener("change", updateStatus);
+    updateStatus();
+</script>
