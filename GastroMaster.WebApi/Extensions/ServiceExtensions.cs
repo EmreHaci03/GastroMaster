@@ -19,7 +19,13 @@ namespace GastroMaster.WebApi.Extensions
             services.AddScoped<ISocialMediaDal, EfSocialMediaDal>();
             services.AddScoped<ITestimonialDal, EfTestimonialDal>();
             services.AddScoped<IFeatureDal, EfFeatureDal>();
+            services.AddScoped<IStatisticDal, EfStatisticDal>();
+            services.AddScoped<IOrderDal, EfOrderDal>();
+            services.AddScoped<IOrderDetailDal, EfOrderDetailDal>();
 
+            services.AddScoped<IStatisticService, StatisticManager>();
+            services.AddScoped<IOrderService, OrderManager>();
+            services.AddScoped<IOrderDetailService, OrderDetailManager>();
             services.AddScoped<IAboutService, AboutManager>();
             services.AddScoped<IFeatureService, FeatureManager>();
             services.AddScoped<ITestimonialService,TestimonialManager>();

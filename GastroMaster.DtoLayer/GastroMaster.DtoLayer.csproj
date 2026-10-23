@@ -11,6 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\GastroMaster.DataAccessLayer\GastroMaster.DataAccessLayer.csproj" />
     <ProjectReference Include="..\GastroMaster.EntityLayer\GastroMaster.EntityLayer.csproj" />
   </ItemGroup>
 

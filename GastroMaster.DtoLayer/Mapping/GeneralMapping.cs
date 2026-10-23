@@ -1,12 +1,16 @@
 ﻿using AutoMapper;
+using GastroMaster.DataAccessLayer.Models;
 using GastroMaster.DtoLayer.DTOS.AboutDtos;
 using GastroMaster.DtoLayer.DTOS.BookingDtos;
 using GastroMaster.DtoLayer.DTOS.CategoryDtos;
 using GastroMaster.DtoLayer.DTOS.ContactDtos;
 using GastroMaster.DtoLayer.DTOS.DiscountDtos;
 using GastroMaster.DtoLayer.DTOS.FeatureDtos;
+using GastroMaster.DtoLayer.DTOS.OrderDetailDtos;
+using GastroMaster.DtoLayer.DTOS.OrderDtos;
 using GastroMaster.DtoLayer.DTOS.ProductDtos;
 using GastroMaster.DtoLayer.DTOS.SocialMediaDtos;
+using GastroMaster.DtoLayer.DTOS.StatisticDtos;
 using GastroMaster.DtoLayer.DTOS.TestimonialDtos;
 using GastroMaster.EntityLayer.Entities;
 
@@ -86,6 +90,32 @@ namespace GastroMaster.DtoLayer.Mapping
             CreateMap<Testimonial, UpdateTestimonialDto>().ReverseMap();
             CreateMap<Testimonial, GetTestimonialByIdDto>().ReverseMap();
             //Testimonial//
+
+            //Statistic//
+            CreateMap<GetStatisticModel, GetStatisticDto>();
+            CreateMap<ProductCountByCategoryModel, ProductCountByCategoryDto>();
+            CreateMap<ProductCountByPriceRangeModel, ProductCountByPriceRangeDto>();
+            CreateMap<ResultOrderModel, ResultOrderCountDto>();
+            //Statistic//
+
+            //Order//
+            CreateMap<Order, ResultOrderDto>().ReverseMap();
+            CreateMap<Order, CreateOrderDto>().ReverseMap();
+            CreateMap<Order, UpdateOrderDto>().ReverseMap();
+            CreateMap<Order, GetOrderByIdDto>().ReverseMap();
+
+            //Order//
+
+            //Order Detail//
+            CreateMap<OrderDetail, ResultOrderDetailDto>().ReverseMap();
+            CreateMap<OrderDetail, CreateOrderDetailDto>().ReverseMap();
+            CreateMap<OrderDetail, UpdateOrderDetailDto>().ReverseMap();
+            CreateMap<OrderDetail, GetOrderDetailByIdDto>().ReverseMap();
+            CreateMap<OrderDetail, GetOrderDetailWithDetailDto>()
+                  .ForMember(dest => dest.Product, opt => opt.MapFrom(src => src.Product.ProductName))
+                  .ForMember(dest => dest.Order, opt => opt.MapFrom(src => src.Order.TableNumber))
+                  .ReverseMap();
+            //Order Detail//
         }
 
     }

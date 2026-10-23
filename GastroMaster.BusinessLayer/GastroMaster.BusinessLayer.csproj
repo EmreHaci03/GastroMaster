@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\GastroMaster.DataAccessLayer\GastroMaster.DataAccessLayer.csproj" />
+    <ProjectReference Include="..\GastroMaster.DtoLayer\GastroMaster.DtoLayer.csproj" />
   </ItemGroup>
 
 </Project>

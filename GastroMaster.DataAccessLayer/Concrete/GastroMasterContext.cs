@@ -18,5 +18,24 @@ namespace GastroMaster.DataAccessLayer.Concrete
         public DbSet<Product> Products { get; set; }
         public DbSet<SocialMedia> SocialMedias { get; set; }
         public DbSet<Testimonial> Testimonials { get; set; }
+        public DbSet<Order> Orders { get; set; }
+        public DbSet<OrderDetail> OrderDetails { get; set; }
+        public DbSet<CashRegister> CashRegisters { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<OrderDetail>()
+                .HasOne(x => x.Product)
+                .WithMany(x => x.OrderDetails)
+                .HasForeignKey(x => x.ProductId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Product>().Property(x => x.Price).HasPrecision(18, 2);
+            modelBuilder.Entity<OrderDetail>().Property(x => x.UnitPrice).HasPrecision(18, 2);
+            modelBuilder.Entity<OrderDetail>().Property(x => x.TotalPrice).HasPrecision(18, 2);
+            modelBuilder.Entity<Order>().Property(x => x.TotalPrice).HasPrecision(18, 2);
+
+            base.OnModelCreating(modelBuilder);
+        }
     }
 }

@@ -1,0 +1,452 @@
+﻿@{
+    ViewData["Title"] = "SignalR İle Anlık Veriler";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<style>
+    .live-bar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 10px;
+        padding: 14px 20px;
+        border-radius: 12px;
+        background: #fff;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, .05);
+        margin-bottom: 25px;
+    }
+
+    .live-status {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-weight: 600;
+    }
+
+    .live-dot {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        background: #ffad46;
+    }
+
+    .live-status.connected .live-dot {
+        background: #31ce36;
+        animation: livePulse 1.6s infinite;
+    }
+
+    .live-status.connected {
+        color: #31ce36;
+    }
+
+    .live-status.connecting {
+        color: #ffad46;
+    }
+
+    .live-status.disconnected {
+        color: #f3545d;
+    }
+
+        .live-status.disconnected .live-dot {
+            background: #f3545d;
+        }
+
+    .live-updated {
+        font-size: 13px;
+        color: #8d9498;
+    }
+
+    .section-title {
+        font-size: 13px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        color: #8d9498;
+        margin: 10px 0 15px;
+    }
+
+    .stat-box {
+        border-radius: 14px;
+        padding: 22px 22px;
+        color: #fff;
+        position: relative;
+        overflow: hidden;
+        margin-bottom: 25px;
+        box-shadow: 0 6px 18px rgba(0, 0, 0, .08);
+    }
+
+        .stat-box .stat-icon {
+            position: absolute;
+            right: 18px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 58px;
+            opacity: .25;
+        }
+
+        .stat-box .stat-label {
+            font-size: 13px;
+            opacity: .9;
+            margin-bottom: 6px;
+        }
+
+        .stat-box .stat-value {
+            font-size: 32px;
+            font-weight: 700;
+            line-height: 1;
+            transition: transform .3s;
+        }
+
+    .bg-blue {
+        background: linear-gradient(135deg, #1572e8, #4a9bff);
+    }
+
+    .bg-green {
+        background: linear-gradient(135deg, #2bb930, #5ad85e);
+    }
+
+    .bg-red {
+        background: linear-gradient(135deg, #e63946, #ff6b74);
+    }
+
+    .bg-orange {
+        background: linear-gradient(135deg, #f39c12, #ffbe33);
+    }
+
+    .bg-purple {
+        background: linear-gradient(135deg, #6f42c1, #9b6dff);
+    }
+
+    .bg-dark {
+        background: linear-gradient(135deg, #222831, #3c4452);
+    }
+
+    .detail-card {
+        border-radius: 14px;
+        background: #fff;
+        padding: 22px;
+        margin-bottom: 25px;
+        box-shadow: 0 2px 12px rgba(0, 0, 0, .05);
+        display: flex;
+        gap: 16px;
+        align-items: flex-start;
+        height: calc(100% - 25px);
+    }
+
+    .detail-icon {
+        min-width: 52px;
+        height: 52px;
+        border-radius: 14px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 26px;
+        color: #fff;
+    }
+
+    .detail-label {
+        font-size: 12px;
+        text-transform: uppercase;
+        letter-spacing: .5px;
+        color: #8d9498;
+        margin-bottom: 4px;
+    }
+
+    .detail-title {
+        font-size: 17px;
+        font-weight: 600;
+        color: #222831;
+        margin-bottom: 4px;
+        word-break: break-word;
+    }
+
+    .detail-value {
+        font-size: 22px;
+        font-weight: 700;
+    }
+
+    .detail-sub {
+        font-size: 12px;
+        color: #8d9498;
+        margin-top: 4px;
+    }
+
+    .flash {
+        animation: valueFlash .6s;
+    }
+
+    @@keyframes livePulse {
+        0% {
+            box-shadow: 0 0 0 0 rgba(49, 206, 54, .5);
+        }
+
+        70% {
+            box-shadow: 0 0 0 10px rgba(49, 206, 54, 0);
+        }
+
+        100% {
+            box-shadow: 0 0 0 0 rgba(49, 206, 54, 0);
+        }
+    }
+
+    @@keyframes valueFlash {
+        0% {
+            transform: scale(1);
+        }
+
+        40% {
+            transform: scale(1.15);
+        }
+
+        100% {
+            transform: scale(1);
+        }
+    }
+</style>
+
+<div class="content">
+    <div class="container-fluid">
+        <h4 class="page-title">Anlık İstatistikler</h4>
+
+        <div class="live-bar">
+            <div class="live-status connecting" id="connectionStatus">
+                <span class="live-dot"></span>
+                <span id="connectionText">Bağlanıyor...</span>
+            </div>
+            <div class="live-updated">
+                <i class="la la-refresh"></i> Son güncelleme: <span id="lastUpdated">-</span>
+            </div>
+        </div>
+
+        <div class="section-title"><i class="la la-cutlery"></i> Ürünler</div>
+        <div class="row">
+            <div class="col-md-4">
+                <div class="stat-box bg-blue">
+                    <div class="stat-label">Toplam Ürün</div>
+                    <div class="stat-value" id="productCount">0</div>
+                    <i class="la la-cutlery stat-icon"></i>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="stat-box bg-green">
+                    <div class="stat-label">Aktif Ürün</div>
+                    <div class="stat-value" id="activeProductCount">0</div>
+                    <i class="la la-check-circle stat-icon"></i>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="stat-box bg-red">
+                    <div class="stat-label">Pasif Ürün</div>
+                    <div class="stat-value" id="passiveProductCount">0</div>
+                    <i class="la la-times-circle stat-icon"></i>
+                </div>
+            </div>
+        </div>
+
+        <div class="section-title"><i class="la la-list"></i> Kategoriler</div>
+        <div class="row">
+            <div class="col-md-4">
+                <div class="stat-box bg-purple">
+                    <div class="stat-label">Toplam Kategori</div>
+                    <div class="stat-value" id="categoryCount">0</div>
+                    <i class="la la-list stat-icon"></i>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="stat-box bg-green">
+                    <div class="stat-label">Aktif Kategori</div>
+                    <div class="stat-value" id="activeCategoryCount">0</div>
+                    <i class="la la-check-square stat-icon"></i>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="stat-box bg-red">
+                    <div class="stat-label">Pasif Kategori</div>
+                    <div class="stat-value" id="passiveCategoryCount">0</div>
+                    <i class="la la-minus-square stat-icon"></i>
+                </div>
+            </div>
+        </div>
+
+        <div class="section-title"><i class="la la-line-chart"></i> Detaylar</div>
+        <div class="row">
+            <div class="col-md-4">
+                <div class="detail-card">
+                    <div class="detail-icon bg-red"><i class="la la-arrow-up"></i></div>
+                    <div>
+                        <div class="detail-label">En Pahalı Ürün</div>
+                        <div class="detail-title" id="mostExpensiveProductName">-</div>
+                        <div class="detail-value text-danger">₺<span id="mostExpensiveProductPrice">0</span></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="detail-card">
+                    <div class="detail-icon bg-green"><i class="la la-arrow-down"></i></div>
+                    <div>
+                        <div class="detail-label">En Ucuz Ürün</div>
+                        <div class="detail-title" id="cheapestProductName">-</div>
+                        <div class="detail-value text-success">₺<span id="cheapestProductPrice">0</span></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="detail-card">
+                    <div class="detail-icon bg-orange"><i class="la la-cutlery"></i></div>
+                    <div>
+                        <div class="detail-label">Burger Ort. Fiyatı</div>
+                        <div class="detail-title">Burger Kategorisi</div>
+                        <div class="detail-value text-warning">₺<span id="hamburgerAveragePrice">0</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-4">
+                <div class="detail-card">
+                    <div class="detail-icon bg-blue"><i class="la la-trophy"></i></div>
+                    <div>
+                        <div class="detail-label">En Kalabalık Kategori</div>
+                        <div class="detail-title" id="mostProductCategoryName">-</div>
+                        <div class="detail-value text-primary"><span id="mostProductCategoryCount">0</span> ürün</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="detail-card">
+                    <div class="detail-icon bg-purple"><i class="la la-shopping-cart"></i></div>
+                    <div>
+                        <div class="detail-label">Siparişler</div>
+                        <div class="detail-title">Toplam: <span id="orderCount">0</span></div>
+                        <div class="detail-value" style="color:#6f42c1;">Masada: <span id="activeOrderCount">0</span></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="detail-card">
+                    <div class="detail-icon bg-dark"><i class="la la-clock-o"></i></div>
+                    <div>
+                        <div class="detail-label">Son Sipariş</div>
+                        <div class="detail-title" id="lastOrderTable">-</div>
+                        <div class="detail-value">₺<span id="lastOrderTotal">0</span></div>
+                        <div class="detail-sub">
+                            <span id="lastOrderDescription">-</span> · <span id="lastOrderDate">-</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="~/lib/microsoft/signalr/dist/browser/signalr.min.js"></script>
+<script>
+    var connection = new signalR.HubConnectionBuilder()
+        .withUrl("https://localhost:7139/SignalRHub")
+        .withAutomaticReconnect()
+        .build();
+
+    var statusBox = document.getElementById("connectionStatus");
+    var statusText = document.getElementById("connectionText");
+    var intervalId = null;
+
+    function setStatus(state, text) {
+        statusBox.className = "live-status " + state;
+        statusText.innerText = text;
+    }
+
+    function setValue(id, value) {
+        var element = document.getElementById(id);
+        var newValue = String(value);
+        if (element.innerText !== newValue) {
+            element.innerText = newValue;
+            element.classList.remove("flash");
+            void element.offsetWidth;
+            element.classList.add("flash");
+        }
+    }
+
+    function formatPrice(value) {
+        return Number(value).toLocaleString("tr-TR", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    }
+
+    function updateTime() {
+        document.getElementById("lastUpdated").innerText = new Date().toLocaleTimeString("tr-TR");
+    }
+
+    connection.on("ReceiveStatistics", function (data) {
+        setValue("productCount", data.productCount);
+        setValue("activeProductCount", data.activeProductCount);
+        setValue("passiveProductCount", data.passiveProductCount);
+        setValue("categoryCount", data.categoryCount);
+        setValue("activeCategoryCount", data.activeCategoryCount);
+        setValue("passiveCategoryCount", data.passiveCategoryCount);
+        updateTime();
+    });
+
+    connection.on("ReceiveOrderStatistic", function (data) {
+        setValue("orderCount", data.orderCount);
+        setValue("activeOrderCount", data.activeOrderCount);
+    });
+
+    connection.on("ReceiveLastOrder", function (data) {
+        if (!data) return;
+        setValue("lastOrderTable", data.tableNumber);
+        setValue("lastOrderTotal", formatPrice(data.totalPrice));
+        setValue("lastOrderDescription", data.description || "-");
+        setValue("lastOrderDate", new Date(data.date).toLocaleString("tr-TR"));
+    });
+
+    connection.on("ReceiveHamburgerAveragePrice", function (data) {
+        setValue("hamburgerAveragePrice", formatPrice(data));
+    });
+
+    connection.on("ReceiveMostProductByCategory", function (data) {
+        if (!data) return;
+        setValue("mostProductCategoryName", data.categoryName);
+        setValue("mostProductCategoryCount", data.productCount);
+    });
+
+    connection.on("ReceiveCheapestProduct", function (data) {
+        if (!data) return;
+        setValue("cheapestProductName", data.productName);
+        setValue("cheapestProductPrice", formatPrice(data.price));
+    });
+
+    connection.on("ReceiveMostExpensiveProduct", function (data) {
+        if (!data) return;
+        setValue("mostExpensiveProductName", data.productName);
+        setValue("mostExpensiveProductPrice", formatPrice(data.price));
+    });
+
+    connection.onreconnecting(function () {
+        setStatus("connecting", "Bağlantı koptu, yeniden bağlanılıyor...");
+    });
+
+    connection.onreconnected(function () {
+        setStatus("connected", "Bağlandı · Canlı");
+        connection.invoke("SendStatistics");
+    });
+
+    connection.onclose(function () {
+        setStatus("disconnected", "Bağlantı kesildi");
+        if (intervalId) { clearInterval(intervalId); }
+    });
+
+    connection.start()
+        .then(function () {
+            setStatus("connected", "Bağlandı · Canlı");
+            connection.invoke("SendStatistics");
+            intervalId = setInterval(function () {
+                if (connection.state === signalR.HubConnectionState.Connected) {
+                    connection.invoke("SendStatistics");
+                }
+            }, 3000);
+        })
+        .catch(function (err) {
+            setStatus("disconnected", "Bağlanılamadı");
+            console.error(err.toString());
+        });
+</script>
