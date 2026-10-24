@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using GastroMaster.BusinessLayer.Abstract;
+using GastroMaster.DtoLayer.DTOS.DashboardDtos;
 using GastroMaster.DtoLayer.DTOS.OrderDetailDtos;
 using GastroMaster.DtoLayer.DTOS.OrderDtos;
 using GastroMaster.EntityLayer.Entities;
@@ -28,9 +29,23 @@ namespace GastroMaster.WebApi.Controllers
             var result = mapper.Map<List<ResultOrderDetailDto>>(values);
             return Ok(result);
         }
+        [HttpGet("GetLastOrders")]
+        public async Task<IActionResult> GetLastOrders()
+        {
+            var values = await orderDetailService.TGetLastOrders();
+            var result = mapper.Map<List<GetLastOrdersDto>>(values);
+            return Ok(result);
+        }
 
+        [HttpGet("TopSellingProduct")] 
+        public async Task<IActionResult> GetTopSellingProduct()
+        {
+            var values = await orderDetailService.TGetTopSellingProductsAsync();
+            var result=mapper.Map<List<TopSellingProductDto>>(values);
+            return Ok(result);
+        }
 
-        [HttpGet("GetOrderDetailWithDetail")] //
+        [HttpGet("GetOrderDetailWithDetail")] 
         public async Task<IActionResult> GetOrderDetailWithDetail()
         {
             var values = await orderDetailService.TOrderDetailWithDetail();
@@ -38,7 +53,7 @@ namespace GastroMaster.WebApi.Controllers
             return Ok(result);
         }
 
-        [HttpGet("GetOrderDetailWithDetail/{id}")] //
+        [HttpGet("GetOrderDetailWithDetail/{id}")] 
         public async Task<IActionResult> GetOrderDetailWithDetailById(int id)
         {
             var values = await orderDetailService.TOrderDetailWithDetailById(id);
@@ -52,7 +67,6 @@ namespace GastroMaster.WebApi.Controllers
             var result = mapper.Map<GetOrderDetailWithDetailDto>(values);
             return Ok(result);
         }
-
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetOrderDetailById(int id)

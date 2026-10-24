@@ -1,7 +1,6 @@
 ﻿using GastroMaster.BusinessLayer.Abstract;
 using GastroMaster.DataAccessLayer.Abstract;
 using GastroMaster.DataAccessLayer.Models;
-using GastroMaster.DtoLayer.DTOS.OrderDtos;
 using GastroMaster.EntityLayer.Entities;
 
 namespace GastroMaster.BusinessLayer.Concrete
@@ -54,6 +53,21 @@ namespace GastroMaster.BusinessLayer.Concrete
         public async Task<Order> TGetOrderWithDetailById(int id)
         {
             return await _orderDal.GetOrderWithDetailById(id);
+        }
+
+        public async Task<int> TGetClosedOrderCountAsync()
+        {
+            return await _orderDal.GetClosedOrderCountAsync();
+        }
+
+        public async Task<int> TGetOccupiedMenuTableCountAsync()
+        {
+            return await _orderDal.GetOccupiedMenuTableCountAsync();
+        }
+
+        public async Task<List<DailyRevenueModel>> TGetLastWeekDailyRevenueAsync()
+        {
+            return await _orderDal.GetLastWeekDailyRevenueAsync();
         }
     }
 }

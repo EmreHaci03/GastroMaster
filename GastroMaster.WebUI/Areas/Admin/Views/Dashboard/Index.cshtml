@@ -1,0 +1,580 @@
+﻿@{
+    ViewData["Title"] = "Dashboard";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<style>
+    .welcome-card {
+        border-radius: 16px;
+        padding: 28px 30px;
+        color: #fff;
+        background: linear-gradient(135deg, #222831, #3c4452);
+        margin-bottom: 25px;
+        position: relative;
+        overflow: hidden;
+    }
+
+        .welcome-card h3 {
+            font-weight: 700;
+            margin-bottom: 6px;
+        }
+
+        .welcome-card p {
+            opacity: .8;
+            margin-bottom: 0;
+        }
+
+        .welcome-card .welcome-icon {
+            position: absolute;
+            right: 30px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 90px;
+            color: #ffbe33;
+            opacity: .35;
+        }
+
+    .stat-box {
+        border-radius: 14px;
+        padding: 22px;
+        color: #fff;
+        position: relative;
+        overflow: hidden;
+        margin-bottom: 25px;
+        box-shadow: 0 6px 18px rgba(0, 0, 0, .08);
+    }
+
+        .stat-box .stat-icon {
+            position: absolute;
+            right: 18px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 58px;
+            opacity: .25;
+        }
+
+        .stat-box .stat-label {
+            font-size: 13px;
+            opacity: .9;
+            margin-bottom: 6px;
+        }
+
+        .stat-box .stat-value {
+            font-size: 30px;
+            font-weight: 700;
+            line-height: 1;
+        }
+
+        .stat-box .stat-sub {
+            font-size: 12px;
+            opacity: .85;
+            margin-top: 8px;
+        }
+
+    .bg-blue {
+        background: linear-gradient(135deg, #1572e8, #4a9bff);
+    }
+
+    .bg-green {
+        background: linear-gradient(135deg, #2bb930, #5ad85e);
+    }
+
+    .bg-orange {
+        background: linear-gradient(135deg, #f39c12, #ffbe33);
+    }
+
+    .bg-purple {
+        background: linear-gradient(135deg, #6f42c1, #9b6dff);
+    }
+
+    .panel {
+        border-radius: 14px;
+        background: #fff;
+        padding: 22px;
+        margin-bottom: 25px;
+        box-shadow: 0 2px 12px rgba(0, 0, 0, .05);
+    }
+
+    .panel-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 18px;
+    }
+
+    .panel-title {
+        font-size: 16px;
+        font-weight: 600;
+        margin: 0;
+    }
+
+    .panel-link {
+        font-size: 13px;
+        color: #1572e8;
+    }
+
+    .bar-chart {
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+        gap: 12px;
+        height: 200px;
+        padding-top: 10px;
+    }
+
+    .bar-item {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        height: 100%;
+        justify-content: flex-end;
+    }
+
+    .bar {
+        width: 100%;
+        max-width: 42px;
+        border-radius: 8px 8px 0 0;
+        background: linear-gradient(180deg, #ffbe33, #f39c12);
+        position: relative;
+    }
+
+        .bar.today {
+            background: linear-gradient(180deg, #4a9bff, #1572e8);
+        }
+
+        .bar span {
+            position: absolute;
+            top: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 11px;
+            font-weight: 600;
+            color: #555;
+            white-space: nowrap;
+        }
+
+    .bar-label {
+        margin-top: 8px;
+        font-size: 12px;
+        color: #8d9498;
+    }
+
+    .table-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 12px;
+    }
+
+    .table-tile {
+        border-radius: 12px;
+        padding: 16px 10px;
+        text-align: center;
+        font-weight: 600;
+        border: 2px solid transparent;
+    }
+
+        .table-tile i {
+            display: block;
+            font-size: 26px;
+            margin-bottom: 6px;
+        }
+
+        .table-tile small {
+            display: block;
+            font-weight: 400;
+            font-size: 11px;
+            margin-top: 2px;
+        }
+
+        .table-tile.full {
+            background: rgba(243, 84, 93, .1);
+            border-color: rgba(243, 84, 93, .3);
+            color: #e63946;
+        }
+
+        .table-tile.empty {
+            background: rgba(49, 206, 54, .1);
+            border-color: rgba(49, 206, 54, .3);
+            color: #2bb930;
+        }
+
+    .top-product {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        padding: 10px 0;
+        border-bottom: 1px solid #f1f2f3;
+    }
+
+        .top-product:last-child {
+            border-bottom: none;
+        }
+
+        .top-product .rank {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: #f4f5f8;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 13px;
+        }
+
+            .top-product .rank.gold {
+                background: #ffbe33;
+                color: #fff;
+            }
+
+            .top-product .rank.silver {
+                background: #b0b4b8;
+                color: #fff;
+            }
+
+            .top-product .rank.bronze {
+                background: #cd7f32;
+                color: #fff;
+            }
+
+        .top-product .info {
+            flex: 1;
+        }
+
+            .top-product .info strong {
+                display: block;
+                font-size: 14px;
+            }
+
+            .top-product .info small {
+                color: #8d9498;
+            }
+
+        .top-product .sold {
+            font-weight: 700;
+            color: #222831;
+        }
+
+    .order-status {
+        display: inline-block;
+        padding: 3px 10px;
+        border-radius: 20px;
+        font-size: 11px;
+        font-weight: 600;
+    }
+
+        .order-status.open {
+            background: rgba(255, 173, 70, .15);
+            color: #e08a00;
+        }
+
+        .order-status.closed {
+            background: rgba(49, 206, 54, .15);
+            color: #2bb930;
+        }
+</style>
+
+<div class="content">
+    <div class="container-fluid">
+
+        <div class="welcome-card">
+            <h3>Hoş geldin, Admin 👋</h3>
+            <p>GastroMaster'da bugün neler olduğuna hızlıca göz at.</p>
+            <i class="la la-cutlery welcome-icon"></i>
+        </div>
+
+        <div class="row">
+            <div class="col-md-3">
+                <div class="stat-box bg-green">
+                    <div class="stat-label">Bugünün Kazancı</div>
+                    <div class="stat-value">₺<span id="todayRevenue">0</span></div>
+                    <i class="la la-money stat-icon"></i>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-box bg-blue">
+                    <div class="stat-label">Kasadaki Toplam</div>
+                    <div class="stat-value">₺<span id="TotalCashRegisterAmount">0</span></div>
+                    <div class="stat-sub"><span id="GetClosedOrderCount">0</span> Kapanan Hesap</div>
+                    <i class="la la-briefcase stat-icon"></i>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-box bg-orange">
+                    <div class="stat-label">Dolu Masa</div>
+                    <div class="stat-value"><span id="OccupiedMenuTableCount">0</span> / <span id="ActiveTableCount">0</span></div>
+                    <div class="stat-sub"><span id="AvailableTableCount">0</span> masa müsait</div>
+                    <i class="la la-users stat-icon"></i>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-box bg-purple">
+                    <div class="stat-label">Bugünkü Rezervasyon</div>
+                    <div class="stat-value">3</div>
+                    <div class="stat-sub">Toplam 11 kişi</div>
+                    <i class="la la-calendar stat-icon"></i>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-8">
+                <div class="panel">
+                    <div class="panel-header">
+                        <h5 class="panel-title">Son 7 Günlük Kazanç</h5>
+                        <span class="text-muted small">₺ cinsinden</span>
+                    </div>
+                    <div class="bar-chart">
+                        <div class="bar-item"><div class="bar" id="bar1"><span id="bar1Value">0</span></div><div class="bar-label" id="bar1Label">-</div></div>
+                        <div class="bar-item"><div class="bar" id="bar2"><span id="bar2Value">0</span></div><div class="bar-label" id="bar2Label">-</div></div>
+                        <div class="bar-item"><div class="bar" id="bar3"><span id="bar3Value">0</span></div><div class="bar-label" id="bar3Label">-</div></div>
+                        <div class="bar-item"><div class="bar" id="bar4"><span id="bar4Value">0</span></div><div class="bar-label" id="bar4Label">-</div></div>
+                        <div class="bar-item"><div class="bar" id="bar5"><span id="bar5Value">0</span></div><div class="bar-label" id="bar5Label">-</div></div>
+                        <div class="bar-item"><div class="bar" id="bar6"><span id="bar6Value">0</span></div><div class="bar-label" id="bar6Label">-</div></div>
+                        <div class="bar-item"><div class="bar today" id="bar7"><span id="bar7Value">0</span></div><div class="bar-label" id="bar7Label"><strong>Bugün</strong></div></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="panel">
+                    <div class="panel-header">
+                        <h5 class="panel-title">Masa Durumu</h5>
+                        <a href="#" class="panel-link">Tümü</a>
+                    </div>
+                    <div class="table-grid">
+                        <div class="table-tile empty"><i class="la la-check-circle"></i>Masa 1<small>Boş</small></div>
+                        <div class="table-tile empty"><i class="la la-check-circle"></i>Masa 2<small>Boş</small></div>
+                        <div class="table-tile empty"><i class="la la-check-circle"></i>Masa 3<small>Boş</small></div>
+                        <div class="table-tile empty"><i class="la la-check-circle"></i>Masa 4<small>Boş</small></div>
+                        <div class="table-tile full"><i class="la la-users"></i>Masa 5<small>₺735,00</small></div>
+                        <div class="table-tile empty"><i class="la la-check-circle"></i>Masa 6<small>Boş</small></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-8">
+                <div class="panel">
+                    <div class="panel-header">
+                        <h5 class="panel-title">Son Siparişler</h5>
+                        <a href="#" class="panel-link">Tüm siparişler</a>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Ürün</th>
+                                    <th>Masa</th>
+                                    <th>Tarih</th>
+                                    <th class="text-right">Tutar</th>
+                                    <th>Durum</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td id="order1Id">-</td>
+                                    <td><strong id="order1Product">-</strong></td>
+                                    <td id="order1Table">-</td>
+                                    <td id="order1Date">-</td>
+                                    <td class="text-right" id="order1Total">-</td>
+                                    <td><span class="order-status" id="order1Status">-</span></td>
+                                </tr>
+                                <tr>
+                                    <td id="order2Id">-</td>
+                                    <td><strong id="order2Product">-</strong></td>
+                                    <td id="order2Table">-</td>
+                                    <td id="order2Date">-</td>
+                                    <td class="text-right" id="order2Total">-</td>
+                                    <td><span class="order-status" id="order2Status">-</span></td>
+                                </tr>
+                                <tr>
+                                    <td id="order3Id">-</td>
+                                    <td><strong id="order3Product">-</strong></td>
+                                    <td id="order3Table">-</td>
+                                    <td id="order3Date">-</td>
+                                    <td class="text-right" id="order3Total">-</td>
+                                    <td><span class="order-status" id="order3Status">-</span></td>
+                                </tr>
+                                <tr>
+                                    <td id="order4Id">-</td>
+                                    <td><strong id="order4Product">-</strong></td>
+                                    <td id="order4Table">-</td>
+                                    <td id="order4Date">-</td>
+                                    <td class="text-right" id="order4Total">-</td>
+                                    <td><span class="order-status" id="order4Status">-</span></td>
+                                </tr>
+                                <tr>
+                                    <td id="order5Id">-</td>
+                                    <td><strong id="order5Product">-</strong></td>
+                                    <td id="order5Table">-</td>
+                                    <td id="order5Date">-</td>
+                                    <td class="text-right" id="order5Total">-</td>
+                                    <td><span class="order-status" id="order5Status">-</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+       <div class="col-md-4">
+    <div class="panel">
+        <div class="panel-header">
+            <h5 class="panel-title">En Çok Satanlar</h5>
+            <span class="text-muted small">Adet</span>
+        </div>
+        <div class="top-product">
+            <div class="rank gold">1</div>
+            <div class="info"><strong id="product1Name">-</strong><small id="product1Category">-</small></div>
+            <div class="sold" id="product1Sold">0</div>
+        </div>
+        <div class="top-product">
+            <div class="rank silver">2</div>
+            <div class="info"><strong id="product2Name">-</strong><small id="product2Category">-</small></div>
+            <div class="sold" id="product2Sold">0</div>
+        </div>
+        <div class="top-product">
+            <div class="rank bronze">3</div>
+            <div class="info"><strong id="product3Name">-</strong><small id="product3Category">-</small></div>
+            <div class="sold" id="product3Sold">0</div>
+        </div>
+        <div class="top-product">
+            <div class="rank">4</div>
+            <div class="info"><strong id="product4Name">-</strong><small id="product4Category">-</small></div>
+            <div class="sold" id="product4Sold">0</div>
+        </div>
+        <div class="top-product">
+            <div class="rank">5</div>
+            <div class="info"><strong id="product5Name">-</strong><small id="product5Category">-</small></div>
+            <div class="sold" id="product5Sold">0</div>
+        </div>
+    </div>
+</div>
+        </div>
+        @*Tamamlandı*@
+    </div>
+</div>
+
+
+<script src="~/lib/microsoft/signalr/dist/browser/signalr.min.js"></script>
+<script>
+    var connection = new signalR.HubConnectionBuilder()
+        .withUrl("https://localhost:7139/SignalRHub")
+        .withAutomaticReconnect()
+        .build();
+
+    var intervalId = null;
+
+    function setValue(id, value) {
+        var element = document.getElementById(id);
+        if (!element) return;
+        element.innerText = value;
+    }
+
+    function formatPrice(value) {
+        return Number(value).toLocaleString("tr-TR", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    }
+
+    connection.on("ReceiveTodayOrderAmount", function (data) {
+        if (data === null || data === undefined) return;
+        setValue("todayRevenue", formatPrice(data));
+    });
+
+    connection.on("ReceiveCashRegisterAmount", function (data) {
+        if (data === null || data === undefined) return;
+        setValue("TotalCashRegisterAmount", formatPrice(data));
+    });
+
+    connection.on("ReceiveClosedOrderCount", function (data) {
+        if (data === null || data === undefined) return;
+        setValue("GetClosedOrderCount", data);
+    });
+    var activeTableCount = 0;
+    var occupiedTableCount = 0; 
+
+    function updateAvailableTables() {
+        setValue("AvailableTableCount", Math.max(activeTableCount - occupiedTableCount, 0));
+    }
+    connection.on("ReceiveActiveTableCount", function (data) {
+        if (data === null || data === undefined) return;
+        activeTableCount = data;
+        setValue("ActiveTableCount", data);
+        updateAvailableTables();
+    });
+
+    connection.on("ReceiveOccupiedMenuTableCount", function (data) {
+        if (data === null || data === undefined) return;
+        occupiedTableCount = data;
+        setValue("OccupiedMenuTableCount", data);
+        updateAvailableTables();
+    });
+
+    connection.on("ReceiveTopSellingProducts", function (data) {
+        for (var i = 0; i < 5; i++) {
+            var item = data[i];
+            setValue("product" + (i + 1) + "Name", item ? item.productName : "-");
+            setValue("product" + (i + 1) + "Category", item ? item.categoryName : "-");
+            setValue("product" + (i + 1) + "Sold", item ? item.soldCount : 0);
+        }
+    });
+
+    connection.on("ReceiveLastWeekRevenue", function (data) {
+        var days = ["Paz", "Pzt", "Sal", "Çar", "Per", "Cum", "Cmt"];
+        var max = Math.max.apply(null, data.map(function (x) { return x.revenue; })) || 1;
+
+        for (var i = 0; i < 7; i++) {
+            var item = data[i];
+            var n = i + 1;
+            if (!item) continue;
+
+            setValue("bar" + n + "Value", formatPrice(item.revenue));
+            document.getElementById("bar" + n).style.height = Math.max(item.revenue / max * 90, 3) + "%";
+
+            if (n < 7) {
+                setValue("bar" + n + "Label", days[new Date(item.date).getDay()]);
+            }
+        }
+    });
+    
+
+    connection.on("ReceiveLastOrders", function (data) {
+        for (var i = 0; i < 5; i++) {
+            var item = data[i];
+            var n = i + 1;
+            setValue("order" + n + "Id", item ? item.orderDetailId : "-");
+            setValue("order" + n + "Product", item ? item.productName : "-");
+            setValue("order" + n + "Table", item ? item.menuTableName : "-");
+            setValue("order" + n + "Date", item ? new Date(item.date).toLocaleString("tr-TR") : "-");
+            setValue("order" + n + "Total", item ? "₺" + formatPrice(item.totalPrice) : "-");
+            setValue("order" + n + "Status", item ? item.description : "-");
+
+            var status = document.getElementById("order" + n + "Status");
+            status.className = "order-status " + (item && item.description === "Hesap Kapatıldı" ? "closed" : "open");
+        }
+    });
+
+
+
+    connection.onreconnected(function () {
+        connection.invoke("DashboardStatistic");
+    });
+
+    connection.onclose(function () {
+        if (intervalId) { clearInterval(intervalId); }
+    });
+
+    connection.start()
+        .then(function () {
+            connection.invoke("DashboardStatistic");
+            intervalId = setInterval(function () {
+                if (connection.state === signalR.HubConnectionState.Connected) {
+                    connection.invoke("DashboardStatistic");
+                }
+            }, 3000);
+        })
+        .catch(function (err) {
+            console.error(err.toString());
+        });
+</script>

@@ -28,6 +28,15 @@ namespace GastroMaster.WebApi.Controllers
             return Ok(result);
         }
 
+        [HttpGet("DailyRevenue")]
+        public async Task<IActionResult> GetDailyRevenue()
+        {
+            var values = await orderService.TGetLastWeekDailyRevenueAsync();
+            var result = mapper.Map<List<DailyRevenueDto>>(values);
+            return Ok(result);
+        }
+
+
 
         [HttpGet("GetOrderWithDetail")]
         public async Task<IActionResult> GetOrderWithDetail()

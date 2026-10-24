@@ -1,4 +1,5 @@
-﻿using GastroMaster.EntityLayer.Entities;
+﻿using GastroMaster.DataAccessLayer.Models;
+using GastroMaster.EntityLayer.Entities;
 
 
 namespace GastroMaster.BusinessLayer.Abstract
@@ -8,5 +9,7 @@ namespace GastroMaster.BusinessLayer.Abstract
         Task<List<OrderDetail>> TOrderDetailWithDetail();
         Task<OrderDetail> TOrderDetailWithDetailById(int id);
         Task<OrderDetail> TOrderDetailWithDetailByProductId(int id);
+        Task<List<GetLastOrderModel>> TGetLastOrders();
+        Task<List<TopSellingProductModels>> TGetTopSellingProductsAsync();
     }
 }

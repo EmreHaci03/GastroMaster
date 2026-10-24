@@ -35,5 +35,28 @@ namespace GastroMaster.DataAccessLayer.EntityFramework
         {
             return await _context.Orders.Include(x => x.MenuTable).Where(x => x.OrderId == id).FirstOrDefaultAsync();
         }
+
+        public async Task<int> GetClosedOrderCountAsync()
+        {
+            return await _context.Orders.Where(x => x.Description == "Hesap Kapatıldı").CountAsync();
+        }
+
+        public async Task<int> GetOccupiedMenuTableCountAsync()
+        {
+            return await _context.Orders.Where(x => x.Description == "Müşteri Masada").CountAsync();
+        }
+
+        public async Task<List<DailyRevenueModel>> GetLastWeekDailyRevenueAsync()
+        {
+            var startDate = DateTime.Now.AddDays(-6);
+
+            return await _context.Orders.Where(x => x.Description == "Hesap Kapatıldı" && x.Date >= startDate)
+                .GroupBy(x => x.Date.Date)
+                .Select(x => new DailyRevenueModel
+                {
+                    Date = x.Key,
+                    Revenue = x.Sum(o => o.TotalPrice)
+                }).ToListAsync();
+        }
     }
 }

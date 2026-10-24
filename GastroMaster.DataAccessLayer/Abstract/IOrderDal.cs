@@ -1,4 +1,5 @@
-﻿using GastroMaster.EntityLayer.Entities;
+﻿using GastroMaster.DataAccessLayer.Models;
+using GastroMaster.EntityLayer.Entities;
 namespace GastroMaster.DataAccessLayer.Abstract
 {
     public interface IOrderDal : IGenericDal<Order>
@@ -6,5 +7,8 @@ namespace GastroMaster.DataAccessLayer.Abstract
         Task<List<Order>> GetOrderWithDetail();
         Task<Order> GetOrderWithDetailById(int id);
         Task<decimal> GetTodayRevenueAsync();
+        Task<int> GetClosedOrderCountAsync();
+        Task<int> GetOccupiedMenuTableCountAsync();
+        Task<List<DailyRevenueModel>> GetLastWeekDailyRevenueAsync();
     }
 }

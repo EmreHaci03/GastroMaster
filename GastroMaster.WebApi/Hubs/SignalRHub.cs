@@ -1,4 +1,6 @@
-﻿using GastroMaster.BusinessLayer.Abstract;
+﻿using AutoMapper;
+using GastroMaster.BusinessLayer.Abstract;
+using GastroMaster.DtoLayer.DTOS.OrderDetailDtos;
 using Microsoft.AspNetCore.SignalR;
 
 namespace GastroMaster.WebApi.Hubs
@@ -9,12 +11,16 @@ namespace GastroMaster.WebApi.Hubs
         private readonly ICashRegisterService _cashRegisterService;
         private readonly IOrderService _orderService;
         private readonly IMenuTableService _menuTableService;
-        public SignalRHub(IStatisticService statisticService, ICashRegisterService cashRegisterService, IOrderService orderService, IMenuTableService menuTableService)
+        private readonly IOrderDetailService _orderDetailService;
+        private readonly IMapper _mapper;
+        public SignalRHub(IStatisticService statisticService, ICashRegisterService cashRegisterService, IOrderService orderService, IMenuTableService menuTableService, IOrderDetailService orderDetailService, IMapper mapper)
         {
             _statisticService = statisticService;
             _cashRegisterService = cashRegisterService;
             _orderService = orderService;
             _menuTableService = menuTableService;
+            _orderDetailService = orderDetailService;
+            _mapper = mapper;
         }
 
         public async Task SendStatistics()
@@ -51,6 +57,35 @@ namespace GastroMaster.WebApi.Hubs
 
             var ActiveMenuTableCount = await _menuTableService.TActiveMenuTableCount();
             await Clients.All.SendAsync("ReceiveActiveMenuTableCount", ActiveMenuTableCount);
+        }
+
+        public async Task DashboardStatistic()
+        {
+            var todayRevenue = await _orderService.TGetTodayRevenueAsync();
+            await Clients.All.SendAsync("ReceiveTodayOrderAmount",todayRevenue);
+
+            var TotalCashRegisterAmount = await _cashRegisterService.TGetTotalAmountAsync();
+            await Clients.All.SendAsync("ReceiveCashRegisterAmount", TotalCashRegisterAmount);
+
+            var GetClosedOrderCount = await _orderService.TGetClosedOrderCountAsync();
+            await Clients.All.SendAsync("ReceiveClosedOrderCount", GetClosedOrderCount);
+
+            var ActiveTableCount = await _menuTableService.TActiveMenuTableCount();
+            await Clients.All.SendAsync("ReceiveActiveTableCount", ActiveTableCount);
+
+            var occupiedMenuTableCount = await _orderService.TGetOccupiedMenuTableCountAsync();
+            await Clients.All.SendAsync("ReceiveOccupiedMenuTableCount", occupiedMenuTableCount);
+
+            var TopSellingProducts=await _orderDetailService.TGetTopSellingProductsAsync();
+            await Clients.All.SendAsync("ReceiveTopSellingProducts", TopSellingProducts);
+
+            var LastOrders = await _orderDetailService.TGetLastOrders();
+            await Clients.All.SendAsync("ReceiveLastOrders", LastOrders);
+
+            var LastWeekRevenue = await _orderService.TGetLastWeekDailyRevenueAsync();
+            await Clients.All.SendAsync("ReceiveLastWeekRevenue", LastWeekRevenue);
+
+
         }
     }
 }

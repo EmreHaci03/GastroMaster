@@ -5,6 +5,7 @@ using GastroMaster.DtoLayer.DTOS.BookingDtos;
 using GastroMaster.DtoLayer.DTOS.CashRegisterDtos;
 using GastroMaster.DtoLayer.DTOS.CategoryDtos;
 using GastroMaster.DtoLayer.DTOS.ContactDtos;
+using GastroMaster.DtoLayer.DTOS.DashboardDtos;
 using GastroMaster.DtoLayer.DTOS.DiscountDtos;
 using GastroMaster.DtoLayer.DTOS.FeatureDtos;
 using GastroMaster.DtoLayer.DTOS.MenuTableDtos;
@@ -123,6 +124,12 @@ namespace GastroMaster.DtoLayer.Mapping
                   .ForMember(dest => dest.Product, opt => opt.MapFrom(src => src.Product.ProductName))
                   .ForMember(dest => dest.Order, opt => opt.MapFrom(src => src.Order.MenuTable.Name))
                   .ReverseMap();
+            CreateMap<OrderDetail, GetLastOrdersDto>()
+             .ForMember(dest => dest.ProductName, opt => opt.MapFrom(src => src.Product.ProductName))
+             .ForMember(dest => dest.MenuTableName, opt => opt.MapFrom(src => src.Order.MenuTable.Name))
+             .ForMember(dest => dest.Description, opt => opt.MapFrom(src => src.Order.Description))
+             .ReverseMap();
+
             //Order Detail//
 
             //Cash Register//
@@ -137,6 +144,13 @@ namespace GastroMaster.DtoLayer.Mapping
             CreateMap<MenuTable, GetMenuTableByIdDto>().ReverseMap();
             CreateMap<MenuTable, UpdateMenuTableDto>().ReverseMap();
             //Cash Register//
+
+
+            //Dashboard//
+            CreateMap<GetLastOrderModel, GetLastOrdersDto>();
+            CreateMap<TopSellingProductModels, TopSellingProductDto>();
+            CreateMap<DailyRevenueModel, DailyRevenueDto>();
+            //Dashboard//
         }
 
     }

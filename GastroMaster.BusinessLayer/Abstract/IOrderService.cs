@@ -1,4 +1,5 @@
-﻿using GastroMaster.EntityLayer.Entities;
+﻿using GastroMaster.DataAccessLayer.Models;
+using GastroMaster.EntityLayer.Entities;
 namespace GastroMaster.BusinessLayer.Abstract
 {
     public interface IOrderService:IGenericService<Order>
@@ -6,5 +7,8 @@ namespace GastroMaster.BusinessLayer.Abstract
         Task<List<Order>> TGetOrderWithDetail();
         Task<Order> TGetOrderWithDetailById(int id);
         Task<decimal> TGetTodayRevenueAsync();
+        Task<int> TGetClosedOrderCountAsync();
+        Task<int> TGetOccupiedMenuTableCountAsync();
+        Task<List<DailyRevenueModel>> TGetLastWeekDailyRevenueAsync();
     }
 }

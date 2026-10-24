@@ -1,5 +1,7 @@
 ﻿using GastroMaster.BusinessLayer.Abstract;
 using GastroMaster.DataAccessLayer.Abstract;
+using GastroMaster.DataAccessLayer.Models;
+using GastroMaster.DtoLayer.DTOS.OrderDetailDtos;
 using GastroMaster.EntityLayer.Entities;
 
 namespace GastroMaster.BusinessLayer.Concrete
@@ -51,6 +53,16 @@ namespace GastroMaster.BusinessLayer.Concrete
         public async Task TUpdateAsync(OrderDetail t)
         {
             await _orderDetailDal.UpdateAsync(t);
+        }
+
+        public async Task<List<TopSellingProductModels>> TGetTopSellingProductsAsync()
+        {
+            return await _orderDetailDal.GetTopSellingProductsAsync();
+        }
+
+        public async Task<List<GetLastOrderModel>> TGetLastOrders()
+        {
+            return await _orderDetailDal.GetLastOrders();
         }
     }
 }
