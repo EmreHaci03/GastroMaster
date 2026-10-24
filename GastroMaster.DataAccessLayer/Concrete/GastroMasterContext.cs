@@ -21,6 +21,7 @@ namespace GastroMaster.DataAccessLayer.Concrete
         public DbSet<Order> Orders { get; set; }
         public DbSet<OrderDetail> OrderDetails { get; set; }
         public DbSet<CashRegister> CashRegisters { get; set; }
+        public DbSet<MenuTable> MenuTables { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

@@ -193,6 +193,26 @@ namespace GastroMaster.DataAccessLayer.Migrations
                     b.ToTable("Features");
                 });
 
+            modelBuilder.Entity("GastroMaster.EntityLayer.Entities.MenuTable", b =>
+                {
+                    b.Property<int>("MenuTableId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("MenuTableId"), 1L, 1);
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("Status")
+                        .HasColumnType("bit");
+
+                    b.HasKey("MenuTableId");
+
+                    b.ToTable("MenuTables");
+                });
+
             modelBuilder.Entity("GastroMaster.EntityLayer.Entities.Order", b =>
                 {
                     b.Property<int>("OrderId")
@@ -208,15 +228,16 @@ namespace GastroMaster.DataAccessLayer.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("TableNumber")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("MenuTableId")
+                        .HasColumnType("int");
 
                     b.Property<decimal>("TotalPrice")
                         .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
                     b.HasKey("OrderId");
+
+                    b.HasIndex("MenuTableId");
 
                     b.ToTable("Orders");
                 });
@@ -349,6 +370,17 @@ namespace GastroMaster.DataAccessLayer.Migrations
                     b.ToTable("Testimonials");
                 });
 
+            modelBuilder.Entity("GastroMaster.EntityLayer.Entities.Order", b =>
+                {
+                    b.HasOne("GastroMaster.EntityLayer.Entities.MenuTable", "MenuTable")
+                        .WithMany("Orders")
+                        .HasForeignKey("MenuTableId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("MenuTable");
+                });
+
             modelBuilder.Entity("GastroMaster.EntityLayer.Entities.OrderDetail", b =>
                 {
                     b.HasOne("GastroMaster.EntityLayer.Entities.Order", "Order")
@@ -382,6 +414,11 @@ namespace GastroMaster.DataAccessLayer.Migrations
             modelBuilder.Entity("GastroMaster.EntityLayer.Entities.Category", b =>
                 {
                     b.Navigation("Products");
+                });
+
+            modelBuilder.Entity("GastroMaster.EntityLayer.Entities.MenuTable", b =>
+                {
+                    b.Navigation("Orders");
                 });
 
             modelBuilder.Entity("GastroMaster.EntityLayer.Entities.Order", b =>

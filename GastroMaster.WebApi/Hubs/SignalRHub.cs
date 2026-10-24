@@ -6,10 +6,15 @@ namespace GastroMaster.WebApi.Hubs
     public class SignalRHub : Hub
     {
         private readonly IStatisticService _statisticService;
-
-        public SignalRHub(IStatisticService statisticService)
+        private readonly ICashRegisterService _cashRegisterService;
+        private readonly IOrderService _orderService;
+        private readonly IMenuTableService _menuTableService;
+        public SignalRHub(IStatisticService statisticService, ICashRegisterService cashRegisterService, IOrderService orderService, IMenuTableService menuTableService)
         {
             _statisticService = statisticService;
+            _cashRegisterService = cashRegisterService;
+            _orderService = orderService;
+            _menuTableService = menuTableService;
         }
 
         public async Task SendStatistics()
@@ -34,6 +39,18 @@ namespace GastroMaster.WebApi.Hubs
 
             var mostExpensiveProduct = await _statisticService.TReceiveMostExpensiveProduct();
             await Clients.All.SendAsync("ReceiveMostExpensiveProduct", mostExpensiveProduct);
+
+            var CashRegisterTotalAmount = await _cashRegisterService.TGetTotalAmountAsync();
+            await Clients.All.SendAsync("ReceiveCashRegisterTotalAmount", CashRegisterTotalAmount);
+
+            var TodayOrderAmount = await _orderService.TGetTodayRevenueAsync();
+            await Clients.All.SendAsync("ReceiveTodayOrderAmount", TodayOrderAmount);
+
+            var MenuTableCount = await _menuTableService.TMenuTableCount();
+            await Clients.All.SendAsync("ReceiveMenuTableCount", MenuTableCount);
+
+            var ActiveMenuTableCount = await _menuTableService.TActiveMenuTableCount();
+            await Clients.All.SendAsync("ReceiveActiveMenuTableCount", ActiveMenuTableCount);
         }
     }
 }

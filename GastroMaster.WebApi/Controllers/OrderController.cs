@@ -23,8 +23,25 @@ namespace GastroMaster.WebApi.Controllers
         [HttpGet]
         public async Task<IActionResult> OrderList()
         {
-            var values = await orderService.TGetAllAsync();
+            var values = await orderService.TGetOrderWithDetail();
             var result = mapper.Map<List<ResultOrderDto>>(values);
+            return Ok(result);
+        }
+
+
+        [HttpGet("GetOrderWithDetail")]
+        public async Task<IActionResult> GetOrderWithDetail()
+        {
+            var values = await orderService.TGetOrderWithDetail();
+            var result = mapper.Map<List<ResultOrderDto>>(values);
+            return Ok(result);
+        }
+
+        [HttpGet("GetOrderWithDetail/{id}")]
+        public async Task<IActionResult> GetOrderWithDetailById(int id)
+        {
+            var values = await orderService.TGetOrderWithDetailById(id);
+            var result = mapper.Map<GetOrderWithDetailByIdDto>(values);
             return Ok(result);
         }
 
@@ -34,6 +51,14 @@ namespace GastroMaster.WebApi.Controllers
             var value = await orderService.TGetByIdAsync(id);
             var result = mapper.Map<GetOrderByIdDto>(value);
             return Ok(result);
+        }
+
+
+        [HttpGet("TodayRevenue")]
+        public async Task<IActionResult> GetTodayRevenue()
+        {
+            var value = await orderService.TGetTodayRevenueAsync();
+            return Ok(value);
         }
 
         [HttpPost]

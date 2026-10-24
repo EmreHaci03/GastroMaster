@@ -3,7 +3,8 @@
     public class Order
     {
         public int OrderId { get; set; }
-        public string TableNumber {  get; set; }
+        public MenuTable MenuTable { get; set; }
+        public int MenuTableId { get; set; }
         public decimal TotalPrice { get; set; }
         public string Description { get; set; }
         public DateTime Date {  get; set; }

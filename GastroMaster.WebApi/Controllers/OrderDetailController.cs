@@ -21,7 +21,7 @@ namespace GastroMaster.WebApi.Controllers
             this.mapper = mapper;
         }
 
-        [HttpGet]
+        [HttpGet] // 
         public async Task<IActionResult> OrderDetailList()
         {
             var values = await orderDetailService.TGetAllAsync();
@@ -30,7 +30,7 @@ namespace GastroMaster.WebApi.Controllers
         }
 
 
-        [HttpGet("GetOrderDetailWithDetail")]
+        [HttpGet("GetOrderDetailWithDetail")] //
         public async Task<IActionResult> GetOrderDetailWithDetail()
         {
             var values = await orderDetailService.TOrderDetailWithDetail();
@@ -38,7 +38,7 @@ namespace GastroMaster.WebApi.Controllers
             return Ok(result);
         }
 
-        [HttpGet("GetOrderDetailWithDetail/{id}")]
+        [HttpGet("GetOrderDetailWithDetail/{id}")] //
         public async Task<IActionResult> GetOrderDetailWithDetailById(int id)
         {
             var values = await orderDetailService.TOrderDetailWithDetailById(id);

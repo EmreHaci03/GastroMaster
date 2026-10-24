@@ -30,6 +30,16 @@ namespace GastroMaster.BusinessLayer.Concrete
             return await _orderDal.GetByIdAsync(id);
         }
 
+        public async Task<List<Order>> TGetOrderWithDetail()
+        {
+            return await _orderDal.GetOrderWithDetail();
+        }
+
+
+        public async Task<decimal> TGetTodayRevenueAsync()
+        {
+            return await _orderDal.GetTodayRevenueAsync();
+        }
 
         public async Task TInsertAsync(Order t)
         {
@@ -39,6 +49,11 @@ namespace GastroMaster.BusinessLayer.Concrete
         public async Task TUpdateAsync(Order t)
         {
             await _orderDal.UpdateAsync(t);
+        }
+
+        public async Task<Order> TGetOrderWithDetailById(int id)
+        {
+            return await _orderDal.GetOrderWithDetailById(id);
         }
     }
 }

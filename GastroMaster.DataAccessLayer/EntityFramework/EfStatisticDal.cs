@@ -77,7 +77,7 @@ namespace GastroMaster.DataAccessLayer.EntityFramework
 
         public async Task<Order> GetLastOrderAsync()
         {
-            return await _context.Orders.OrderByDescending(x => x.OrderId).FirstOrDefaultAsync();
+            return await _context.Orders.Include(x=>x.MenuTable).OrderByDescending(x => x.Date).FirstOrDefaultAsync();
         }
     }
 }

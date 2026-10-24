@@ -68,7 +68,7 @@
 
     .stat-box {
         border-radius: 14px;
-        padding: 22px 22px;
+        padding: 22px;
         color: #fff;
         position: relative;
         overflow: hidden;
@@ -95,7 +95,6 @@
             font-size: 32px;
             font-weight: 700;
             line-height: 1;
-            transition: transform .3s;
         }
 
     .bg-blue {
@@ -120,6 +119,10 @@
 
     .bg-dark {
         background: linear-gradient(135deg, #222831, #3c4452);
+    }
+
+    .bg-teal {
+        background: linear-gradient(135deg, #0f9d8a, #3cc9b5);
     }
 
     .detail-card {
@@ -173,6 +176,7 @@
     }
 
     .flash {
+        display: inline-block;
         animation: valueFlash .6s;
     }
 
@@ -216,6 +220,56 @@
             </div>
             <div class="live-updated">
                 <i class="la la-refresh"></i> Son güncelleme: <span id="lastUpdated">-</span>
+            </div>
+        </div>
+
+        <div class="section-title"><i class="la la-money"></i> Kasa</div>
+        <div class="row">
+            <div class="col-md-4">
+                <div class="stat-box bg-green">
+                    <div class="stat-label">Kasadaki Toplam Tutar</div>
+                    <div class="stat-value">₺<span id="TotalAmount">0</span></div>
+                    <i class="la la-money stat-icon"></i>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="stat-box bg-blue">
+                    <div class="stat-label">Bugünün Kazancı</div>
+                    <div class="stat-value">₺<span id="todayRevenue">0</span></div>
+                    <i class="la la-calendar-check-o stat-icon"></i>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="stat-box bg-purple">
+                    <div class="stat-label">Siparişler (Toplam / Masada)</div>
+                    <div class="stat-value"><span id="orderCount">0</span> / <span id="activeOrderCount">0</span></div>
+                    <i class="la la-shopping-cart stat-icon"></i>
+                </div>
+            </div>
+        </div>
+
+        <div class="section-title"><i class="la la-th-large"></i> Masalar</div>
+        <div class="row">
+            <div class="col-md-4">
+                <div class="stat-box bg-dark">
+                    <div class="stat-label">Toplam Masa</div>
+                    <div class="stat-value" id="MenuTableCount">0</div>
+                    <i class="la la-th-large stat-icon"></i>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="stat-box bg-orange">
+                    <div class="stat-label">Dolu Masa</div>
+                    <div class="stat-value" id="ActiveMenuTableCount">0</div>
+                    <i class="la la-users stat-icon"></i>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="stat-box bg-teal">
+                    <div class="stat-label">Boş Masa</div>
+                    <div class="stat-value" id="EmptyMenuTableCount">0</div>
+                    <i class="la la-check stat-icon"></i>
+                </div>
             </div>
         </div>
 
@@ -304,7 +358,7 @@
         </div>
 
         <div class="row">
-            <div class="col-md-4">
+            <div class="col-md-6">
                 <div class="detail-card">
                     <div class="detail-icon bg-blue"><i class="la la-trophy"></i></div>
                     <div>
@@ -314,17 +368,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-4">
-                <div class="detail-card">
-                    <div class="detail-icon bg-purple"><i class="la la-shopping-cart"></i></div>
-                    <div>
-                        <div class="detail-label">Siparişler</div>
-                        <div class="detail-title">Toplam: <span id="orderCount">0</span></div>
-                        <div class="detail-value" style="color:#6f42c1;">Masada: <span id="activeOrderCount">0</span></div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4">
+            <div class="col-md-6">
                 <div class="detail-card">
                     <div class="detail-icon bg-dark"><i class="la la-clock-o"></i></div>
                     <div>
@@ -351,14 +395,21 @@
     var statusBox = document.getElementById("connectionStatus");
     var statusText = document.getElementById("connectionText");
     var intervalId = null;
+    var menuTableCount = 0;
+    var activeMenuTableCount = 0;
 
     function setStatus(state, text) {
         statusBox.className = "live-status " + state;
         statusText.innerText = text;
     }
 
+    function hasValue(value) {
+        return value !== null && value !== undefined;
+    }
+
     function setValue(id, value) {
         var element = document.getElementById(id);
+        if (!element) return;
         var newValue = String(value);
         if (element.innerText !== newValue) {
             element.innerText = newValue;
@@ -376,7 +427,12 @@
         document.getElementById("lastUpdated").innerText = new Date().toLocaleTimeString("tr-TR");
     }
 
+    function updateEmptyTables() {
+        setValue("EmptyMenuTableCount", Math.max(menuTableCount - activeMenuTableCount, 0));
+    }
+
     connection.on("ReceiveStatistics", function (data) {
+        if (!data) return;
         setValue("productCount", data.productCount);
         setValue("activeProductCount", data.activeProductCount);
         setValue("passiveProductCount", data.passiveProductCount);
@@ -387,19 +443,21 @@
     });
 
     connection.on("ReceiveOrderStatistic", function (data) {
+        if (!data) return;
         setValue("orderCount", data.orderCount);
         setValue("activeOrderCount", data.activeOrderCount);
     });
 
     connection.on("ReceiveLastOrder", function (data) {
         if (!data) return;
-        setValue("lastOrderTable", data.tableNumber);
+        setValue("lastOrderTable", data.menuTable || "-");
         setValue("lastOrderTotal", formatPrice(data.totalPrice));
         setValue("lastOrderDescription", data.description || "-");
-        setValue("lastOrderDate", new Date(data.date).toLocaleString("tr-TR"));
+        setValue("lastOrderDate", data.date ? new Date(data.date).toLocaleString("tr-TR") : "-");
     });
 
     connection.on("ReceiveHamburgerAveragePrice", function (data) {
+        if (!hasValue(data)) return;
         setValue("hamburgerAveragePrice", formatPrice(data));
     });
 
@@ -419,6 +477,30 @@
         if (!data) return;
         setValue("mostExpensiveProductName", data.productName);
         setValue("mostExpensiveProductPrice", formatPrice(data.price));
+    });
+
+    connection.on("ReceiveCashRegisterTotalAmount", function (data) {
+        if (!hasValue(data)) return;
+        setValue("TotalAmount", formatPrice(data));
+    });
+
+    connection.on("ReceiveTodayOrderAmount", function (data) {
+        if (!hasValue(data)) return;
+        setValue("todayRevenue", formatPrice(data));
+    });
+
+    connection.on("ReceiveMenuTableCount", function (data) {
+        if (!hasValue(data)) return;
+        menuTableCount = data;
+        setValue("MenuTableCount", data);
+        updateEmptyTables();
+    });
+
+    connection.on("ReceiveActiveMenuTableCount", function (data) {
+        if (!hasValue(data)) return;
+        activeMenuTableCount = data;
+        setValue("ActiveMenuTableCount", data);
+        updateEmptyTables();
     });
 
     connection.onreconnecting(function () {
