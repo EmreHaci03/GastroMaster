@@ -1,0 +1,62 @@
+﻿using AutoMapper;
+using GastroMaster.BusinessLayer.Abstract;
+using GastroMaster.DtoLayer.DTOS.SliderDtos;
+using GastroMaster.EntityLayer.Entities;
+using Microsoft.AspNetCore.Mvc;
+
+namespace GastroMaster.WebApi.Controllers
+{
+    [Route("api/[controller]")]
+    [ApiController]
+    public class SliderController : ControllerBase
+    {
+        private readonly ISliderService _sliderService;
+        private readonly IMapper _mapper;
+
+        public SliderController(ISliderService sliderService, IMapper mapper)
+        {
+            _sliderService = sliderService;
+            _mapper = mapper;
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> SliderList()
+        {
+            var values = await _sliderService.TGetAllAsync();
+            var result = _mapper.Map<List<ResultSliderDto>>(values);
+            return Ok(result);
+        }
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetSliderById(int id)
+        {
+            var value = await _sliderService.TGetByIdAsync(id);
+            var result = _mapper.Map<GetSliderByIdDto>(value);
+            return Ok(result);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CreateSlider(CreateSliderDto createSliderDto)
+        {
+            var value = _mapper.Map<Slider>(createSliderDto);
+            await _sliderService.TInsertAsync(value);
+            return Ok("Slider eklendi");
+        }
+
+        [HttpPut]
+        public async Task<IActionResult> UpdateSlider(UpdateSliderDto updateSliderDto)
+        {
+            var value = _mapper.Map<Slider>(updateSliderDto);
+            await _sliderService.TUpdateAsync(value);
+            return Ok("Slider güncellendi");
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteSlider(int id)
+        {
+            var value = await _sliderService.TGetByIdAsync(id);
+            await _sliderService.TDeleteAsync(value);
+            return Ok("Slider silindi");
+        }
+    }
+}

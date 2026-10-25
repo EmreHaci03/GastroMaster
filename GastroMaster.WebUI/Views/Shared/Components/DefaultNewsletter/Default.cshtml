@@ -1,0 +1,14 @@
+﻿<section class="newsletter">
+    <div class="container">
+        <div class="newsletter-text">
+            <h2>Kampanyaları<br />ilk sen duy.</h2>
+            <p>Yeni menüler ve indirim kuponları ayda en fazla iki kez e-postana gelsin. Spam yok.</p>
+        </div>
+
+        <form class="newsletter-form" action="/Newsletter/CreateNewsletter" method="post">
+            @Html.AntiForgeryToken()
+            <input type="email" name="Email" placeholder="E-posta adresin" aria-label="E-posta adresin" required />
+            <button type="submit" class="btn btn-primary">Abone ol</button>
+        </form>
+    </div>
+</section>

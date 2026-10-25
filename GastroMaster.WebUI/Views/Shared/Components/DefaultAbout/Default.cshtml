@@ -1,0 +1,25 @@
+﻿@model List<ResultAboutDto>
+
+@foreach (var item in Model)
+{
+    <section class="section about" id="hakkimizda">
+        <div class="container">
+            <div class="about-img">
+                <img src="@item.ImageUrl" alt="@item.Title" />
+                <div class="about-badge"><strong>2019</strong>Kadıköy'de açıldık</div>
+            </div>
+            <div>
+                <div class="section-head">
+                    <h2>@item.Title</h2>
+                    <p>@item.Description</p>
+                </div>
+                <div class="about-facts">
+                    <div><strong>6</strong><span>masa</span></div>
+                    <div><strong>10</strong><span>ürünlük menü</span></div>
+                    <div><strong>15 dk</strong><span>ortalama servis</span></div>
+                </div>
+                <a href="/About/Index/" class="btn btn-ghost">Hikâyemizi oku</a>
+            </div>
+        </div>
+    </section>
+}

@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using GastroMaster.BusinessLayer.Abstract;
+using GastroMaster.DtoLayer.DTOS.DiscountDtos;
 using GastroMaster.DtoLayer.DTOS.OrderDetailDtos;
+using GastroMaster.DtoLayer.DTOS.ProductDtos;
 using Microsoft.AspNetCore.SignalR;
 
 namespace GastroMaster.WebApi.Hubs
@@ -12,8 +14,10 @@ namespace GastroMaster.WebApi.Hubs
         private readonly IOrderService _orderService;
         private readonly IMenuTableService _menuTableService;
         private readonly IOrderDetailService _orderDetailService;
+        private readonly IProductService _productService;
+        private readonly IDiscountService _discountService;
         private readonly IMapper _mapper;
-        public SignalRHub(IStatisticService statisticService, ICashRegisterService cashRegisterService, IOrderService orderService, IMenuTableService menuTableService, IOrderDetailService orderDetailService, IMapper mapper)
+        public SignalRHub(IStatisticService statisticService, ICashRegisterService cashRegisterService, IOrderService orderService, IMenuTableService menuTableService, IOrderDetailService orderDetailService, IMapper mapper, IProductService productService, IDiscountService discountService)
         {
             _statisticService = statisticService;
             _cashRegisterService = cashRegisterService;
@@ -21,6 +25,8 @@ namespace GastroMaster.WebApi.Hubs
             _menuTableService = menuTableService;
             _orderDetailService = orderDetailService;
             _mapper = mapper;
+            _productService = productService;
+            _discountService = discountService;
         }
 
         public async Task SendStatistics()
@@ -86,6 +92,20 @@ namespace GastroMaster.WebApi.Hubs
             await Clients.All.SendAsync("ReceiveLastWeekRevenue", LastWeekRevenue);
 
 
+        }
+        public async Task DefaultStatistic()
+        {
+            var menuValues = await _productService.TGetProductListWithCategoryAsync();
+            var menuResult = _mapper.Map<List<ResultProductWithCategoryDto>>(menuValues);
+            await Clients.Caller.SendAsync("ReceiveMenuStatistic", menuResult);
+
+            var offerValues = await _discountService.TGetAllAsync();
+            var offerResult = _mapper.Map<List<ResultDiscountDto>>(offerValues);
+            await Clients.Caller.SendAsync("ReceiveDiscount", offerResult);
+
+            var value = await _productService.TGetMostExpensiveBurgerAsync();
+            var result = _mapper.Map<MaxPriceHamburgerDto>(value);
+            await Clients.Caller.SendAsync("ReceiveSliderBurger", result);
         }
     }
 }

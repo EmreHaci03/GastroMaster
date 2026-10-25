@@ -47,6 +47,27 @@ namespace GastroMaster.DataAccessLayer.Migrations
                     b.ToTable("Abouts");
                 });
 
+            modelBuilder.Entity("GastroMaster.EntityLayer.Entities.AboutItem", b =>
+                {
+                    b.Property<int>("AboutItemId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("AboutItemId"), 1L, 1);
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("AboutItemId");
+
+                    b.ToTable("AboutItems");
+                });
+
             modelBuilder.Entity("GastroMaster.EntityLayer.Entities.Booking", b =>
                 {
                     b.Property<int>("BookingId")
@@ -213,6 +234,26 @@ namespace GastroMaster.DataAccessLayer.Migrations
                     b.ToTable("MenuTables");
                 });
 
+            modelBuilder.Entity("GastroMaster.EntityLayer.Entities.Newsletter", b =>
+                {
+                    b.Property<int>("NewsletterId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("NewsletterId"), 1L, 1);
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("NewsletterId");
+
+                    b.HasIndex("Email")
+                        .IsUnique();
+
+                    b.ToTable("Newsletters");
+                });
+
             modelBuilder.Entity("GastroMaster.EntityLayer.Entities.Order", b =>
                 {
                     b.Property<int>("OrderId")
@@ -311,6 +352,27 @@ namespace GastroMaster.DataAccessLayer.Migrations
                     b.HasIndex("CategoryId");
 
                     b.ToTable("Products");
+                });
+
+            modelBuilder.Entity("GastroMaster.EntityLayer.Entities.Slider", b =>
+                {
+                    b.Property<int>("SliderId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("SliderId"), 1L, 1);
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("SliderId");
+
+                    b.ToTable("Sliders");
                 });
 
             modelBuilder.Entity("GastroMaster.EntityLayer.Entities.SocialMedia", b =>

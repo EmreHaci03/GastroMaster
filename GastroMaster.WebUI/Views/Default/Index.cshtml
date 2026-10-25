@@ -1,0 +1,200 @@
+﻿@{
+    ViewData["Title"] = "Ana Sayfa";
+    Layout = "~/Views/Shared/_UILayout.cshtml";
+}
+<style>
+    /* ---------- Newsletter ---------- */
+    .newsletter {
+        background: var(--ketchup);
+        color: #fff;
+        padding: 80px 0;
+    }
+
+        .newsletter .container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            align-items: center;
+        }
+
+        .newsletter h2 {
+            font-family: var(--display);
+            font-weight: 900;
+            font-size: clamp(40px, 5vw, 64px);
+            line-height: .95;
+            text-transform: uppercase;
+        }
+
+        .newsletter p {
+            margin-top: 14px;
+            color: rgba(255,255,255,.85);
+            max-width: 44ch;
+        }
+
+    .newsletter-form {
+        display: flex;
+        gap: 10px;
+        background: #fff;
+        padding: 8px;
+        border-radius: 999px;
+    }
+
+        .newsletter-form input {
+            flex: 1;
+            min-width: 0;
+            border: 0;
+            background: none;
+            padding: 0 20px;
+            font: inherit;
+            color: var(--char);
+        }
+
+            .newsletter-form input:focus {
+                outline: none;
+            }
+
+        .newsletter-form .btn {
+            background: var(--char);
+        }
+
+            .newsletter-form .btn:hover {
+                background: var(--char-soft);
+            }
+
+    /* ---------- Toast ---------- */
+    .toast {
+        position: fixed;
+        right: 24px;
+        bottom: 24px;
+        z-index: 100;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 16px 22px;
+        border-radius: 14px;
+        color: #fff;
+        font-weight: 600;
+        box-shadow: 0 18px 40px rgba(30,27,24,.25);
+        transition: opacity .4s, transform .4s;
+    }
+
+    .toast-success {
+        background: var(--pickle);
+    }
+
+    .toast-error {
+        background: var(--ketchup-dark);
+    }
+
+    .toast.hide {
+        opacity: 0;
+        transform: translateY(20px);
+        pointer-events: none;
+    }
+
+    @@media (max-width: 980px) {
+        .newsletter .container {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    @@media (max-width: 620px) {
+        .newsletter-form {
+            flex-direction: column;
+            border-radius: 18px;
+        }
+
+            .newsletter-form input {
+                padding: 14px 16px;
+            }
+
+        .toast {
+            left: 16px;
+            right: 16px;
+            bottom: 16px;
+        }
+    }
+</style>
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="toast toast-success" id="toast" role="status"><i class="fa fa-check-circle"></i> @TempData["SuccessMessage"]</div>
+}
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="toast toast-error" id="toast" role="alert"><i class="fa fa-exclamation-circle"></i> @TempData["ErrorMessage"]</div>
+}
+
+<!-- ==================== HERO / SLIDER (Feature) ==================== -->
+@await Component.InvokeAsync("DefaultSlider") @*Tamamlandı*@
+
+<!-- ==================== OFFERS (Discount) ==================== -->
+@await Component.InvokeAsync("DefaultOffer") @*Tamamlandı*@
+
+<!-- ==================== MENU (Product + Category) ==================== -->
+@await Component.InvokeAsync("DefaultMenu") @*Tamamlandı Resimler Düzeltilecek Sadece*@ 
+
+<!-- ==================== ABOUT ==================== -->
+@await Component.InvokeAsync("DefaultAbout") @*Tamamlandı*@
+
+<!-- ==================== BOOK (Booking) ==================== -->
+@await Component.InvokeAsync("DefaultBooking")
+
+<!-- ==================== TESTIMONIALS ==================== -->
+@await Component.InvokeAsync("DefaultTestimonial") @*Tamamlandı*@
+
+<!-- ==================== NEWSLETTER ==================== -->
+@await Component.InvokeAsync("DefaultNewsletter")  @*Tamamlandı*@
+
+@section Scripts {
+    <script>
+        // Toast
+        var toast = document.getElementById("toast");
+        if (toast) {
+            setTimeout(function () { toast.classList.add("hide"); }, 4000);
+        }
+
+        // Hero slider
+        var slides = document.querySelectorAll(".hero-slide");
+        var dots = document.querySelectorAll("#heroDots button");
+        var current = 0;
+        function showSlide(index) {
+            slides[current].classList.remove("active");
+            dots[current].classList.remove("active");
+            current = index;
+            slides[current].classList.add("active");
+            dots[current].classList.add("active");
+        }
+        dots.forEach(function (dot, index) {
+            dot.addEventListener("click", function () { showSlide(index); });
+        });
+        if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+            setInterval(function () { showSlide((current + 1) % slides.length); }, 6000);
+        }
+
+        // Menü filtresi
+        var filterButtons = document.querySelectorAll("#filters button");
+        var tickets = document.querySelectorAll("#menuGrid .ticket");
+        filterButtons.forEach(function (button) {
+            button.addEventListener("click", function () {
+                var filter = button.getAttribute("data-filter");
+                filterButtons.forEach(function (b) { b.classList.remove("active"); });
+                button.classList.add("active");
+                tickets.forEach(function (ticket) {
+                    ticket.hidden = !(filter === "all" || ticket.getAttribute("data-category") === filter);
+                });
+            });
+        });
+
+        // Yorum geçişi
+        var reviews = document.querySelectorAll("#reviews .review");
+        var reviewIndex = 0;
+        function showReview(index) {
+            reviews[reviewIndex].classList.remove("active");
+            reviewIndex = (index + reviews.length) % reviews.length;
+            reviews[reviewIndex].classList.add("active");
+        }
+        document.getElementById("prevReview").addEventListener("click", function () { showReview(reviewIndex - 1); });
+        document.getElementById("nextReview").addEventListener("click", function () { showReview(reviewIndex + 1); });
+    </script>
+}

@@ -1,0 +1,26 @@
+﻿@model List<ResultAboutItemDto>
+
+@{
+    string[] icons = { "fa-leaf", "fa-fire", "fa-clock-o", "fa-heart", "fa-star", "fa-cutlery" };
+    int count = 0;
+}
+
+<section class="section">
+    <div class="container">
+        <div class="section-head">
+            <h2>Neye önem veriyoruz?</h2>
+            <p>Mutfağa giren her şey için kurallarımız var.</p>
+        </div>
+        <div class="values-grid">
+            @foreach (var item in Model)
+            {
+                <div class="value-card">
+                    <i class="fa @icons[count % icons.Length]"></i>
+                    <h3>@item.Title</h3>
+                    <p>@item.Description</p>
+                </div>
+                count++;
+            }
+        </div>
+    </div>
+</section>

@@ -1,5 +1,6 @@
 ﻿using GastroMaster.DataAccessLayer.Abstract;
 using GastroMaster.DataAccessLayer.Concrete;
+using GastroMaster.DataAccessLayer.Models;
 using GastroMaster.DataAccessLayer.Repositories;
 using GastroMaster.EntityLayer.Entities;
 using Microsoft.EntityFrameworkCore;
@@ -12,6 +13,17 @@ namespace GastroMaster.DataAccessLayer.EntityFramework
         public EfProductDal(GastroMasterContext context) : base(context)
         {
             _context = context; 
+        }
+
+        public async Task<MaxPriceHamburgerModel> GetMostExpensiveBurgerAsync()
+        {
+            return await _context.Products.Where(x => x.Category.CategoryName=="Burger").Select(x => new MaxPriceHamburgerModel
+            {
+                ProductName=x.ProductName,
+                Price=x.Price,
+                Description=x.Description,
+                ImageUrl=x.ImageUrl
+            }).OrderByDescending(x=>x.Price).FirstOrDefaultAsync();
         }
 
         public async Task<List<Product>> GetProductListWithCategoryAsync()

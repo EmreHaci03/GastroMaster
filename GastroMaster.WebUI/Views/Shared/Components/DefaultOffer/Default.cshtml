@@ -1,0 +1,51 @@
+﻿@model List<ResultDiscountDto>
+
+<section class="offers">
+    <div class="container">
+        @foreach (var item in Model)
+        {
+            <article class="coupon">
+                <img id="offerImage-@item.DiscountId" src="@item.ImageUrl" alt="@item.Title" />
+                <div class="coupon-body">
+                    <h3 id="offerTitle-@item.DiscountId">@item.Title</h3>
+                    <p id="offerDescription-@item.DiscountId">@item.Description</p>
+                </div>
+                <div class="coupon-stub">
+                    <div class="coupon-amount">%<span id="offerAmount-@item.DiscountId">@item.Amount</span><small>indirim</small></div>
+                </div>
+            </article>
+        }
+    </div>
+</section>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/8.0.7/signalr.min.js"></script>
+<script>
+    var offerConnection = new signalR.HubConnectionBuilder()
+        .withUrl("https://localhost:7139/SignalRHub")
+        .withAutomaticReconnect()
+        .build();
+
+    function setOfferValue(id, value) {
+        var element = document.getElementById(id);
+        if (element) element.innerText = value;
+    }
+
+    offerConnection.on("ReceiveDiscount", function (data) {
+        data.forEach(function (item) {
+            setOfferValue("offerTitle-" + item.discountId, item.title);
+            setOfferValue("offerDescription-" + item.discountId, item.description);
+            setOfferValue("offerAmount-" + item.discountId, item.amount);
+
+            var image = document.getElementById("offerImage-" + item.discountId);
+            if (image) image.src = item.imageUrl;
+        });
+    });
+
+    offerConnection.start().then(function () {
+        offerConnection.invoke("DefaultStatistic");
+        setInterval(function () {
+            if (offerConnection.state === signalR.HubConnectionState.Connected) {
+                offerConnection.invoke("DefaultStatistic");
+            }
+        }, 5000);
+    });
+</script>

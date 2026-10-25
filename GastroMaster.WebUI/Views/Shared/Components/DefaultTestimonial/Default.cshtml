@@ -1,0 +1,32 @@
+﻿@model List<ResultTestimonialDto>
+
+@{
+    int count = 0;
+}
+
+<section class="section reviews">
+    <div class="container">
+        <div class="section-head">
+            <h2>Gelenler ne diyor?</h2>
+        </div>
+        <div class="reviews-wrap">
+            <div id="reviews">
+                @foreach (var item in Model)
+                {
+                    <figure class="review @(count == 0 ? "active" : "")">
+                        <img src="@item.ImageUrl" alt="@item.Name" />
+                        <div>
+                            <blockquote>@item.Comment</blockquote>
+                            <cite>@item.Name<span>@item.Title</span></cite>
+                        </div>
+                    </figure>
+                    count++;
+                }
+            </div>
+            <div class="review-nav">
+                <button id="prevReview" aria-label="Önceki yorum"><i class="fa fa-arrow-left"></i></button>
+                <button id="nextReview" aria-label="Sonraki yorum"><i class="fa fa-arrow-right"></i></button>
+            </div>
+        </div>
+    </div>
+</section>

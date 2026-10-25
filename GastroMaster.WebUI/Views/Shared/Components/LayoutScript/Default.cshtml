@@ -1,0 +1,55 @@
+﻿<script>
+        // Mobil menü
+        var menuToggle = document.getElementById("menuToggle");
+        var nav = document.getElementById("nav");
+        menuToggle.addEventListener("click", function () {
+            var open = nav.classList.toggle("open");
+            menuToggle.setAttribute("aria-expanded", open);
+        });
+
+        // Hero slider
+        var slides = document.querySelectorAll(".hero-slide");
+        var dots = document.querySelectorAll("#heroDots button");
+        var current = 0;
+        function showSlide(index) {
+            slides[current].classList.remove("active");
+            dots[current].classList.remove("active");
+            current = index;
+            slides[current].classList.add("active");
+            dots[current].classList.add("active");
+        }
+        dots.forEach(function (dot, index) {
+            dot.addEventListener("click", function () { showSlide(index); });
+        });
+        if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+            setInterval(function () { showSlide((current + 1) % slides.length); }, 6000);
+        }
+
+        // Menü filtresi
+        var filterButtons = document.querySelectorAll("#filters button");
+        var tickets = document.querySelectorAll("#menuGrid .ticket");
+        filterButtons.forEach(function (button) {
+            button.addEventListener("click", function () {
+                var filter = button.getAttribute("data-filter");
+                filterButtons.forEach(function (b) { b.classList.remove("active"); });
+                button.classList.add("active");
+                tickets.forEach(function (ticket) {
+                    ticket.hidden = !(filter === "all" || ticket.getAttribute("data-category") === filter);
+                });
+            });
+        });
+
+        // Yorum geçişi
+        var reviews = document.querySelectorAll("#reviews .review");
+        var reviewIndex = 0;
+        function showReview(index) {
+            reviews[reviewIndex].classList.remove("active");
+            reviewIndex = (index + reviews.length) % reviews.length;
+            reviews[reviewIndex].classList.add("active");
+        }
+        document.getElementById("prevReview").addEventListener("click", function () { showReview(reviewIndex - 1); });
+        document.getElementById("nextReview").addEventListener("click", function () { showReview(reviewIndex + 1); });
+
+        // Yıl
+        document.getElementById("year").textContent = new Date().getFullYear();
+</script>

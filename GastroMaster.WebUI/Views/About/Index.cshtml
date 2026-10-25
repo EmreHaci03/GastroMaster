@@ -1,0 +1,270 @@
+﻿@{
+    ViewData["Title"] = "Hakkımızda";
+    Layout = "~/Views/Shared/_UILayout.cshtml";
+}
+
+<style>
+    /* ---------- Page Hero ---------- */
+    .page-hero {
+        background: var(--char);
+        color: var(--paper);
+        padding: 90px 0 110px;
+    }
+
+        .page-hero .crumb {
+            font-size: 14px;
+            color: rgba(250,250,247,.6);
+            margin-bottom: 18px;
+        }
+
+            .page-hero .crumb a:hover {
+                color: var(--mustard);
+            }
+
+        .page-hero h1 {
+            font-family: var(--display);
+            font-weight: 900;
+            font-size: clamp(56px, 9vw, 120px);
+            line-height: .88;
+            text-transform: uppercase;
+        }
+
+            .page-hero h1 .stroke {
+                color: transparent;
+                -webkit-text-stroke: 2px var(--mustard);
+            }
+
+        .page-hero p {
+            margin-top: 24px;
+            max-width: 52ch;
+            color: rgba(250,250,247,.75);
+            font-size: 18px;
+        }
+
+    /* ---------- Story ---------- */
+    .story .container {
+        display: grid;
+        grid-template-columns: .9fr 1.1fr;
+        gap: 70px;
+        align-items: center;
+    }
+
+    .story-img img {
+        width: 100%;
+        border-radius: 24px;
+        aspect-ratio: 4/4.4;
+        object-fit: cover;
+        background: var(--line);
+    }
+
+    .story-text p {
+        color: var(--muted);
+        margin-bottom: 18px;
+    }
+
+        .story-text p:first-of-type {
+            color: var(--char);
+            font-size: 20px;
+            font-weight: 500;
+        }
+
+    /* ---------- Timeline ---------- */
+    .timeline {
+        background: var(--mustard);
+    }
+
+    .timeline-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 24px;
+    }
+
+    .timeline-item {
+        border-top: 3px solid var(--char);
+        padding-top: 18px;
+    }
+
+        .timeline-item strong {
+            display: block;
+            font-family: var(--display);
+            font-size: 48px;
+            font-weight: 900;
+            line-height: 1;
+        }
+
+        .timeline-item h3 {
+            font-size: 19px;
+            margin: 10px 0 6px;
+        }
+
+        .timeline-item p {
+            font-size: 15px;
+            color: var(--char-soft);
+        }
+
+    /* ---------- Values ---------- */
+    .values-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 26px;
+    }
+
+    .value-card {
+        background: #fff;
+        border: 1px solid var(--line);
+        border-radius: 18px;
+        padding: 34px;
+    }
+
+        .value-card i {
+            width: 56px;
+            height: 56px;
+            border-radius: 14px;
+            background: var(--char);
+            color: var(--mustard);
+            display: grid;
+            place-items: center;
+            font-size: 22px;
+            margin-bottom: 20px;
+        }
+
+        .value-card h3 {
+            font-size: 21px;
+            margin-bottom: 8px;
+        }
+
+        .value-card p {
+            color: var(--muted);
+            font-size: 15px;
+        }
+
+    /* ---------- CTA ---------- */
+    .about-cta {
+        background: var(--char);
+        color: var(--paper);
+        text-align: center;
+    }
+
+        .about-cta h2 {
+            font-family: var(--display);
+            font-weight: 900;
+            font-size: clamp(44px, 6vw, 80px);
+            line-height: .95;
+            text-transform: uppercase;
+        }
+
+        .about-cta p {
+            color: rgba(250,250,247,.7);
+            margin: 18px auto 34px;
+            max-width: 46ch;
+        }
+
+        .about-cta .btn-ghost {
+            color: var(--paper);
+        }
+
+            .about-cta .btn-ghost:hover {
+                background: var(--paper);
+                color: var(--char);
+                border-color: var(--paper);
+            }
+
+        .about-cta .actions {
+            display: flex;
+            gap: 14px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+    @@media (max-width: 980px) {
+        .story .container {
+            grid-template-columns: 1fr;
+            gap: 40px;
+        }
+
+        .timeline-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        .values-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    @@media (max-width: 620px) {
+        .timeline-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+
+<!-- ==================== PAGE HERO ==================== -->
+<section class="page-hero">
+    <div class="container">
+        <div class="crumb"><a href="/">Ana Sayfa</a> / Hakkımızda</div>
+        <h1>Küçük bir<br /><span class="stroke">tezgâhtan</span><br />bugüne.</h1>
+        <p>2019'da Kadıköy'de tek bir ızgara ve dört taburla başladık. Tarifimiz o günden beri aynı: taze et, günlük ekmek, acele etmeden pişirmek.</p>
+    </div>
+</section>
+
+<!-- ==================== STORY ==================== -->
+<section class="section story">
+    <div class="container">
+        <div class="story-img">
+            <img src="~/feane-1.0.0/images/about-img.png" alt="GastroMaster mutfağı" />
+        </div>
+        <div class="story-text">
+            <div class="section-head">
+                <h2>Hikâyemiz</h2>
+            </div>
+            <p>Her şey Moda'daki dar bir sokakta, mahalleliye öğle arasında sıcak burger yetiştirme fikriyle başladı.</p>
+            <p>İlk aylarda menüde sadece üç ürün vardı. Köfteleri her sabah kendimiz yoğuruyor, ekmekleri yan sokaktaki fırından alıyorduk. Müşterilerimiz arkadaşlarını getirdi, onlar da kendi arkadaşlarını. Tezgâh yetmeyince karşıdaki dükkânı tuttuk, taş fırını kurduk ve menüye pizzayı ekledik.</p>
+            <p>Bugün altı masamız, on ürünlük bir menümüz ve bizi adıyla çağıran müdavimlerimiz var. Büyüdük ama tarif değişmedi: her sipariş, masaya gelmeden hemen önce hazırlanır.</p>
+        </div>
+    </div>
+</section>
+
+<!-- ==================== TIMELINE ==================== -->
+<section class="section timeline">
+    <div class="container">
+        <div class="section-head">
+            <h2>Yol haritamız</h2>
+        </div>
+        <div class="timeline-grid">
+            <div class="timeline-item">
+                <strong>2019</strong>
+                <h3>İlk tezgâh</h3>
+                <p>Moda'da tek ızgara, dört tabure ve üç burgerlik bir menüyle açıldık.</p>
+            </div>
+            <div class="timeline-item">
+                <strong>2021</strong>
+                <h3>Taş fırın</h3>
+                <p>Karşı dükkâna taşındık, taş fırını kurduk ve pizzayı menüye ekledik.</p>
+            </div>
+            <div class="timeline-item">
+                <strong>2023</strong>
+                <h3>Altı masa</h3>
+                <p>Salonu genişlettik, makarna ve atıştırmalıklarla menüyü on ürüne çıkardık.</p>
+            </div>
+            <div class="timeline-item">
+                <strong>2025</strong>
+                <h3>Online rezervasyon</h3>
+                <p>Sıra beklemek yok: masanı artık birkaç saniyede ayırtabiliyorsun.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ==================== VALUES ==================== -->
+@await Component.InvokeAsync("AboutItemList")
+<!-- ==================== CTA ==================== -->
+<section class="section about-cta">
+    <div class="container">
+        <h2>Gel, bir tadına bak.</h2>
+        <p>Masan hazır. Rezervasyonunu yap ya da menüye göz at, gerisini bize bırak.</p>
+        <div class="actions">
+            <a href="/#rezervasyon" class="btn btn-primary">Masa ayırt</a>
+            <a href="/#menu" class="btn btn-ghost">Menüyü incele</a>
+        </div>
+    </div>
+</section>

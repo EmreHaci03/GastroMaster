@@ -1,0 +1,66 @@
+﻿@model List<ResultProductWithCategoryDto>
+
+<section class="section" id="menu">
+    <div class="container">
+        <div class="section-head">
+            <h2>Bugün ne yesek?</h2>
+            <p>Hepsi siparişle hazırlanır. Kategoriye göre filtrele, beğendiğini sepete ekle.</p>
+        </div>
+
+        <div class="filters" id="filters">
+            <button class="active" data-filter="all">Tümü</button>
+            @foreach (var category in Model.Select(x => x.Category).Distinct())
+            {
+                <button data-filter="@category">@category</button>
+            }
+        </div>
+
+        <div class="menu-grid" id="menuGrid">
+            @foreach (var item in Model)
+            {
+                <article class="ticket" data-category="@item.Category" data-id="@item.ProductId">
+                    <div class="ticket-img">
+                        <span class="ticket-cat">@item.Category</span>
+                        <img src="@item.ImageUrl" alt="@item.ProductName" />
+                    </div>
+                    <div class="ticket-body">
+                        <h3>@item.ProductName</h3>
+                        <p>@item.Description</p>
+                    </div>
+                    <div class="ticket-foot">
+                        <span class="ticket-price" id="price-@item.ProductId">₺@item.Price.ToString("N0")</span>
+                        <button class="add-btn" aria-label="@item.ProductName sepete ekle"><i class="fa fa-plus"></i></button>
+                    </div>
+                </article>
+            }
+        </div>
+
+        <div class="menu-more"><a href="#" class="btn btn-ghost">Bütün menüyü gör</a></div>
+    </div>
+</section>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/8.0.7/signalr.min.js"></script>
+<script>
+    var menuConnection = new signalR.HubConnectionBuilder()
+        .withUrl("https://localhost:7139/SignalRHub")
+        .withAutomaticReconnect()
+        .build();
+
+    menuConnection.on("DefaultStatistic", function (products) {
+        products.forEach(function (product) {
+            var card = document.querySelector('.ticket[data-id="' + product.productId + '"]');
+            if (!card) return;
+
+            card.hidden = !product.productStatus;
+            document.getElementById("price-" + product.productId).innerText = "₺" + product.price.toLocaleString("tr-TR", { maximumFractionDigits: 0 });
+        });
+    });
+
+    menuConnection.start().then(function () {
+        menuConnection.invoke("DefaultStatistic");
+        setInterval(function () {
+            if (menuConnection.state === signalR.HubConnectionState.Connected) {
+                menuConnection.invoke("DefaultStatistic");
+            }
+        }, 10000);
+    });
+</script>

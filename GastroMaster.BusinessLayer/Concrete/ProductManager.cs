@@ -1,5 +1,6 @@
 ﻿using GastroMaster.BusinessLayer.Abstract;
 using GastroMaster.DataAccessLayer.Abstract;
+using GastroMaster.DataAccessLayer.Models;
 using GastroMaster.EntityLayer.Entities;
 
 namespace GastroMaster.BusinessLayer.Concrete
@@ -11,6 +12,11 @@ namespace GastroMaster.BusinessLayer.Concrete
         public ProductManager(IProductDal productDal)
         {
             _productDal = productDal;
+        }
+
+        public async Task<MaxPriceHamburgerModel> TGetMostExpensiveBurgerAsync()
+        {
+            return await _productDal.GetMostExpensiveBurgerAsync();
         }
 
         public async Task TDeleteAsync(Product t)

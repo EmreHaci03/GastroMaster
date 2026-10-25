@@ -22,6 +22,9 @@ namespace GastroMaster.DataAccessLayer.Concrete
         public DbSet<OrderDetail> OrderDetails { get; set; }
         public DbSet<CashRegister> CashRegisters { get; set; }
         public DbSet<MenuTable> MenuTables { get; set; }
+        public DbSet<Newsletter> Newsletters { get; set; }
+        public DbSet<AboutItem> AboutItems { get; set; }
+        public DbSet<Slider> Sliders { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -35,6 +38,7 @@ namespace GastroMaster.DataAccessLayer.Concrete
             modelBuilder.Entity<OrderDetail>().Property(x => x.UnitPrice).HasPrecision(18, 2);
             modelBuilder.Entity<OrderDetail>().Property(x => x.TotalPrice).HasPrecision(18, 2);
             modelBuilder.Entity<Order>().Property(x => x.TotalPrice).HasPrecision(18, 2);
+            modelBuilder.Entity<Newsletter>().HasIndex(x => x.Email).IsUnique(); // Kaydedilen Mail bir Daha Kaydedilmesin Diye
 
             base.OnModelCreating(modelBuilder);
         }

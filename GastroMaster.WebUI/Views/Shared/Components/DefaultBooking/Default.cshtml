@@ -1,0 +1,39 @@
+﻿<section class="section book" id="rezervasyon">
+    <div class="container">
+        <form class="book-form" action="#" method="post">
+            <div class="section-head" style="margin-bottom: 30px;">
+                <h2>Masanı ayırt</h2>
+                <p>Onay mesajını telefonuna gönderiyoruz.</p>
+            </div>
+            <div class="form-grid">
+                <div class="field"><label for="name">Ad soyad</label><input id="name" type="text" placeholder="Adın ve soyadın" required /></div>
+                <div class="field"><label for="phone">Telefon</label><input id="phone" type="tel" placeholder="05xx xxx xx xx" required /></div>
+                <div class="field full"><label for="mail">E-posta</label><input id="mail" type="email" placeholder="ornek@mail.com" /></div>
+                <div class="field">
+                    <label for="persons">Kişi sayısı</label>
+                    <select id="persons" required>
+                        <option value="" disabled selected>Seç</option>
+                        <option>2 kişi</option>
+                        <option>3 kişi</option>
+                        <option>4 kişi</option>
+                        <option>5 kişi</option>
+                        <option>6 kişi</option>
+                    </select>
+                </div>
+                <div class="field"><label for="date">Tarih ve saat</label><input id="date" type="datetime-local" required /></div>
+            </div>
+            <button type="submit" class="btn btn-primary">Rezervasyonu tamamla</button>
+        </form>
+
+        <aside class="book-info">
+            <h3>Bizi bul</h3>
+            <div class="info-row"><i class="fa fa-map-marker"></i><div><strong>Adres</strong><span>Caferağa Mah. Moda Cad. No:12, Kadıköy</span></div></div>
+            <div class="info-row"><i class="fa fa-phone"></i><div><strong>Telefon</strong><span>0216 345 67 89</span></div></div>
+            <div class="info-row"><i class="fa fa-envelope"></i><div><strong>E-posta</strong><span>merhaba@gastromaster.com</span></div></div>
+            <div class="hours">
+                <div><span>Hafta içi</span><span>11:00 – 23:00</span></div>
+                <div><span>Hafta sonu</span><span>10:00 – 00:00</span></div>
+            </div>
+        </aside>
+    </div>
+</section>

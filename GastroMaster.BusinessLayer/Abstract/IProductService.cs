@@ -1,4 +1,5 @@
-﻿using GastroMaster.EntityLayer.Entities;
+﻿using GastroMaster.DataAccessLayer.Models;
+using GastroMaster.EntityLayer.Entities;
 
 
 namespace GastroMaster.BusinessLayer.Abstract
@@ -7,5 +8,6 @@ namespace GastroMaster.BusinessLayer.Abstract
     {
         Task<List<Product>> TGetProductListWithCategoryAsync();
         Task<Product?> TGetProductWithCategoryByIdAsync(int id);
+        Task<MaxPriceHamburgerModel> TGetMostExpensiveBurgerAsync();
     }
 }

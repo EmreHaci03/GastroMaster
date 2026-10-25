@@ -1,0 +1,31 @@
+﻿@model List<ResultSliderDto>
+@{
+    int count = 0;
+}
+<section class="hero">
+    <div class="container">
+        <div>
+            @foreach (var item in Model)
+            {
+                <div class="hero-slide @(count == 0 ? "active" : "")">
+                    <h1>@item.Title</h1>
+                    <p>@item.Description</p>
+                </div>
+                count++;
+            }
+
+            <div class="hero-actions">
+                <a href="#menu" class="btn btn-primary">Menüyü incele</a>
+                <a href="#rezervasyon" class="btn btn-ghost">Masa ayırt</a>
+            </div>
+
+            <div class="hero-dots" id="heroDots" role="tablist" aria-label="Slaytlar">
+                <button class="active" aria-label="1. slayt"></button>
+                <button aria-label="2. slayt"></button>
+                <button aria-label="3. slayt"></button>
+            </div>
+        </div>
+
+        @await Component.InvokeAsync("DefaultSliderBurger")
+    </div>
+</section>

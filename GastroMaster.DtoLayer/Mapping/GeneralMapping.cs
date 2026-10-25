@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using GastroMaster.DataAccessLayer.Models;
 using GastroMaster.DtoLayer.DTOS.AboutDtos;
+using GastroMaster.DtoLayer.DTOS.AboutItemDtos;
 using GastroMaster.DtoLayer.DTOS.BookingDtos;
 using GastroMaster.DtoLayer.DTOS.CashRegisterDtos;
 using GastroMaster.DtoLayer.DTOS.CategoryDtos;
@@ -9,9 +10,11 @@ using GastroMaster.DtoLayer.DTOS.DashboardDtos;
 using GastroMaster.DtoLayer.DTOS.DiscountDtos;
 using GastroMaster.DtoLayer.DTOS.FeatureDtos;
 using GastroMaster.DtoLayer.DTOS.MenuTableDtos;
+using GastroMaster.DtoLayer.DTOS.NewsletterDtos;
 using GastroMaster.DtoLayer.DTOS.OrderDetailDtos;
 using GastroMaster.DtoLayer.DTOS.OrderDtos;
 using GastroMaster.DtoLayer.DTOS.ProductDtos;
+using GastroMaster.DtoLayer.DTOS.SliderDtos;
 using GastroMaster.DtoLayer.DTOS.SocialMediaDtos;
 using GastroMaster.DtoLayer.DTOS.StatisticDtos;
 using GastroMaster.DtoLayer.DTOS.TestimonialDtos;
@@ -31,6 +34,14 @@ namespace GastroMaster.DtoLayer.Mapping
             CreateMap<About, UpdateAboutDto>().ReverseMap();
             CreateMap<About, GetAboutByIdDto>().ReverseMap();
             //About//
+
+
+            //AboutItem//
+            CreateMap<AboutItem, ResultAboutItemDto>().ReverseMap();
+            CreateMap<AboutItem, CreateAboutItemDto>().ReverseMap();
+            CreateMap<AboutItem, UpdateAboutItemDto>().ReverseMap();
+            CreateMap<AboutItem, GetAboutItemByIdDto>().ReverseMap();
+            //AboutItem//
 
             //Booking//
             CreateMap<Booking, ResultBookingDto>().ReverseMap();
@@ -52,6 +63,13 @@ namespace GastroMaster.DtoLayer.Mapping
             CreateMap<Contact, UpdateContactDto>().ReverseMap();
             CreateMap<Contact, GetContactByIdDto>().ReverseMap();
             //Contact//
+
+            //Slider//
+            CreateMap<Slider, ResultSliderDto>().ReverseMap();
+            CreateMap<Slider, CreateSliderDto>().ReverseMap();
+            CreateMap<Slider, UpdateSliderDto>().ReverseMap();
+            CreateMap<Slider, GetSliderByIdDto>().ReverseMap();
+            //Slider//
 
             //Discount//
             CreateMap<Discount, ResultDiscountDto>().ReverseMap();
@@ -78,6 +96,8 @@ namespace GastroMaster.DtoLayer.Mapping
             CreateMap<Product, GetProductWithCategoryByIdDto>()
                 .ForMember(dest => dest.Category, opt => opt.MapFrom(src => src.Category.CategoryName))
                 .ReverseMap();
+
+            CreateMap<MaxPriceHamburgerModel,MaxPriceHamburgerDto>();
             //Product//
 
             //SocialMedia//
@@ -151,6 +171,14 @@ namespace GastroMaster.DtoLayer.Mapping
             CreateMap<TopSellingProductModels, TopSellingProductDto>();
             CreateMap<DailyRevenueModel, DailyRevenueDto>();
             //Dashboard//
+
+
+            //Newsletter//
+            CreateMap<Newsletter, CreateNewsletterDto>().ReverseMap();
+            CreateMap<Newsletter, UpdateNewsletterDto>().ReverseMap();
+            CreateMap<Newsletter, GetNewsletterByIdDto>().ReverseMap();
+            CreateMap<Newsletter, ResultNewsletterDto>().ReverseMap();
+            //Newsletter//
         }
 
     }

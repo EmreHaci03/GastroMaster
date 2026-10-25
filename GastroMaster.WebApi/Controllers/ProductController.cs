@@ -29,6 +29,14 @@ namespace GastroMaster.WebApi.Controllers
             return Ok(result);
         }
 
+        [HttpGet("GetMostExpensiveBurger")]
+        public async Task<IActionResult> MostExpensiveBurger()
+        {
+            var values = await _productService.TGetMostExpensiveBurgerAsync();
+            var result = _mapper.Map<MaxPriceHamburgerDto>(values);
+            return Ok(result);
+        }
+
         [HttpGet("{id}")]
         public async Task<IActionResult> GetProductById(int id)
         {

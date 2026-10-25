@@ -1,0 +1,11 @@
+﻿
+
+namespace GastroMaster.DtoLayer.DTOS.SliderDtos
+{
+    public class UpdateSliderDto
+    {
+        public int SliderId { get; set; }
+        public string Title { get; set; }
+        public string Description { get; set; }
+    }
+}
