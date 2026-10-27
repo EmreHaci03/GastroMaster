@@ -1,0 +1,58 @@
+﻿<li class="nav-item dropdown hidden-caret">
+    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <i class="la la-bell"></i>
+        <span class="notification" id="UnReadNotificationCount">0</span>
+    </a>
+    <ul class="dropdown-menu notif-box" aria-labelledby="navbarDropdown">
+        <li>
+            <div class="dropdown-title"><span id="UnReadNotificationTitle">0</span> okunmamış bildirimin var</div>
+        </li>
+        <li>
+            <div class="notif-center">
+                <div id="notiList"></div>
+            </div>
+        </li>
+        <li>
+            <a class="see-all" href="/Admin/Notification/Index"><strong>Tüm bildirimleri gör</strong> <i class="la la-angle-right"></i></a>
+        </li>
+    </ul>
+</li>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/8.0.7/signalr.min.js"></script>
+<script>
+    var notificationConnection = new signalR.HubConnectionBuilder()
+        .withUrl("https://localhost:7139/SignalRHub")
+        .withAutomaticReconnect()
+        .build();
+
+    notificationConnection.on("ReceiveUnreadNotificationCount", function (data) {
+        document.getElementById("UnReadNotificationCount").innerText = data; // Tek Benzersiz Document Id Kullanılabilir.
+        document.getElementById("UnReadNotificationTitle").innerText = data;
+    });
+
+    notificationConnection.on("ReceiveUnReadNotificationListByFalse", function (data) {
+        console.log(data);
+        $("#notiList").empty();
+        for (var i = 0; i < data.length; i++) {
+            $("#notiList").append(`<a href="#">
+               <div class="notif-icon notif-primary"> <i class="${data[i].icon}"></i> </div>
+               <div class="notif-content">
+                <span class="block">
+                ${data[i].description}
+                </span>
+                <span class="time">${data[i].date}</span>
+                    </div>
+                      </a>
+            `);
+        };
+    });
+
+    notificationConnection.start().then(function () {
+        notificationConnection.invoke("SendNotification");
+
+        setInterval(function () {
+            if (notificationConnection.state === signalR.HubConnectionState.Connected) {
+                notificationConnection.invoke("SendNotification");
+            }
+        }, 3000);
+    });
+</script>

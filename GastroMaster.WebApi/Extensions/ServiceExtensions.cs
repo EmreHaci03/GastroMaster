@@ -27,6 +27,7 @@ namespace GastroMaster.WebApi.Extensions
             services.AddScoped<INewsletterDal, EfNewsletterDal>();
             services.AddScoped<IAboutItemDal, EfAboutItemDal>();
             services.AddScoped<ISliderDal, EfSliderDal>();
+            services.AddScoped<INotificationDal, EfNotificationDal>();
 
             services.AddScoped<IStatisticService, StatisticManager>();
             services.AddScoped<IOrderService, OrderManager>();
@@ -45,6 +46,7 @@ namespace GastroMaster.WebApi.Extensions
             services.AddScoped<INewsletterService, NewsletterManager>();
             services.AddScoped<IAboutItemService, AboutItemManager>();
             services.AddScoped<ISliderService, SliderManager>();
+            services.AddScoped<INotificationService, NotificationManager>();
 
             services.AddAutoMapper(cfg => { }, typeof(GeneralMapping));
 

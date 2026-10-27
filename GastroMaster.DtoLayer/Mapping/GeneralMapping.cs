@@ -11,6 +11,7 @@ using GastroMaster.DtoLayer.DTOS.DiscountDtos;
 using GastroMaster.DtoLayer.DTOS.FeatureDtos;
 using GastroMaster.DtoLayer.DTOS.MenuTableDtos;
 using GastroMaster.DtoLayer.DTOS.NewsletterDtos;
+using GastroMaster.DtoLayer.DTOS.NotificationDtos;
 using GastroMaster.DtoLayer.DTOS.OrderDetailDtos;
 using GastroMaster.DtoLayer.DTOS.OrderDtos;
 using GastroMaster.DtoLayer.DTOS.ProductDtos;
@@ -49,6 +50,13 @@ namespace GastroMaster.DtoLayer.Mapping
             CreateMap<Booking, UpdateBookingDto>().ReverseMap();
             CreateMap<Booking, GetBookingByIdDto>().ReverseMap();
             //Booking//
+
+            //Notification//
+            CreateMap<Notification, ResultNotificationDto>().ReverseMap();
+            CreateMap<Notification, CreateNotificationDto>().ReverseMap();
+            CreateMap<Notification, UpdateNotificationDto>().ReverseMap();
+            CreateMap<Notification, GetNotificationByIdDto>().ReverseMap();
+            //Notification//
 
             //Category//
             CreateMap<Category, ResultCategoryDto>().ReverseMap();

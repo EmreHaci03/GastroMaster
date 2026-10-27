@@ -1,26 +1,27 @@
 ﻿<section class="section book" id="rezervasyon">
     <div class="container">
-        <form class="book-form" action="#" method="post">
+        <form class="book-form" action="/Booking/CreateBooking" method="post">
+            @Html.AntiForgeryToken()
             <div class="section-head" style="margin-bottom: 30px;">
                 <h2>Masanı ayırt</h2>
                 <p>Onay mesajını telefonuna gönderiyoruz.</p>
             </div>
             <div class="form-grid">
-                <div class="field"><label for="name">Ad soyad</label><input id="name" type="text" placeholder="Adın ve soyadın" required /></div>
-                <div class="field"><label for="phone">Telefon</label><input id="phone" type="tel" placeholder="05xx xxx xx xx" required /></div>
-                <div class="field full"><label for="mail">E-posta</label><input id="mail" type="email" placeholder="ornek@mail.com" /></div>
+                <div class="field"><label for="name">Ad soyad</label><input id="name" name="Name" type="text" placeholder="Adın ve soyadın" required /></div>
+                <div class="field"><label for="phone">Telefon</label><input id="phone" name="Phone" type="tel" placeholder="05xx xxx xx xx" required /></div>
+                <div class="field full"><label for="mail">E-posta</label><input id="mail" name="Mail" type="email" placeholder="ornek@mail.com" /></div>
                 <div class="field">
                     <label for="persons">Kişi sayısı</label>
-                    <select id="persons" required>
+                    <select id="persons" name="PersonCount" required>
                         <option value="" disabled selected>Seç</option>
-                        <option>2 kişi</option>
-                        <option>3 kişi</option>
-                        <option>4 kişi</option>
-                        <option>5 kişi</option>
-                        <option>6 kişi</option>
+                        <option value="2">2 kişi</option>
+                        <option value="3">3 kişi</option>
+                        <option value="4">4 kişi</option>
+                        <option value="5">5 kişi</option>
+                        <option value="6">6 kişi</option>
                     </select>
                 </div>
-                <div class="field"><label for="date">Tarih ve saat</label><input id="date" type="datetime-local" required /></div>
+                <div class="field"><label for="date">Tarih ve saat</label><input id="date" name="Date" type="datetime-local" required /></div>
             </div>
             <button type="submit" class="btn btn-primary">Rezervasyonu tamamla</button>
         </form>

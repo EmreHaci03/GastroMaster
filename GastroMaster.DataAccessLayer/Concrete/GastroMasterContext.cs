@@ -25,6 +25,7 @@ namespace GastroMaster.DataAccessLayer.Concrete
         public DbSet<Newsletter> Newsletters { get; set; }
         public DbSet<AboutItem> AboutItems { get; set; }
         public DbSet<Slider> Sliders { get; set; }
+        public DbSet<Notification> Notifications { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

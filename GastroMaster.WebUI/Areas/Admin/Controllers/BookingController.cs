@@ -15,14 +15,7 @@ namespace GastroMaster.WebUI.Areas.Admin.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var client = httpClientFactory.CreateClient();
-            var responseMessage = await client.GetAsync("https://localhost:7139/api/Booking");
-            if (responseMessage.IsSuccessStatusCode)
-            {
-                var values = await responseMessage.Content.ReadFromJsonAsync<List<ResultBookingDto>>();
-                return View(values);
-            }
-            return View(new List<ResultBookingDto>());
+            return View();
         }
 
         [HttpGet]

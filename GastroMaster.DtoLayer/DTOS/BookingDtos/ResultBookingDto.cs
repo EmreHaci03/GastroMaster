@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
+﻿
 namespace GastroMaster.DtoLayer.DTOS.BookingDtos
 {
     public class ResultBookingDto
@@ -12,5 +9,6 @@ namespace GastroMaster.DtoLayer.DTOS.BookingDtos
         public string Mail { get; set; }
         public int PersonCount { get; set; }
         public DateTime Date { get; set; }
+        public string Status { get; set; }
     }
 }

@@ -311,8 +311,8 @@
             <div class="col-md-3">
                 <div class="stat-box bg-purple">
                     <div class="stat-label">Bugünkü Rezervasyon</div>
-                    <div class="stat-value">3</div>
-                    <div class="stat-sub">Toplam 11 kişi</div>
+                    <div class="stat-value" id="TodayReservationCount">0</div>
+                    <div class="stat-sub" id="TotalReservationCount">Toplam 0 kişi</div>
                     <i class="la la-calendar stat-icon"></i>
                 </div>
             </div>
@@ -519,6 +519,15 @@
             setValue("product" + (i + 1) + "Sold", item ? item.soldCount : 0);
         }
     });
+
+    connection.on("ReceiveTodayReservationCount", function (data) {
+        document.getElementById("TodayReservationCount").innerText = data;
+    });
+    connection.on("ReceiveTotalReservationCount", function (data) {
+        document.getElementById("TotalReservationCount").innerText = data;
+    });
+
+
 
     connection.on("ReceiveLastWeekRevenue", function (data) {
         var days = ["Paz", "Pzt", "Sal", "Çar", "Per", "Cum", "Cmt"];

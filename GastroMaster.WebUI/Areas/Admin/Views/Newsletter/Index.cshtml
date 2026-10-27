@@ -1,6 +1,4 @@
-﻿@model List<ResultNewsletterDto>
-
-@{
+﻿@{
     ViewData["Title"] = "Bülten Aboneleri";
     Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
 }
@@ -128,7 +126,7 @@
                             <div class="col-7 d-flex align-items-center">
                                 <div class="numbers">
                                     <p class="card-category">Toplam Abone</p>
-                                    <h4 class="card-title">@Model.Count</h4>
+                                    <h4 class="card-title" id="TotalNewsletterCount">0</h4>
                                 </div>
                             </div>
                         </div>
@@ -147,7 +145,7 @@
                             <div class="col-7 d-flex align-items-center">
                                 <div class="numbers">
                                     <p class="card-category">Gmail</p>
-                                    <h4 class="card-title">@Model.Count(x => x.Email.EndsWith("@gmail.com"))</h4>
+                                    <h4 class="card-title" id="GmailCount">0</h4>
                                 </div>
                             </div>
                         </div>
@@ -166,7 +164,7 @@
                             <div class="col-7 d-flex align-items-center">
                                 <div class="numbers">
                                     <p class="card-category">Hotmail / Outlook</p>
-                                    <h4 class="card-title">@Model.Count(x => x.Email.EndsWith("@hotmail.com") || x.Email.EndsWith("@outlook.com"))</h4>
+                                    <h4 class="card-title" id="HotmailCount">0</h4>
                                 </div>
                             </div>
                         </div>
@@ -185,7 +183,7 @@
                             <div class="col-7 d-flex align-items-center">
                                 <div class="numbers">
                                     <p class="card-category">Diğer</p>
-                                    <h4 class="card-title">@Model.Count(x => !x.Email.EndsWith("@gmail.com") && !x.Email.EndsWith("@hotmail.com") && !x.Email.EndsWith("@outlook.com"))</h4>
+                                    <h4 class="card-title" id="OtherMailCount">0</h4>
                                 </div>
                             </div>
                         </div>
@@ -202,10 +200,7 @@
                         <div class="card-category">Bültene abone olan tüm mail adreslerini buradan yönetebilirsiniz</div>
                     </div>
                     <div class="card-body">
-                        @if (Model.Any())
-                        {
-                            <input type="text" id="mailSearch" class="form-control mail-search" placeholder="Mail adresinde ara..." />
-                        }
+                        <input type="text" id="mailSearch" class="form-control mail-search" placeholder="Mail adresinde ara..." />
                         <div class="table-responsive">
                             <table class="table table-striped table-hover mt-3">
                                 <thead>
@@ -217,40 +212,7 @@
                                         <th scope="col" class="text-center">İşlemler</th>
                                     </tr>
                                 </thead>
-                                <tbody>
-                                    @if (Model.Any())
-                                    {
-                                        @foreach (var item in Model)
-                                        {
-                                            <tr data-mail="@item.Email.ToLower()">
-                                                <td>@item.NewsletterId</td>
-                                                <td><div class="mail-avatar">@item.Email.Substring(0, 1)</div></td>
-                                                <td><strong>@item.Email</strong></td>
-                                                <td><span class="mail-domain">@item.Email.Substring(item.Email.IndexOf("@@") + 1)</span></td>
-                                                <td class="text-center" style="white-space:nowrap;">
-                                                    <a href="mailto:@item.Email" class="btn btn-info btn-sm" title="Mail Gönder">
-                                                        <i class="la la-paper-plane"></i> Mail Gönder
-                                                    </a>
-                                                    <button type="button" class="btn btn-danger btn-sm" title="Sil"
-                                                            data-toggle="modal" data-target="#deleteModal"
-                                                            data-name="@item.Email"
-                                                            data-url="/Admin/Newsletter/DeleteNewsletter/@item.NewsletterId"
-                                                            onclick="setDeleteModal(this)">
-                                                        <i class="la la-trash"></i> Sil
-                                                    </button>
-                                                </td>
-                                            </tr>
-                                        }
-                                    }
-                                    else
-                                    {
-                                        <tr>
-                                            <td colspan="5" class="text-center text-muted py-4">
-                                                <i class="la la-inbox" style="font-size:32px;"></i>
-                                                <p class="mb-0">Henüz abone yok.</p>
-                                            </td>
-                                        </tr>
-                                    }
+                                <tbody id="newsList">
                                 </tbody>
                             </table>
                         </div>
@@ -287,20 +249,84 @@
         </div>
     </div>
 </div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/8.0.7/signalr.min.js"></script>
 
 <script>
+    var newsletterConnection = new signalR.HubConnectionBuilder()
+        .withUrl("https://localhost:7139/SignalRHub")
+        .withAutomaticReconnect()
+        .build();
+
+    newsletterConnection.on("ReceiveNewsletterList", function (data) {
+        var gmail = 0;
+        var hotmail = 0;
+
+        $("#newsList").empty();
+
+        if (data.length === 0) {
+            $("#newsList").append(`<tr>
+                <td colspan="5" class="text-center text-muted py-4">
+                    <i class="la la-inbox" style="font-size:32px;"></i>
+                    <p class="mb-0">Henüz abone yok.</p>
+                </td>
+            </tr>`);
+        }
+
+        for (var i = 0; i < data.length; i++) {
+            var email = data[i].email;
+            var domain = email.split("@@")[1];
+
+            if (domain === "gmail.com") gmail++;
+            if (domain === "hotmail.com" || domain === "outlook.com") hotmail++;
+
+            $("#newsList").append(`<tr data-mail="${email.toLowerCase()}">
+                <td>${i + 1}</td>
+                <td><div class="mail-avatar">${email.charAt(0)}</div></td>
+                <td><strong>${email}</strong></td>
+                <td><span class="mail-domain">${domain}</span></td>
+                <td class="text-center" style="white-space:nowrap;">
+                    <a href="mailto:${email}" class="btn btn-info btn-sm" title="Mail Gönder">
+                        <i class="la la-paper-plane"></i> Mail Gönder
+                    </a>
+                    <button type="button" class="btn btn-danger btn-sm" title="Sil"
+                            data-toggle="modal" data-target="#deleteModal"
+                            data-name="${email}"
+                            data-url="/Admin/Newsletter/DeleteNewsletter/${data[i].newsletterId}"
+                            onclick="setDeleteModal(this)">
+                        <i class="la la-trash"></i> Sil
+                    </button>
+                </td>
+            </tr>`);
+        }
+
+        $("#TotalNewsletterCount").text(data.length);
+        $("#GmailCount").text(gmail);
+        $("#HotmailCount").text(hotmail);
+        $("#OtherMailCount").text(data.length - gmail - hotmail);
+
+        filterMails();
+    });
+
+    newsletterConnection.start().then(function () {
+        newsletterConnection.invoke("SendNewsletter");
+        setInterval(function () {
+            if (newsletterConnection.state === signalR.HubConnectionState.Connected) {
+                newsletterConnection.invoke("SendNewsletter");
+            }
+        }, 8000);
+    });
+
     function setDeleteModal(button) {
         document.getElementById("deleteName").innerText = button.getAttribute("data-name");
         document.getElementById("deleteConfirm").setAttribute("href", button.getAttribute("data-url"));
     }
 
-    var mailSearch = document.getElementById("mailSearch");
-    if (mailSearch) {
-        mailSearch.addEventListener("input", function () {
-            var text = mailSearch.value.toLowerCase();
-            document.querySelectorAll("tbody tr[data-mail]").forEach(function (row) {
-                row.style.display = row.getAttribute("data-mail").includes(text) ? "" : "none";
-            });
+    function filterMails() {
+        var text = document.getElementById("mailSearch").value.toLowerCase();
+        document.querySelectorAll("#newsList tr[data-mail]").forEach(function (row) {
+            row.style.display = row.getAttribute("data-mail").includes(text) ? "" : "none";
         });
     }
+
+    document.getElementById("mailSearch").addEventListener("input", filterMails);
 </script>

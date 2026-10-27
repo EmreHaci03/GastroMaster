@@ -1,0 +1,384 @@
+﻿@{
+    ViewData["Title"] = "Bildirimler";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<style>
+    .notif-type-icon {
+        width: 42px;
+        height: 42px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 20px;
+    }
+
+        .notif-type-icon.type-booking {
+            background: rgba(23, 125, 255, .12);
+            color: #177dff;
+        }
+
+        .notif-type-icon.type-other {
+            background: rgba(49, 206, 54, .12);
+            color: #31ce36;
+        }
+
+        .notif-type-icon.type-default {
+            background: rgba(255, 190, 51, .15);
+            color: #c48a00;
+        }
+
+    .notif-time {
+        font-size: 13px;
+        color: #8d9498;
+        white-space: nowrap;
+    }
+
+    tr.unread td {
+        background: rgba(255, 190, 51, .08);
+    }
+
+        tr.unread td:first-child {
+            box-shadow: inset 3px 0 0 #ffbe33;
+        }
+
+    .status-filter {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-bottom: 10px;
+    }
+
+        .status-filter button {
+            border: 1px solid #e3e6ea;
+            background: #fff;
+            border-radius: 20px;
+            padding: 5px 14px;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all .2s;
+        }
+
+            .status-filter button:hover,
+            .status-filter button.active {
+                background: #222831;
+                border-color: #222831;
+                color: #ffbe33;
+            }
+
+    .delete-modal .modal-content {
+        border: none;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 15px 40px rgba(0, 0, 0, .2);
+    }
+
+    .delete-modal .modal-body {
+        padding: 35px 30px 25px;
+        text-align: center;
+    }
+
+    .delete-modal .delete-icon {
+        width: 80px;
+        height: 80px;
+        margin: 0 auto 20px;
+        border-radius: 50%;
+        background: rgba(243, 84, 93, .12);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        animation: deletePulse 1.6s infinite;
+    }
+
+        .delete-modal .delete-icon i {
+            font-size: 40px;
+            color: #f3545d;
+        }
+
+    .delete-modal h4 {
+        font-weight: 600;
+        margin-bottom: 10px;
+    }
+
+    .delete-modal .delete-name {
+        display: inline-block;
+        margin: 6px 0 14px;
+        padding: 4px 14px;
+        border-radius: 20px;
+        background: #f4f5f8;
+        font-weight: 600;
+        color: #333;
+    }
+
+    .delete-modal .delete-warning {
+        font-size: 13px;
+        color: #8d9498;
+        margin-bottom: 0;
+    }
+
+    .delete-modal .modal-footer {
+        border-top: none;
+        justify-content: center;
+        padding: 0 30px 30px;
+    }
+
+        .delete-modal .modal-footer .btn {
+            min-width: 130px;
+            border-radius: 25px;
+            font-weight: 500;
+        }
+
+    @@keyframes deletePulse {
+        0% {
+            box-shadow: 0 0 0 0 rgba(243, 84, 93, .35);
+        }
+
+        70% {
+            box-shadow: 0 0 0 15px rgba(243, 84, 93, 0);
+        }
+
+        100% {
+            box-shadow: 0 0 0 0 rgba(243, 84, 93, 0);
+        }
+    }
+</style>
+
+<div class="content">
+    <div class="container-fluid">
+        <h4 class="page-title">Bildirimler</h4>
+
+        <div class="row">
+            <div class="col-md-3">
+                <div class="card card-stats card-primary">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-5">
+                                <div class="icon-big text-center">
+                                    <i class="la la-bell"></i>
+                                </div>
+                            </div>
+                            <div class="col-7 d-flex align-items-center">
+                                <div class="numbers">
+                                    <p class="card-category">Toplam</p>
+                                    <h4 class="card-title" id="TotalNotificationCount">0</h4>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card card-stats card-warning">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-5">
+                                <div class="icon-big text-center">
+                                    <i class="la la-envelope"></i>
+                                </div>
+                            </div>
+                            <div class="col-7 d-flex align-items-center">
+                                <div class="numbers">
+                                    <p class="card-category">Okunmamış</p>
+                                    <h4 class="card-title" id="UnreadCount">0</h4>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card card-stats card-success">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-5">
+                                <div class="icon-big text-center">
+                                    <i class="la la-check-circle"></i>
+                                </div>
+                            </div>
+                            <div class="col-7 d-flex align-items-center">
+                                <div class="numbers">
+                                    <p class="card-category">Okunmuş</p>
+                                    <h4 class="card-title" id="ReadCount">0</h4>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card card-stats card-danger">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-5">
+                                <div class="icon-big text-center">
+                                    <i class="la la-calendar"></i>
+                                </div>
+                            </div>
+                            <div class="col-7 d-flex align-items-center">
+                                <div class="numbers">
+                                    <p class="card-category">Bugün</p>
+                                    <h4 class="card-title" id="TodayNotificationCount">0</h4>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">Bildirim Listesi</div>
+                        <div class="card-category">Rezervasyon ve abonelik bildirimlerini buradan takip edebilirsiniz</div>
+                    </div>
+                    <div class="card-body">
+                        <div class="status-filter">
+                            <button type="button" class="active" data-filter="all">Tümü (<span id="FilterAllCount">0</span>)</button>
+                            <button type="button" data-filter="unread">Okunmamış (<span id="FilterUnreadCount">0</span>)</button>
+                            <button type="button" data-filter="read">Okunmuş (<span id="FilterReadCount">0</span>)</button>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-hover mt-3">
+                                <thead>
+                                    <tr>
+                                        <th scope="col"></th>
+                                        <th scope="col">Bildirim</th>
+                                        <th scope="col">Tür</th>
+                                        <th scope="col">Zaman</th>
+                                        <th scope="col">Durum</th>
+                                        <th scope="col" class="text-center">İşlemler</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="notificationTable">
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade delete-modal" id="deleteModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="delete-icon">
+                    <i class="la la-trash"></i>
+                </div>
+                <h4>Bildirimi Sil</h4>
+                <p class="mb-0">Aşağıdaki bildirimi silmek üzeresiniz:</p>
+                <span class="delete-name" id="deleteName"></span>
+                <p class="delete-warning">
+                    <i class="la la-exclamation-triangle"></i>
+                    Bu işlem geri alınamaz.
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">
+                    <i class="la la-close"></i> Vazgeç
+                </button>
+                <a href="#" id="deleteConfirm" class="btn btn-danger">
+                    <i class="la la-trash"></i> Evet, Sil
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/8.0.7/signalr.min.js"></script>
+<script>
+
+    var notificationConnection = new signalR.HubConnectionBuilder()
+        .withUrl("https://localhost:7139/SignalRHub")
+        .withAutomaticReconnect()
+        .build();
+
+    notificationConnection.on("ReceiveNotificationList", function (data) {
+        var unread = 0;
+        var today = 0;
+        var todayText = new Date().toDateString();
+
+        $("#notificationTable").empty();
+
+        for (var i = 0; i < data.length; i++) {
+            var item = data[i];
+            var status = item.status ? "read" : "unread";
+            var icon = item.icon ? item.icon : "la la-bell";
+            var typeClass = item.type === "Rezervasyon" ? "type-booking" : item.type === "Abone" ? "type-other" : "type-default";
+
+            if (!item.status) unread++;
+            if (new Date(item.date).toDateString() === todayText) today++;
+
+            var statusBadge = item.status
+                ? `<span class="badge badge-success"><i class="la la-check"></i> Okundu</span>`
+                : `<span class="badge badge-warning"><i class="la la-circle"></i> Yeni</span>`;
+
+            var statusButton = item.status
+                ? `<a href="/Admin/Notification/NotificationStatusToFalse/${item.notificationId}" class="btn btn-default btn-sm"><i class="la la-envelope"></i> Okunmadı</a>`
+                : `<a href="/Admin/Notification/NotificationStatusToTrue/${item.notificationId}" class="btn btn-success btn-sm"><i class="la la-check"></i> Okundu</a>`;
+
+            $("#notificationTable").append(`<tr class="${status}" data-status="${status}">
+            <td>
+                <div class="notif-type-icon ${typeClass}">
+                    <i class="${icon}"></i>
+                </div>
+            </td>
+            <td style="min-width:240px;"><strong>${item.description}</strong></td>
+            <td><span class="badge badge-info">${item.type}</span></td>
+            <td class="notif-time">${new Date(item.date).toLocaleString("tr-TR")}</td>
+            <td>${statusBadge}</td>
+            <td class="text-center" style="white-space:nowrap;">
+                ${statusButton}
+                <button type="button" class="btn btn-danger btn-sm"
+                        data-toggle="modal" data-target="#deleteModal"
+                        data-name="${item.description}"
+                        data-url="/Admin/Notification/DeleteNotification/${item.notificationId}"
+                        onclick="setDeleteModal(this)">
+                    <i class="la la-trash"></i> Sil
+                </button>
+            </td>
+        </tr>`);
+        }
+
+        $("#TotalNotificationCount").text(data.length);
+        $("#UnreadCount").text(unread);
+        $("#ReadCount").text(data.length - unread);
+        $("#TodayNotificationCount").text(today);
+        $("#FilterAllCount").text(data.length);
+        $("#FilterUnreadCount").text(unread);
+        $("#FilterReadCount").text(data.length - unread);
+
+        $(".status-filter button.active").click();
+    });
+
+    notificationConnection.start().then(function () {
+        notificationConnection.invoke("SendNotification");
+        setInterval(function () {
+            if (notificationConnection.state === signalR.HubConnectionState.Connected) {
+                notificationConnection.invoke("SendNotification");
+            }
+        }, 5000);
+    });
+
+    function setDeleteModal(button) {
+        document.getElementById("deleteName").innerText = button.getAttribute("data-name");
+        document.getElementById("deleteConfirm").setAttribute("href", button.getAttribute("data-url"));
+    }
+
+    var statusButtons = document.querySelectorAll(".status-filter button");
+    statusButtons.forEach(function (button) {
+        button.addEventListener("click", function () {
+            var filter = button.getAttribute("data-filter");
+            statusButtons.forEach(function (b) { b.classList.remove("active"); });
+            button.classList.add("active");
+            document.querySelectorAll("tbody tr[data-status]").forEach(function (row) {
+                row.style.display = (filter === "all" || row.getAttribute("data-status") === filter) ? "" : "none";
+            });
+        });
+    });
+</script>

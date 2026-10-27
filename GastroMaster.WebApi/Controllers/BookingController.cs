@@ -28,6 +28,20 @@ namespace GastroMaster.WebApi.Controllers
             return Ok(result);
         }
 
+        [HttpGet("TotalBookingCount")]
+        public async Task<IActionResult> TotalBookingCount()
+        {
+            var result = await bookingService.TGetTotalReservationCount();
+            return Ok(result);
+        }
+
+        [HttpGet("TodayBookingCount")]
+        public async Task<IActionResult> TodayBookingCount()
+        {
+            var result = await bookingService.TGetTodayReservationCount();
+            return Ok(result);
+        }
+
         [HttpGet("{id}")]
         public async Task<IActionResult> GetBookingById(int id)
         {
@@ -39,7 +53,16 @@ namespace GastroMaster.WebApi.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateBooking(CreateBookingDto createBookingDto)
         {
+            var alreadyBooking = await bookingService.TIsAlreadyBooking(createBookingDto.Date);
+            if (alreadyBooking)
+            {
+                return BadRequest("Bu tarih ve saat için zaten rezervasyon var");
+            }
             var value = mapper.Map<Booking>(createBookingDto);
+            if (await bookingService.TIsDuplicateBookingAsync(value))
+            {
+                return BadRequest("Bu bilgilerle zaten bir rezervasyonun var");
+            }
             await bookingService.TInsertAsync(value);
             return Ok("Rezervasyon eklendi");
         }
