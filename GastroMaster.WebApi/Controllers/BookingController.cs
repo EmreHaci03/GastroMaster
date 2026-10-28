@@ -28,6 +28,29 @@ namespace GastroMaster.WebApi.Controllers
             return Ok(result);
         }
 
+        [HttpPut("BookingStatusPending/{id}")]
+        public async Task<IActionResult> BookingStatusPending(int id)
+        {
+            await bookingService.TBookingStatusPending(id);
+            return Ok("Rezervasyon Beklemeye Alındı");
+        }
+
+        [HttpPut("BookingStatusApproved/{id}")]
+        public async Task<IActionResult> BookingStatusApproved(int id)
+        {
+            await bookingService.TBookingStatusApproved(id);
+            return Ok("Rezervasyon Onaylandı");
+        }
+
+
+        [HttpPut("BookingStatusCancelled/{id}")]
+        public async Task<IActionResult> BookingStatusCancelled(int id)
+        {
+            await bookingService.TCancelledStatusApproved(id);
+            return Ok("Rezervasyon İptal Edildi");
+        }
+
+
         [HttpGet("TotalBookingCount")]
         public async Task<IActionResult> TotalBookingCount()
         {

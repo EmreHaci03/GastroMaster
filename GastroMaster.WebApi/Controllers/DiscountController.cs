@@ -27,6 +27,27 @@ namespace GastroMaster.WebApi.Controllers
             var result = mapper.Map<List<ResultDiscountDto>>(values);
             return Ok(result);
         }
+        [HttpGet("GetTrueDiscountStatus")]
+        public async Task<IActionResult> GetTrueDiscountStatus()
+        {
+            var values = await discountService.TGetStatusTrueDiscountList();
+            var result = mapper.Map<List<ResultDiscountDto>>(values);
+            return Ok(result);
+        }
+
+        [HttpPut("ChangeStatusToTrue/{id}")]
+        public async Task<IActionResult> ChangeStatusToTrue(int id)
+        {
+            await discountService.TChangeStatusToTrue(id);
+            return Ok("İndirim aktif hale getirildi");
+        }
+
+        [HttpPut("ChangeStatusToFalse/{id}")]
+        public async Task<IActionResult> ChangeStatusToFalse(int id)
+        {
+            await discountService.TChangeStatusToFalse(id);
+            return Ok("İndirim Pasif Hale Getirildi");
+        }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetDiscountById(int id)

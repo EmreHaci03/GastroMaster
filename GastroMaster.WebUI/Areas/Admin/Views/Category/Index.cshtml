@@ -3,6 +3,7 @@
 @{
     ViewData["Title"] = "Kategoriler";
     Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+    int count = 0;
 }
 
 <style>
@@ -175,8 +176,9 @@
                                     {
                                         @foreach (var item in Model)
                                         {
+                                            count++;
                                             <tr>
-                                                <td>@item.CategoryId</td>
+                                                <td>@count</td>
                                                 <td><strong>@item.CategoryName</strong></td>
                                                 <td>
                                                     @if (item.CategoryStatus)

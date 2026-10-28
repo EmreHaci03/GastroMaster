@@ -27,6 +27,14 @@ namespace GastroMaster.WebApi.Controllers
             return Ok(result);
         }
 
+        [HttpGet("GetMenuWithOrderStatus")]
+        public async Task<IActionResult> GetMenuWithOrderStatus()
+        {
+            var values=await _menuTableService.TGetMenuTableWithOrderStatus();
+            var result=_mapper.Map<List<GetMenuTableWithOrderStatusDto>>(values);
+            return Ok(result);
+        }
+
         [HttpGet("GetMenuTableCount")]
         public async Task<IActionResult> MenuTableCount()
         {

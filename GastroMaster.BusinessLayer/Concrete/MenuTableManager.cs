@@ -1,5 +1,7 @@
 ﻿using GastroMaster.BusinessLayer.Abstract;
 using GastroMaster.DataAccessLayer.Abstract;
+using GastroMaster.DataAccessLayer.Models;
+using GastroMaster.DtoLayer.DTOS.MenuTableDtos;
 using GastroMaster.EntityLayer.Entities;
 
 namespace GastroMaster.BusinessLayer.Concrete
@@ -31,6 +33,11 @@ namespace GastroMaster.BusinessLayer.Concrete
         public async Task<MenuTable?> TGetByIdAsync(int id)
         {
             return await _menuTableDal.GetByIdAsync(id);
+        }
+
+        public async Task<List<GetMenuTableWithOrderStatusModel>> TGetMenuTableWithOrderStatus()
+        {
+            return await _menuTableDal.GetMenuTableWithOrderStatus();
         }
 
         public async Task TInsertAsync(MenuTable t)

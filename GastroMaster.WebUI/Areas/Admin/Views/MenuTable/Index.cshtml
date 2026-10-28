@@ -1,0 +1,347 @@
+﻿@model List<GetMenuTableWithOrderStatusDto>
+
+@{
+    ViewData["Title"] = "Masalar";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<style>
+    .table-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+        gap: 18px;
+    }
+
+    .table-card {
+        border-radius: 14px;
+        padding: 22px 16px 16px;
+        text-align: center;
+        border: 2px solid transparent;
+        background: #fff;
+        box-shadow: 0 2px 12px rgba(0, 0, 0, .05);
+        transition: transform .2s;
+    }
+
+        .table-card:hover {
+            transform: translateY(-3px);
+        }
+
+        .table-card.empty {
+            border-color: rgba(49, 206, 54, .35);
+        }
+
+        .table-card.full {
+            border-color: rgba(243, 84, 93, .35);
+        }
+
+        .table-card.passive {
+            border-color: #e3e6ea;
+            opacity: .6;
+        }
+
+        .table-card .table-icon {
+            width: 64px;
+            height: 64px;
+            margin: 0 auto 12px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 30px;
+        }
+
+        .table-card.empty .table-icon {
+            background: rgba(49, 206, 54, .12);
+            color: #2bb930;
+        }
+
+        .table-card.full .table-icon {
+            background: rgba(243, 84, 93, .12);
+            color: #e63946;
+        }
+
+        .table-card.passive .table-icon {
+            background: #f4f5f8;
+            color: #8d9498;
+        }
+
+        .table-card h5 {
+            font-weight: 700;
+            margin-bottom: 6px;
+        }
+
+        .table-card .order-status {
+            display: block;
+            font-size: 12px;
+            color: #8d9498;
+            margin-top: 6px;
+        }
+
+        .table-card .table-actions {
+            display: flex;
+            gap: 6px;
+            justify-content: center;
+            margin-top: 14px;
+        }
+
+    .delete-modal .modal-content {
+        border: none;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 15px 40px rgba(0, 0, 0, .2);
+    }
+
+    .delete-modal .modal-body {
+        padding: 35px 30px 25px;
+        text-align: center;
+    }
+
+    .delete-modal .delete-icon {
+        width: 80px;
+        height: 80px;
+        margin: 0 auto 20px;
+        border-radius: 50%;
+        background: rgba(243, 84, 93, .12);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        animation: deletePulse 1.6s infinite;
+    }
+
+        .delete-modal .delete-icon i {
+            font-size: 40px;
+            color: #f3545d;
+        }
+
+    .delete-modal h4 {
+        font-weight: 600;
+        margin-bottom: 10px;
+    }
+
+    .delete-modal .delete-name {
+        display: inline-block;
+        margin: 6px 0 14px;
+        padding: 4px 14px;
+        border-radius: 20px;
+        background: #f4f5f8;
+        font-weight: 600;
+        color: #333;
+    }
+
+    .delete-modal .delete-warning {
+        font-size: 13px;
+        color: #8d9498;
+        margin-bottom: 0;
+    }
+
+    .delete-modal .modal-footer {
+        border-top: none;
+        justify-content: center;
+        padding: 0 30px 30px;
+    }
+
+        .delete-modal .modal-footer .btn {
+            min-width: 130px;
+            border-radius: 25px;
+            font-weight: 500;
+        }
+
+    @@keyframes deletePulse {
+        0% {
+            box-shadow: 0 0 0 0 rgba(243, 84, 93, .35);
+        }
+
+        70% {
+            box-shadow: 0 0 0 15px rgba(243, 84, 93, 0);
+        }
+
+        100% {
+            box-shadow: 0 0 0 0 rgba(243, 84, 93, 0);
+        }
+    }
+</style>
+
+<div class="content">
+    <div class="container-fluid">
+        <h4 class="page-title">Masalar</h4>
+
+        <div class="row">
+            <div class="col-md-4">
+                <div class="card card-stats card-primary">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-5">
+                                <div class="icon-big text-center">
+                                    <i class="la la-th-large"></i>
+                                </div>
+                            </div>
+                            <div class="col-7 d-flex align-items-center">
+                                <div class="numbers">
+                                    <p class="card-category">Toplam Masa</p>
+                                    <h4 class="card-title" id="TotalTableCount">0</h4>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card card-stats card-danger">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-5">
+                                <div class="icon-big text-center">
+                                    <i class="la la-users"></i>
+                                </div>
+                            </div>
+                            <div class="col-7 d-flex align-items-center">
+                                <div class="numbers">
+                                    <p class="card-category">Dolu</p>
+                                    <h4 class="card-title" id="FullTableCount">0</h4>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card card-stats card-success">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-5">
+                                <div class="icon-big text-center">
+                                    <i class="la la-check-circle"></i>
+                                </div>
+                            </div>
+                            <div class="col-7 d-flex align-items-center">
+                                <div class="numbers">
+                                    <p class="card-category">Boş</p>
+                                    <h4 class="card-title" id="EmptyTableCount">0</h4>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <div>
+                            <div class="card-title">Masa Listesi</div>
+                            <div class="card-category">Restorandaki masaları ve anlık doluluk durumlarını buradan takip edebilirsiniz</div>
+                        </div>
+                        <a href="/Admin/MenuTable/CreateMenuTable" class="btn btn-primary">
+                            <i class="la la-plus"></i> Yeni Masa
+                        </a>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-grid" id="menuTableList"> 
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade delete-modal" id="deleteModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="delete-icon">
+                    <i class="la la-trash"></i>
+                </div>
+                <h4>Masayı Sil</h4>
+                <p class="mb-0">Aşağıdaki masayı silmek üzeresiniz:</p>
+                <span class="delete-name" id="deleteName"></span>
+                <p class="delete-warning">
+                    <i class="la la-exclamation-triangle"></i>
+                    Bu işlem geri alınamaz. Masaya bağlı siparişler varsa silme işlemi başarısız olabilir.
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">
+                    <i class="la la-close"></i> Vazgeç
+                </button>
+                <a href="#" id="deleteConfirm" class="btn btn-danger">
+                    <i class="la la-trash"></i> Evet, Sil
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    var MenuTableConnection = new signalR.HubConnectionBuilder()
+        .withUrl("https://localhost:7139/SignalRHub")
+        .withAutomaticReconnect()
+        .build();
+
+    MenuTableConnection.on("ReceiveMenuTableWithOrderStatus", function (data) {
+        var full = 0;
+        var empty = 0;
+
+        $("#menuTableList").empty();
+
+        for (var i = 0; i < data.length; i++) {
+            var item = data[i];
+            var isFull = item.isFull;
+            var cardClass = !item.status ? "passive" : isFull ? "full" : "empty";
+            var icon = isFull ? "la-users" : "la-cutlery";
+
+            var badge = !item.status
+                ? `<span class="badge badge-default"><i class="la la-ban"></i> Pasif</span>`
+                : isFull
+                    ? `<span class="badge badge-danger"><i class="la la-users"></i> Dolu</span>`
+                    : `<span class="badge badge-success"><i class="la la-check"></i> Boş</span>`;
+
+            if (item.status && isFull) full++;
+            if (item.status && !isFull) empty++;
+
+            $("#menuTableList").append(`
+            <div class="table-card ${cardClass}">
+                <div class="table-icon">
+                    <i class="la ${icon}"></i>
+                </div>
+                <h5>${item.name}</h5>
+                ${badge}
+                <span class="order-status">${item.orderStatus}</span>
+                <div class="table-actions">
+                    <a href="/Admin/MenuTable/UpdateMenuTable/${item.menuTableId}" class="btn btn-warning btn-sm" title="Güncelle">
+                        <i class="la la-edit"></i>
+                    </a>
+                    <button type="button" class="btn btn-danger btn-sm" title="Sil"
+                            data-toggle="modal" data-target="#deleteModal"
+                            data-name="${item.name}"
+                            data-url="/Admin/MenuTable/DeleteMenuTable/${item.menuTableId}"
+                            onclick="setDeleteModal(this)">
+                        <i class="la la-trash"></i>
+                    </button>
+                </div>
+            </div>
+        `);
+        }
+
+        $("#TotalTableCount").text(data.length);
+        $("#FullTableCount").text(full);
+        $("#EmptyTableCount").text(empty);
+    });
+
+    MenuTableConnection.start().then(function () {
+        MenuTableConnection.invoke("SendMenuTable");
+        setInterval(function () {
+            if (MenuTableConnection.state === signalR.HubConnectionState.Connected) {
+                MenuTableConnection.invoke("SendMenuTable");
+            }
+        }, 5000);
+    });
+
+    function setDeleteModal(button) {
+        document.getElementById("deleteName").innerText = button.getAttribute("data-name");
+        document.getElementById("deleteConfirm").setAttribute("href", button.getAttribute("data-url"));
+    }
+</script>

@@ -14,6 +14,16 @@ namespace GastroMaster.BusinessLayer.Concrete
             _discountDal = discountDal;
         }
 
+        public async Task TChangeStatusToFalse(int id)
+        {
+            await _discountDal.ChangeStatusToFalse(id);
+        }
+
+        public async Task TChangeStatusToTrue(int id)
+        {
+            await _discountDal.ChangeStatusToTrue(id);
+        }
+
         public async Task TDeleteAsync(Discount t)
         {
             await _discountDal.DeleteAsync(t);
@@ -27,6 +37,11 @@ namespace GastroMaster.BusinessLayer.Concrete
         public async Task<Discount?> TGetByIdAsync(int id)
         {
             return await _discountDal.GetByIdAsync(id);
+        }
+
+        public async Task<List<Discount>> TGetStatusTrueDiscountList()
+        {
+            return await _discountDal.GetStatusTrueDiscountList();
         }
 
         public async Task TInsertAsync(Discount t)

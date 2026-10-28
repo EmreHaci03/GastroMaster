@@ -1,0 +1,47 @@
+﻿@model UpdateMenuTableDto
+
+@{
+    ViewData["Title"] = "Masa Güncelle";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="content">
+    <div class="container-fluid">
+        <h4 class="page-title">Masa Güncelle</h4>
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">Masa Bilgileri</div>
+                        <div class="card-category">"@Model.Name" masasını düzenliyorsunuz</div>
+                    </div>
+                    <form method="post">
+                        <input type="hidden" asp-for="MenuTableId" />
+                        <div class="card-body">
+                            <div class="form-group">
+                                <label asp-for="Name">Masa Adı</label>
+                                <input type="text" asp-for="Name" class="form-control" required />
+                            </div>
+                            <div class="form-check">
+                                <label class="form-check-label">
+                                    <input class="form-check-input" type="checkbox" asp-for="Status" />
+                                    <span class="form-check-sign">Aktif</span>
+                                </label>
+                                <small class="form-text text-muted">Pasif masalar sipariş ve doluluk hesaplarına dahil edilmez.</small>
+                            </div>
+                        </div>
+                        <div class="card-action">
+                            <button type="submit" class="btn btn-success">
+                                <i class="la la-check"></i> Güncelle
+                            </button>
+                            <a href="/Admin/MenuTable/Index" class="btn btn-danger">
+                                <i class="la la-close"></i> Vazgeç
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

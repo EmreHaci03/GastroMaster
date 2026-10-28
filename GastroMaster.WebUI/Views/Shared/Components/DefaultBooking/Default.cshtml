@@ -1,4 +1,128 @@
-﻿<section class="section book" id="rezervasyon">
+﻿<style>
+    .book .field-optional {
+        font-weight: 400;
+        color: var(--muted);
+        font-size: 13px;
+        margin-left: 4px;
+    }
+
+    .book .field input,
+    .book .field select,
+    .book .field textarea {
+        width: 100%;
+        font: inherit;
+        font-size: 16px;
+        padding: 14px 16px;
+        border: 1.5px solid var(--line);
+        border-radius: 12px;
+        background: var(--paper);
+        color: var(--char);
+        transition: border-color .2s, box-shadow .2s, background .2s;
+    }
+
+        .book .field input:focus,
+        .book .field select:focus,
+        .book .field textarea:focus {
+            outline: none;
+            border-color: var(--char);
+            background: #fff;
+            box-shadow: 0 0 0 4px rgba(242, 183, 5, .25);
+        }
+
+    .book .field textarea {
+        min-height: 110px;
+        resize: vertical;
+        line-height: 1.5;
+    }
+
+        .book .field textarea::placeholder,
+        .book .field input::placeholder {
+            color: #a39b91;
+        }
+
+    .book .request-box {
+        border: 1.5px solid var(--line);
+        border-radius: 14px;
+        background: var(--paper);
+        padding: 14px;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        transition: border-color .2s, box-shadow .2s;
+    }
+
+        .book .request-box:focus-within {
+            border-color: var(--char);
+            box-shadow: 0 0 0 4px rgba(242, 183, 5, .25);
+        }
+
+        .book .request-box textarea {
+            border: none;
+            background: #fff;
+            box-shadow: none;
+            padding: 12px 14px;
+        }
+
+            .book .request-box textarea:focus {
+                border: none;
+                box-shadow: none;
+            }
+
+    .book .request-chips {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+
+        .book .request-chips button {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 7px 14px;
+            border-radius: 999px;
+            border: 1.5px solid var(--line);
+            background: #fff;
+            color: var(--char-soft);
+            font: inherit;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all .2s;
+        }
+
+            .book .request-chips button i {
+                color: var(--ketchup);
+                transition: color .2s;
+            }
+
+            .book .request-chips button:hover {
+                border-color: var(--char);
+            }
+
+            .book .request-chips button.active {
+                background: var(--char);
+                border-color: var(--char);
+                color: var(--paper);
+            }
+
+                .book .request-chips button.active i {
+                    color: var(--mustard);
+                }
+
+    .book .request-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 12px;
+        color: var(--muted);
+    }
+
+    .book .request-counter {
+        font-variant-numeric: tabular-nums;
+    }
+</style>
+
+<section class="section book" id="rezervasyon">
     <div class="container">
         <form class="book-form" action="/Booking/CreateBooking" method="post">
             @Html.AntiForgeryToken()
@@ -22,6 +146,24 @@
                     </select>
                 </div>
                 <div class="field"><label for="date">Tarih ve saat</label><input id="date" name="Date" type="datetime-local" required /></div>
+                <div class="field full">
+                    <label for="description">Özel istek <span class="field-optional">isteğe bağlı</span></label>
+                    <div class="request-box">
+                        <div class="request-chips" id="requestChips">
+                            <button type="button" data-text="Doğum günü kutlaması"><i class="fa fa-birthday-cake"></i> Doğum günü</button>
+                            <button type="button" data-text="Bebek sandalyesi lazım"><i class="fa fa-child"></i> Bebek sandalyesi</button>
+                            <button type="button" data-text="Gıda alerjim var"><i class="fa fa-exclamation-circle"></i> Alerji</button>
+                            <button type="button" data-text="Cam kenarı masa"><i class="fa fa-sun-o"></i> Cam kenarı</button>
+                            <button type="button" data-text="Sessiz bir masa"><i class="fa fa-volume-off"></i> Sessiz masa</button>
+                            <button type="button" data-text="Tekerlekli sandalye ile geleceğiz"><i class="fa fa-wheelchair"></i> Erişilebilir</button>
+                        </div>
+                        <textarea id="description" name="Description" rows="3" maxlength="250" placeholder="Etiketlerden seç ya da kendin yaz..."></textarea>
+                        <div class="request-footer">
+                            <span><i class="fa fa-info-circle"></i> Notun mutfağa ve servise iletilir.</span>
+                            <span class="request-counter"><span id="requestCount">0</span> / 250</span>
+                        </div>
+                    </div>
+                </div>
             </div>
             <button type="submit" class="btn btn-primary">Rezervasyonu tamamla</button>
         </form>
@@ -38,3 +180,36 @@
         </aside>
     </div>
 </section>
+
+<script>
+    var requestInput = document.getElementById("description");
+    var requestCount = document.getElementById("requestCount");
+    var requestChips = document.querySelectorAll("#requestChips button");
+
+    function updateRequestCount() {
+        requestCount.innerText = requestInput.value.length;
+    }
+
+    requestChips.forEach(function (chip) {
+        chip.addEventListener("click", function () {
+            var text = chip.getAttribute("data-text");
+
+            if (chip.classList.contains("active")) {
+                requestInput.value = requestInput.value
+                    .split(", ")
+                    .filter(function (part) { return part !== text; })
+                    .join(", ");
+                chip.classList.remove("active");
+            } else {
+                var newValue = requestInput.value ? requestInput.value + ", " + text : text;
+                if (newValue.length > 250) return;
+                requestInput.value = newValue;
+                chip.classList.add("active");
+            }
+
+            updateRequestCount();
+        });
+    });
+
+    requestInput.addEventListener("input", updateRequestCount);
+</script>

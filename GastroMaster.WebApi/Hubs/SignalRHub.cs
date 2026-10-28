@@ -2,9 +2,9 @@
 using GastroMaster.BusinessLayer.Abstract;
 using GastroMaster.DtoLayer.DTOS.BookingDtos;
 using GastroMaster.DtoLayer.DTOS.DiscountDtos;
+using GastroMaster.DtoLayer.DTOS.MenuTableDtos;
 using GastroMaster.DtoLayer.DTOS.NewsletterDtos;
 using GastroMaster.DtoLayer.DTOS.NotificationDtos;
-using GastroMaster.DtoLayer.DTOS.OrderDetailDtos;
 using GastroMaster.DtoLayer.DTOS.ProductDtos;
 using Microsoft.AspNetCore.SignalR;
 
@@ -113,13 +113,14 @@ namespace GastroMaster.WebApi.Hubs
             var menuResult = _mapper.Map<List<ResultProductWithCategoryDto>>(menuValues);
             await Clients.Caller.SendAsync("ReceiveMenuStatistic", menuResult);
 
-            var offerValues = await _discountService.TGetAllAsync();
+            var offerValues = await _discountService.TGetStatusTrueDiscountList();
             var offerResult = _mapper.Map<List<ResultDiscountDto>>(offerValues);
-            await Clients.Caller.SendAsync("ReceiveDiscount", offerResult);
+            await Clients.Caller.SendAsync("ReceiveTrueStatusDiscount", offerResult);
 
             var value = await _productService.TGetMostExpensiveBurgerAsync();
             var result = _mapper.Map<MaxPriceHamburgerDto>(value);
             await Clients.Caller.SendAsync("ReceiveSliderBurger", result);
+
         }
         public async Task SendNotification()
         {
@@ -147,6 +148,27 @@ namespace GastroMaster.WebApi.Hubs
             var newsletterList = await _newsletterService.TGetAllAsync();
             var result=_mapper.Map<List<ResultNewsletterDto>>(newsletterList);
             await Clients.Caller.SendAsync("ReceiveNewsletterList", result);
+        }
+
+        public async Task SendMenuTable()
+        {
+            var MenuTableWithOrderStatus=await _menuTableService.TGetMenuTableWithOrderStatus();
+            var result=_mapper.Map<List<GetMenuTableWithOrderStatusDto>>(MenuTableWithOrderStatus);
+            await Clients.Caller.SendAsync("ReceiveMenuTableWithOrderStatus", result);
+        }
+        private static int Client; // static alan nesneye değil sınıfa aittir. Kaç hub nesnesi oluşturulursa oluşturulsun, hepsi aynı tek Client değişkenini kullanır.
+
+        public override async Task OnConnectedAsync()
+        {
+            Client++;
+            await Clients.All.SendAsync("ReceiveClientCount", Client);
+            await base.OnConnectedAsync();
+        }
+        public override async Task OnDisconnectedAsync(Exception? exception)
+        {
+            Client--;
+            await Clients.All.SendAsync("ReceiveClientCount", Client);
+            await base.OnDisconnectedAsync(exception);
         }
     }
 }

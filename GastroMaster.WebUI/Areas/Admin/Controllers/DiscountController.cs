@@ -26,6 +26,22 @@ namespace GastroMaster.WebUI.Areas.Admin.Controllers
         }
 
         [HttpGet]
+        public async Task<IActionResult> ChangeStatusToTrue(int id)
+        {
+            var client = httpClientFactory.CreateClient();
+            await client.PutAsync($"https://localhost:7139/api/Discount/ChangeStatusToTrue/{id}", null);
+            return RedirectToAction("Index");
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> ChangeStatusToFalse(int id)
+        {
+            var client = httpClientFactory.CreateClient();
+            await client.PutAsync($"https://localhost:7139/api/Discount/ChangeStatusToFalse/{id}", null);
+            return RedirectToAction("Index");
+        }
+
+        [HttpGet]
         public IActionResult CreateDiscount()
         {
             return View();

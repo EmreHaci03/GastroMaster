@@ -94,6 +94,13 @@
                                 </div>
                                 <span asp-validation-for="ImageUrl" class="text-danger small"></span>
                             </div>
+
+                            <div class="form-check">
+                                <label class="form-check-label">
+                                    <input asp-for="Status" id="statusInput" class="form-check-input" type="checkbox" />
+                                    <span class="form-check-sign">Aktif (ana sayfada gösterilsin)</span>
+                                </label>
+                            </div>
                         </div>
                         <div class="card-action">
                             <button type="submit" class="btn btn-success">
@@ -121,7 +128,8 @@
                                 <p class="mb-0 mt-2" id="previewDescription" style="font-size:13px; opacity:.8;"></p>
                             </div>
                         </div>
-                        <p class="mt-3 mb-0 text-muted small"><strong>İndirim No:</strong> @Model.DiscountId</p>
+                        <p class="mt-3 mb-1"><span id="previewStatus" class="badge"></span></p>
+                        <p class="mb-0 text-muted small"><strong>İndirim No:</strong> @Model.DiscountId</p>
                     </div>
                 </div>
             </div>
@@ -145,4 +153,13 @@
     bindPreview("amountInput", "previewAmount", null, "0");
     bindPreview("descriptionInput", "previewDescription", null, "");
     bindPreview("imageInput", "previewImage", "src", "");
+
+    var statusInput = document.getElementById("statusInput");
+    var previewStatus = document.getElementById("previewStatus");
+    function updateStatus() {
+        previewStatus.className = "badge " + (statusInput.checked ? "badge-success" : "badge-danger");
+        previewStatus.innerText = statusInput.checked ? "Aktif" : "Pasif";
+    }
+    statusInput.addEventListener("change", updateStatus);
+    updateStatus();
 </script>

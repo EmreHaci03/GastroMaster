@@ -13,6 +13,21 @@ namespace GastroMaster.BusinessLayer.Concrete
             _bookingDal = bookingDal;
         }
 
+        public async Task TBookingStatusApproved(int id)
+        {
+            await _bookingDal.BookingStatusApproved(id);
+        }
+
+        public async Task TBookingStatusPending(int id)
+        {
+            await _bookingDal.BookingStatusPending(id);
+        }
+
+        public async Task TCancelledStatusApproved(int id)
+        {
+            await _bookingDal.CancelledStatusApproved(id);
+        }
+
         public async Task TDeleteAsync(Booking t)
         {
             await _bookingDal.DeleteAsync(t);

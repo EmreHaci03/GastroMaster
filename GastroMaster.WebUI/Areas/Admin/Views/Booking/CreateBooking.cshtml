@@ -82,6 +82,18 @@
                                         <span asp-validation-for="Date" class="text-danger small"></span>
                                     </div>
                                 </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label asp-for="Description">Özel İstek</label>
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text"><i class="la la-sticky-note"></i></span>
+                                            </div>
+                                            <textarea asp-for="Description" class="form-control" rows="3" maxlength="250" placeholder="Doğum günü, alerji, bebek sandalyesi..."></textarea>
+                                        </div>
+                                        <span asp-validation-for="Description" class="text-danger small"></span>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         <div class="card-action">

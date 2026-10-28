@@ -29,7 +29,7 @@
                     </div>
                     <div class="ticket-foot">
                         <span class="ticket-price" id="price-@item.ProductId">₺@item.Price.ToString("N0")</span>
-                        <button class="add-btn" aria-label="@item.ProductName sepete ekle"><i class="fa fa-plus"></i></button>
+                        <button class="add-btn" onclick="showProductId(@item.ProductId)" aria-label="@item.ProductName sepete ekle"><i class="fa fa-plus"></i></button>
                     </div>
                 </article>
             }
@@ -38,8 +38,13 @@
         <div class="menu-more"><a href="#" class="btn btn-ghost">Bütün menüyü gör</a></div>
     </div>
 </section>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/8.0.7/signalr.min.js"></script>
 <script>
+    function showProductId(id) {
+        swal("Seçilen Ürün ID: " + id, "Başarıyla Seçildi!", "success");
+    }
+
     var menuConnection = new signalR.HubConnectionBuilder()
         .withUrl("https://localhost:7139/SignalRHub")
         .withAutomaticReconnect()

@@ -12,59 +12,39 @@ namespace GastroMaster.WebUI.Areas.Admin.Controllers
         {
             this.httpClientFactory = httpClientFactory;
         }
-
+        [HttpGet]
         public async Task<IActionResult> Index()
         {
             return View();
         }
-
         [HttpGet]
-        public IActionResult CreateBooking()
+        public async Task<IActionResult> DeleteBooking(int id)
         {
-            return View();
+            var client = httpClientFactory.CreateClient("GastroMasterApi");
+            await client.DeleteAsync($"Booking/{id}");
+            return RedirectToAction(nameof(Index));
         }
-
-        [HttpPost]
-        public async Task<IActionResult> CreateBooking(CreateBookingDto createBookingDto)
-        {
-            var client = httpClientFactory.CreateClient();
-            var responseMessage = await client.PostAsJsonAsync("https://localhost:7139/api/Booking", createBookingDto);
-            if (responseMessage.IsSuccessStatusCode)
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            return View(createBookingDto);
-        }
-
         [HttpGet]
-        public async Task<IActionResult> UpdateBooking(int id)
+        public async Task<IActionResult> BookingStatusApproved(int id)
         {
-            var client = httpClientFactory.CreateClient();
-            var responseMessage = await client.GetAsync($"https://localhost:7139/api/Booking/{id}");
-            if (responseMessage.IsSuccessStatusCode)
-            {
-                var value = await responseMessage.Content.ReadFromJsonAsync<UpdateBookingDto>();
-                return View(value);
-            }
+            var client = httpClientFactory.CreateClient("GastroMasterApi");
+            await client.PutAsync($"Booking/BookingStatusApproved/{id}", null);
             return RedirectToAction(nameof(Index));
         }
 
-        [HttpPost]
-        public async Task<IActionResult> UpdateBooking(UpdateBookingDto updateBookingDto)
+        [HttpGet]
+        public async Task<IActionResult> BookingStatusCancelled(int id)
         {
-            var client = httpClientFactory.CreateClient();
-            var responseMessage = await client.PutAsJsonAsync("https://localhost:7139/api/Booking", updateBookingDto);
-            if (responseMessage.IsSuccessStatusCode)
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            return View(updateBookingDto);
+            var client = httpClientFactory.CreateClient("GastroMasterApi");
+            await client.PutAsync($"Booking/BookingStatusCancelled/{id}", null);
+            return RedirectToAction(nameof(Index));
         }
 
-        public async Task<IActionResult> DeleteBooking(int id)
+        [HttpGet]
+        public async Task<IActionResult> BookingStatusPending(int id)
         {
-            var client = httpClientFactory.CreateClient();
-            await client.DeleteAsync($"https://localhost:7139/api/Booking/{id}");
+            var client = httpClientFactory.CreateClient("GastroMasterApi");
+            await client.PutAsync($"Booking/BookingStatusPending/{id}", null);
             return RedirectToAction(nameof(Index));
         }
     }

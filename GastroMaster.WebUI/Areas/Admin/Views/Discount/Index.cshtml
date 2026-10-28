@@ -188,6 +188,7 @@
                                         <th scope="col">Başlık</th>
                                         <th scope="col">İndirim</th>
                                         <th scope="col">Açıklama</th>
+                                        <th scope="col">Durum</th>
                                         <th scope="col" class="text-center">İşlemler</th>
                                     </tr>
                                 </thead>
@@ -204,7 +205,29 @@
                                                 <td class="text-muted">
                                                     @(item.Description?.Length > 60 ? item.Description.Substring(0, 60) + "..." : item.Description)
                                                 </td>
-                                                <td class="text-center">
+                                                <td>
+                                                    @if (item.Status)
+                                                    {
+                                                        <span class="badge badge-success"><i class="la la-check"></i> Aktif</span>
+                                                    }
+                                                    else
+                                                    {
+                                                        <span class="badge badge-danger"><i class="la la-close"></i> Pasif</span>
+                                                    }
+                                                </td>
+                                                <td class="text-center" style="white-space:nowrap;">
+                                                    @if (item.Status)
+                                                    {
+                                                        <a href="/Admin/Discount/ChangeStatusToFalse/@item.DiscountId" class="btn btn-default btn-sm" title="Pasif yap">
+                                                            <i class="la la-eye-slash"></i> Pasif Yap
+                                                        </a>
+                                                    }
+                                                    else
+                                                    {
+                                                        <a href="/Admin/Discount/ChangeStatusToTrue/@item.DiscountId" class="btn btn-success btn-sm" title="Aktif yap">
+                                                            <i class="la la-eye"></i> Aktif Yap
+                                                        </a>
+                                                    }
                                                     <a href="/Admin/Discount/UpdateDiscount/@item.DiscountId" class="btn btn-warning btn-sm" title="Güncelle">
                                                         <i class="la la-edit"></i> Güncelle
                                                     </a>
@@ -222,7 +245,7 @@
                                     else
                                     {
                                         <tr>
-                                            <td colspan="6" class="text-center text-muted py-4">
+                                            <td colspan="7" class="text-center text-muted py-4">
                                                 <i class="la la-inbox" style="font-size:32px;"></i>
                                                 <p class="mb-0">Henüz indirim eklenmemiş.</p>
                                             </td>

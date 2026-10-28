@@ -166,12 +166,13 @@ namespace GastroMaster.DtoLayer.Mapping
             //Cash Register//
 
 
-            //Cash Register//
+            //MenuTable //
             CreateMap<MenuTable, ResultMenuTableDto>().ReverseMap();
             CreateMap<MenuTable, CreateMenuTableDto>().ReverseMap();
             CreateMap<MenuTable, GetMenuTableByIdDto>().ReverseMap();
             CreateMap<MenuTable, UpdateMenuTableDto>().ReverseMap();
-            //Cash Register//
+            CreateMap<GetMenuTableWithOrderStatusModel, GetMenuTableWithOrderStatusDto>().ReverseMap();
+            //MenuTable//
 
 
             //Dashboard//

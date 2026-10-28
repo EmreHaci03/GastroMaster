@@ -88,6 +88,7 @@
         <div class="row">
             <div class="col-md-4">
                 <div class="card card-stats card-primary">
+                    w
                     <div class="card-body">
                         <div class="row">
                             <div class="col-5">
@@ -153,9 +154,6 @@
                             <div class="card-title">Rezervasyon Listesi</div>
                             <div class="card-category">Müşteri rezervasyonlarını buradan yönetebilirsiniz</div>
                         </div>
-                        <a href="/Admin/Booking/CreateBooking" class="btn btn-primary">
-                            <i class="la la-plus"></i> Yeni Rezervasyon
-                        </a>
                     </div>
                     <div class="card-body">
                         <div class="table-responsive">
@@ -167,13 +165,16 @@
                                         <th scope="col">Telefon</th>
                                         <th scope="col">E-posta</th>
                                         <th scope="col">Kişi</th>
+                                        <th scope="col">Açıklama</th>
                                         <th scope="col">Tarih</th>
+                                        <th scope="col">Durum</th>
+
                                         <th scope="col" class="text-center">İşlemler</th>
                                     </tr>
                                 </thead>
                                 <tbody id="bookingList">
                                     <tr>
-                                        <td colspan="7" class="text-center text-muted py-4">
+                                        <td colspan="9" class="text-center text-muted py-4">
                                             <i class="la la-spinner" style="font-size:32px;"></i>
                                             <p class="mb-0">Yükleniyor...</p>
                                         </td>
@@ -216,6 +217,7 @@
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/8.0.7/signalr.min.js"></script>
 
+
 <script>
     var bookingConnection = new signalR.HubConnectionBuilder()
         .withUrl("https://localhost:7139/SignalRHub")
@@ -223,20 +225,26 @@
         .build();
 
     bookingConnection.on("ReceiveBookingList", function (data) {
+        var count = 0;
         $("#bookingList").empty();
         for (var i = 0; i < data.length; i++) {
+            count++;
             $("#bookingList").append(`<tr>
-            <td>${data[i].bookingId}</td>
-            <td><strong>${data[i].name}</strong></td>
-            <td>${data[i].phone}</td>
-            <td>${data[i].mail}</td>
-            <td>${data[i].personCount}</td>
-            <td>${new Date(data[i].date).toLocaleString("tr-TR")}</td>
-            <td class="text-center">
-                <a href="/Admin/Booking/UpdateBooking/${data[i].bookingId}" class="btn btn-warning btn-sm"><i class="la la-edit"></i> Güncelle</a>
-                <a href="/Admin/Booking/DeleteBooking/${data[i].bookingId}" class="btn btn-danger btn-sm"><i class="la la-trash"></i> Sil</a>
-            </td>
-        </tr>`);
+    <td>${count}</td>
+    <td><strong>${data[i].name}</strong></td>
+    <td>${data[i].phone}</td>
+    <td>${data[i].mail}</td>
+    <td>${data[i].personCount}</td>
+    <td>${data[i].description}</td>
+    <td>${new Date(data[i].date).toLocaleString("tr-TR")}</td>
+    <td><span class="badge ${data[i].status === "Rezervasyon Onaylandı" ? "badge-success" : data[i].status === "Rezervasyon İptal Edildi" ? "badge-danger" : "badge-warning"}">${data[i].status}</span></td>
+    <td class="text-center" style="white-space:nowrap;">
+    <a href="/Admin/Booking/BookingStatusApproved/${data[i].bookingId}" class="btn btn-success btn-sm"><i class="la la-check"></i> Onayla</a>
+    <a href="/Admin/Booking/BookingStatusCancelled/${data[i].bookingId}" class="btn btn-default btn-sm"><i class="la la-close"></i> İptal</a>
+<a href="/Admin/Booking/BookingStatusPending/${data[i].bookingId}" class="btn btn-warning btn-sm"><i class="la la-clock-o"></i> Beklemeye Al</a>
+<a href="/Admin/Booking/DeleteBooking/${data[i].bookingId}" class="btn btn-danger btn-sm"><i class="la la-trash"></i> Sil</a>
+</td>
+</tr>`);
         }
     });
 

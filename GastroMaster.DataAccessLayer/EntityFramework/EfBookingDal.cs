@@ -14,6 +14,36 @@ namespace GastroMaster.DataAccessLayer.EntityFramework
             _context = context;
         }
 
+        public async Task BookingStatusApproved(int id)
+        {
+            var booking=await _context.Bookings.FindAsync(id);
+            if(booking != null)
+            {
+                booking.Status = "Rezervasyon Onaylandı";
+                await _context.SaveChangesAsync();
+            }
+        }
+
+        public async Task BookingStatusPending(int id)
+        {
+            var booking = await _context.Bookings.FindAsync(id);
+            if( booking != null )
+            {
+                booking.Status = "Rezervasyon Alındı";
+                await _context.SaveChangesAsync();  
+            }
+        }
+
+        public async Task CancelledStatusApproved(int id)
+        {
+            var booking = await _context.Bookings.FindAsync(id);
+            if (booking != null)
+            {
+                booking.Status = "Rezervasyon İptal Edildi";
+                await _context.SaveChangesAsync();
+            }
+        }
+
         public async Task<int> GetTodayReservationCount()
         {
             var today = DateTime.Today;
