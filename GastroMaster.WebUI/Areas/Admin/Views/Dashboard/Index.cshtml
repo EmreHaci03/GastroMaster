@@ -340,15 +340,10 @@
                 <div class="panel">
                     <div class="panel-header">
                         <h5 class="panel-title">Masa Durumu</h5>
-                        <a href="#" class="panel-link">Tümü</a>
+                        <a href="/Admin/MenuTable/Index/" class="panel-link">Tümü</a>
                     </div>
-                    <div class="table-grid">
-                        <div class="table-tile empty"><i class="la la-check-circle"></i>Masa 1<small>Boş</small></div>
-                        <div class="table-tile empty"><i class="la la-check-circle"></i>Masa 2<small>Boş</small></div>
-                        <div class="table-tile empty"><i class="la la-check-circle"></i>Masa 3<small>Boş</small></div>
-                        <div class="table-tile empty"><i class="la la-check-circle"></i>Masa 4<small>Boş</small></div>
-                        <div class="table-tile full"><i class="la la-users"></i>Masa 5<small>₺735,00</small></div>
-                        <div class="table-tile empty"><i class="la la-check-circle"></i>Masa 6<small>Boş</small></div>
+                    <div class="table-grid" id="dashboardTableList">
+
                     </div>
                 </div>
             </div>
@@ -510,6 +505,21 @@
         setValue("OccupiedMenuTableCount", data);
         updateAvailableTables();
     });
+
+   connection.on("ReceiveMenuTableListWithStatus", function (data) {
+    $("#dashboardTableList").empty();
+    for (var i = 0; i < data.length/2; i++) {
+        var item = data[i];
+        if (!item.status) continue;
+
+        $("#dashboardTableList").append(`
+            <div class="table-tile ${item.isFull ? "full" : "empty"}">
+                <i class="la ${item.isFull ? "la-users" : "la-check-circle"}"></i>
+                ${item.name}
+                <small>${item.isFull ? item.orderStatus : "Boş"}</small>
+            </div>`);
+    }
+});
 
     connection.on("ReceiveTopSellingProducts", function (data) {
         for (var i = 0; i < 5; i++) {

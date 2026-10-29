@@ -15,14 +15,7 @@ namespace GastroMaster.WebUI.Areas.Admin.Controllers
         [HttpGet]
         public async Task<IActionResult> Index()
         {
-            var client = _httpClientFactory.CreateClient("GastroMasterApi");
-            var responseMessage = await client.GetAsync("MenuTable/GetMenuWithOrderStatus");
-            if (responseMessage.IsSuccessStatusCode)
-            {
-                var values = await responseMessage.Content.ReadFromJsonAsync<List<GetMenuTableWithOrderStatusDto>>();
-                return View(values);
-            }
-            return View(new List<GetMenuTableWithOrderStatusDto>());
+            return View();
         }
 
         [HttpGet]

@@ -26,6 +26,7 @@ namespace GastroMaster.DataAccessLayer.Concrete
         public DbSet<AboutItem> AboutItems { get; set; }
         public DbSet<Slider> Sliders { get; set; }
         public DbSet<Notification> Notifications { get; set; }
+        public DbSet<Basket> Baskets { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -34,6 +35,18 @@ namespace GastroMaster.DataAccessLayer.Concrete
                 .WithMany(x => x.OrderDetails)
                 .HasForeignKey(x => x.ProductId)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Basket>()
+                .HasOne(x => x.Product)
+                .WithMany(x => x.Baskets)
+                .HasForeignKey(x => x.ProductId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Basket>()
+                .HasOne(x => x.MenuTable)
+                .WithMany(x => x.Baskets)
+                .HasForeignKey(x => x.MenuTableId)
+                .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<Product>().Property(x => x.Price).HasPrecision(18, 2);
             modelBuilder.Entity<OrderDetail>().Property(x => x.UnitPrice).HasPrecision(18, 2);

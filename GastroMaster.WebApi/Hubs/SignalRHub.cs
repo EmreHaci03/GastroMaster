@@ -106,6 +106,11 @@ namespace GastroMaster.WebApi.Hubs
             await Clients.Caller.SendAsync("ReceiveTotalReservationCount", TotalReservationCount);
 
 
+            var MenuTableList = await _menuTableService.TGetMenuTableWithOrderStatus();
+            var MenuTableResult=_mapper.Map<List<GetMenuTableWithOrderStatusDto>>(MenuTableList);
+            await Clients.Caller.SendAsync("ReceiveMenuTableListWithStatus", MenuTableResult);
+
+
         }
         public async Task DefaultStatistic()
         {

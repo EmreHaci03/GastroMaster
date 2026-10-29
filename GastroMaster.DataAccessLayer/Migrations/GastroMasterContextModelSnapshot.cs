@@ -68,6 +68,38 @@ namespace GastroMaster.DataAccessLayer.Migrations
                     b.ToTable("AboutItems");
                 });
 
+            modelBuilder.Entity("GastroMaster.EntityLayer.Entities.Basket", b =>
+                {
+                    b.Property<int>("BasketId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("BasketId"), 1L, 1);
+
+                    b.Property<int>("Count")
+                        .HasColumnType("int");
+
+                    b.Property<int>("MenuTableId")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("Price")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("TotalPrice")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.HasKey("BasketId");
+
+                    b.HasIndex("MenuTableId");
+
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("Baskets");
+                });
+
             modelBuilder.Entity("GastroMaster.EntityLayer.Entities.Booking", b =>
                 {
                     b.Property<int>("BookingId")
@@ -474,6 +506,25 @@ namespace GastroMaster.DataAccessLayer.Migrations
                     b.ToTable("Testimonials");
                 });
 
+            modelBuilder.Entity("GastroMaster.EntityLayer.Entities.Basket", b =>
+                {
+                    b.HasOne("GastroMaster.EntityLayer.Entities.MenuTable", "MenuTable")
+                        .WithMany("Baskets")
+                        .HasForeignKey("MenuTableId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("GastroMaster.EntityLayer.Entities.Product", "Product")
+                        .WithMany("Baskets")
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("MenuTable");
+
+                    b.Navigation("Product");
+                });
+
             modelBuilder.Entity("GastroMaster.EntityLayer.Entities.Order", b =>
                 {
                     b.HasOne("GastroMaster.EntityLayer.Entities.MenuTable", "MenuTable")
@@ -522,6 +573,8 @@ namespace GastroMaster.DataAccessLayer.Migrations
 
             modelBuilder.Entity("GastroMaster.EntityLayer.Entities.MenuTable", b =>
                 {
+                    b.Navigation("Baskets");
+
                     b.Navigation("Orders");
                 });
 
@@ -532,6 +585,8 @@ namespace GastroMaster.DataAccessLayer.Migrations
 
             modelBuilder.Entity("GastroMaster.EntityLayer.Entities.Product", b =>
                 {
+                    b.Navigation("Baskets");
+
                     b.Navigation("OrderDetails");
                 });
 #pragma warning restore 612, 618

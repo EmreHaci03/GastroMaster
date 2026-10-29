@@ -2,6 +2,7 @@
 using GastroMaster.DataAccessLayer.Models;
 using GastroMaster.DtoLayer.DTOS.AboutDtos;
 using GastroMaster.DtoLayer.DTOS.AboutItemDtos;
+using GastroMaster.DtoLayer.DTOS.BasketDtos;
 using GastroMaster.DtoLayer.DTOS.BookingDtos;
 using GastroMaster.DtoLayer.DTOS.CashRegisterDtos;
 using GastroMaster.DtoLayer.DTOS.CategoryDtos;
@@ -188,6 +189,22 @@ namespace GastroMaster.DtoLayer.Mapping
             CreateMap<Newsletter, GetNewsletterByIdDto>().ReverseMap();
             CreateMap<Newsletter, ResultNewsletterDto>().ReverseMap();
             //Newsletter//
+
+
+            //Basket//
+            CreateMap<Basket, ResultBasketDto>().ReverseMap();
+            CreateMap<Basket, CreateBasketDto>().ReverseMap();
+            CreateMap<Basket, UpdateBasketDto>().ReverseMap();
+            CreateMap<Basket, GetBasketByIdDto>().ReverseMap();
+            CreateMap<Basket, ResultBasketWithDetailsDto>()
+                .ForMember(dest => dest.Product, opt => opt.MapFrom(src => src.Product.ProductName))
+                .ForMember(dest => dest.MenuTable, opt => opt.MapFrom(src => src.MenuTable.Name))
+                .ReverseMap();
+            CreateMap<Basket, GetBasketWithDetailsByIdDto>()
+                    .ForMember(dest => dest.Product, opt => opt.MapFrom(src => src.Product.ProductName))
+                .ForMember(dest => dest.MenuTable, opt => opt.MapFrom(src => src.MenuTable.Name))
+                .ReverseMap();
+            //Basket//
         }
 
     }
