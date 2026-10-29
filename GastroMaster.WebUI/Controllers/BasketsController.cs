@@ -1,9 +1,11 @@
 ﻿using GastroMaster.DtoLayer.DTOS.BasketDtos;
 using GastroMaster.DtoLayer.DTOS.ProductDtos;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GastroMaster.WebUI.Controllers
 {
+    [AllowAnonymous]
     public class BasketsController : Controller
     {
         private readonly IHttpClientFactory _httpClientFactory;

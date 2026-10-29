@@ -1,9 +1,11 @@
 ﻿using GastroMaster.DtoLayer.DTOS.NewsletterDtos;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 
 namespace GastroMaster.WebUI.Controllers
 {
+    [AllowAnonymous]
     public class NewsletterController : Controller
     {
         private readonly IHttpClientFactory _httpClientFactory;

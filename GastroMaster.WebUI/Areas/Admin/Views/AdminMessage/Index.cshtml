@@ -1,0 +1,312 @@
+﻿@{
+    ViewData["Title"] = "Müşteri Mesajları";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<style>
+    .chat-card .card-body {
+        padding: 0;
+    }
+
+    .chat-area {
+        height: 520px;
+        overflow-y: auto;
+        padding: 25px;
+        background: #f9fbfd;
+        display: flex;
+        flex-direction: column;
+        gap: 18px;
+    }
+
+    .chat-empty {
+        margin: auto;
+        text-align: center;
+        color: #8d9498;
+    }
+
+        .chat-empty i {
+            font-size: 48px;
+            display: block;
+            margin-bottom: 8px;
+            color: #d5d9dd;
+        }
+
+    .chat-row {
+        display: flex;
+        align-items: flex-end;
+        gap: 10px;
+        max-width: 75%;
+    }
+
+        .chat-row.me {
+            align-self: flex-end;
+            flex-direction: row-reverse;
+        }
+
+    .chat-avatar {
+        width: 38px;
+        height: 38px;
+        flex: none;
+        border-radius: 50%;
+        background: rgba(255, 190, 51, .15);
+        color: #c48a00;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .chat-row.me .chat-avatar {
+        background: rgba(21, 114, 232, .12);
+        color: #1572e8;
+    }
+
+    .chat-content {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+    }
+
+    .chat-row.me .chat-content {
+        align-items: flex-end;
+    }
+
+    .chat-name {
+        font-size: 12px;
+        font-weight: 600;
+        color: #575962;
+    }
+
+    .chat-bubble {
+        padding: 10px 15px;
+        border-radius: 14px;
+        border-bottom-left-radius: 4px;
+        background: #fff;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, .06);
+        font-size: 14px;
+        line-height: 1.5;
+        word-break: break-word;
+    }
+
+    .chat-row.me .chat-bubble {
+        background: #1572e8;
+        color: #fff;
+        border-bottom-left-radius: 14px;
+        border-bottom-right-radius: 4px;
+    }
+
+    .chat-time {
+        font-size: 11px;
+        color: #8d9498;
+    }
+
+    .chat-footer {
+        padding: 15px 20px;
+        border-top: 1px solid #ebedf2;
+        background: #fff;
+    }
+
+        .chat-footer .form-control {
+            border-radius: 25px;
+            padding: 10px 20px;
+            height: auto;
+        }
+
+        .chat-footer .btn {
+            border-radius: 25px;
+            padding: 10px 22px;
+            margin-left: 10px;
+        }
+
+    .status-dot {
+        display: inline-block;
+        width: 9px;
+        height: 9px;
+        border-radius: 50%;
+        margin-right: 6px;
+        background: #ffad46;
+    }
+
+        .status-dot.online {
+            background: #31ce36;
+            box-shadow: 0 0 0 4px rgba(49, 206, 54, .2);
+        }
+
+        .status-dot.offline {
+            background: #f3545d;
+        }
+
+    .info-item {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        padding: 14px 0;
+        border-bottom: 1px solid #ebedf2;
+    }
+
+        .info-item:last-child {
+            border-bottom: none;
+        }
+
+    .info-icon {
+        width: 46px;
+        height: 46px;
+        flex: none;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 22px;
+    }
+
+    .info-item h5 {
+        margin: 0;
+        font-weight: 700;
+    }
+
+    .info-item small {
+        color: #8d9498;
+    }
+</style>
+
+<div class="content">
+    <div class="container-fluid">
+        <h4 class="page-title">Müşteri Mesajları</h4>
+
+        <div class="row">
+            <div class="col-md-8">
+                <div class="card chat-card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <div>
+                            <div class="card-title">Canlı Destek</div>
+                            <div class="card-category">Sitedeki müşterilerden gelen mesajlar anlık olarak burada görünür</div>
+                        </div>
+                        <span class="badge badge-warning" id="connBadge">
+                            <span class="status-dot" id="connDot"></span><span id="connText">Bağlanıyor...</span>
+                        </span>
+                    </div>
+                    <div class="card-body">
+                        <div class="chat-area" id="adminMessages">
+                            <div class="chat-empty" id="chatEmpty">
+                                <i class="la la-comments-o"></i>
+                                Henüz mesaj yok
+                            </div>
+                        </div>
+                        <div class="chat-footer">
+                            <form class="d-flex" id="adminChatForm" onsubmit="return false;">
+                                <input type="text" class="form-control" id="adminInput" placeholder="Cevabını yaz..." autocomplete="off" maxlength="500" />
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="la la-send"></i> Gönder
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">Özet</div>
+                        <div class="card-category">Bu oturumdaki sohbet bilgileri</div>
+                    </div>
+                    <div class="card-body">
+                        <div class="info-item">
+                            <div class="info-icon" style="background:rgba(255,190,51,.15); color:#c48a00;"><i class="la la-comment"></i></div>
+                            <div>
+                                <h5 id="incomingCount">0</h5>
+                                <small>Gelen Mesaj</small>
+                            </div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-icon" style="background:rgba(21,114,232,.12); color:#1572e8;"><i class="la la-send"></i></div>
+                            <div>
+                                <h5 id="sentCount">0</h5>
+                                <small>Gönderilen Cevap</small>
+                            </div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-icon" style="background:rgba(49,206,54,.12); color:#31ce36;"><i class="la la-users"></i></div>
+                            <div>
+                                <h5 id="customerCount">0</h5>
+                                <small>Yazan Müşteri</small>
+                            </div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-icon" style="background:rgba(243,84,93,.12); color:#f3545d;"><i class="la la-clock-o"></i></div>
+                            <div>
+                                <h5 id="lastMessageTime">-</h5>
+                                <small>Son Mesaj</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/8.0.7/signalr.min.js"></script>
+<script>
+    var adminName = "GastroMaster Destek";
+    var incomingCount = 0;
+    var sentCount = 0;
+    var customers = [];
+
+    var adminMessageConnection = new signalR.HubConnectionBuilder()
+        .withUrl("https://localhost:7139/SignalRHub")
+        .withAutomaticReconnect()
+        .build();
+
+    function setStatus(badge, dot, text) {
+        $("#connBadge").removeClass("badge-warning badge-success badge-danger").addClass(badge);
+        $("#connDot").removeClass("online offline").addClass(dot);
+        $("#connText").text(text);
+    }
+
+    adminMessageConnection.on("ReceiveMessage", function (user, message) {
+        $("#chatEmpty").remove();
+
+        var time = new Date().toLocaleTimeString("tr-TR", { hour: "2-digit", minute: "2-digit" });
+        var row = $("<div>").addClass(user == adminName ? "chat-row me" : "chat-row");
+        $("<div>").addClass("chat-avatar").text(user.charAt(0).toUpperCase()).appendTo(row);
+
+        var content = $("<div>").addClass("chat-content").appendTo(row);
+        $("<div>").addClass("chat-name").text(user).appendTo(content);
+        $("<div>").addClass("chat-bubble").text(message).appendTo(content);
+        $("<div>").addClass("chat-time").text(time).appendTo(content);
+
+        $("#adminMessages").append(row);
+        $("#adminMessages").scrollTop($("#adminMessages")[0].scrollHeight);
+
+        if (user == adminName) {
+            sentCount++;
+            $("#sentCount").text(sentCount);
+        } else {
+            incomingCount++;
+            $("#incomingCount").text(incomingCount);
+            if (customers.indexOf(user) == -1) {
+                customers.push(user);
+                $("#customerCount").text(customers.length);
+            }
+            $("#lastMessageTime").text(time);
+        }
+    });
+
+    $("#adminChatForm").on("submit", function () {
+        var message = $("#adminInput").val().trim();
+        if (message == "") return;
+
+        adminMessageConnection.invoke("SendMessage", adminName, message).catch(function (err) { console.error(err); });
+        $("#adminInput").val("");
+    });
+
+    adminMessageConnection.onreconnecting(function () { setStatus("badge-warning", "", "Yeniden bağlanıyor..."); });
+    adminMessageConnection.onreconnected(function () { setStatus("badge-success", "online", "Çevrimiçi"); });
+    adminMessageConnection.onclose(function () { setStatus("badge-danger", "offline", "Bağlantı koptu"); });
+
+    adminMessageConnection.start()
+        .then(function () { setStatus("badge-success", "online", "Çevrimiçi"); })
+        .catch(function (err) { setStatus("badge-danger", "offline", "Bağlanamadı"); console.error(err); });
+</script>

@@ -1,0 +1,217 @@
+﻿@{
+    ViewData["Title"] = "Geri Bildirimler";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<style>
+    .fb-stat {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+    }
+
+    .fb-stat-icon {
+        width: 52px;
+        height: 52px;
+        flex: none;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 24px;
+    }
+
+    .fb-stat h3 {
+        margin: 0;
+        font-weight: 700;
+    }
+
+    .fb-stat small {
+        color: #8d9498;
+    }
+
+    .fb-unread {
+        background: rgba(21, 114, 232, .05);
+    }
+
+        .fb-unread td:first-child {
+            border-left: 3px solid #1572e8;
+        }
+</style>
+
+<div class="content">
+    <div class="container-fluid">
+        <h4 class="page-title">Geri Bildirimler</h4>
+
+        <div class="row">
+            <div class="col-md-3">
+                <div class="card">
+                    <div class="card-body fb-stat">
+                        <div class="fb-stat-icon" style="background:rgba(21,114,232,.12); color:#1572e8;"><i class="la la-inbox"></i></div>
+                        <div>
+                            <h3 id="totalFeedbackCount">0</h3>
+                            <small>Toplam</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card">
+                    <div class="card-body fb-stat">
+                        <div class="fb-stat-icon" style="background:rgba(243,84,93,.12); color:#f3545d;"><i class="la la-envelope"></i></div>
+                        <div>
+                            <h3 id="unreadFeedbackCount">0</h3>
+                            <small>Okunmamış</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card">
+                    <div class="card-body fb-stat">
+                        <div class="fb-stat-icon" style="background:rgba(255,190,51,.15); color:#c48a00;"><i class="la la-lightbulb-o"></i></div>
+                        <div>
+                            <h3 id="suggestionCount">0</h3>
+                            <small>Öneri</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card">
+                    <div class="card-body fb-stat">
+                        <div class="fb-stat-icon" style="background:rgba(243,84,93,.12); color:#f3545d;"><i class="la la-exclamation-circle"></i></div>
+                        <div>
+                            <h3 id="complaintCount">0</h3>
+                            <small>Şikayet</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">Gelen Geri Bildirimler</div>
+                        <div class="card-category">Sitedeki geri bildirim formundan gelen istek, öneri ve şikayetler</div>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover mt-3">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">Ad Soyad</th>
+                                        <th scope="col">E-posta</th>
+                                        <th scope="col">Konu</th>
+                                        <th scope="col">Mesaj</th>
+                                        <th scope="col">Tarih</th>
+                                        <th scope="col">Durum</th>
+                                        <th scope="col" class="text-center">İşlemler</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="feedbackList">
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/8.0.7/signalr.min.js"></script>
+<script>
+    var FeedBackConnection = new signalR.HubConnectionBuilder()
+        .withUrl("https://localhost:7139/SignalRHub")
+        .withAutomaticReconnect()
+        .build();
+
+
+    FeedBackConnection.on("ReceiveFeedBack", function (data) {
+        $("#feedbackList").empty();
+
+        var unreadCount = 0;
+        var suggestionCount = 0;
+        var complaintCount = 0;
+
+
+        if (data.length == 0) {
+            $("#feedbackList").append(`
+            <tr>
+                <td colspan="8" class="text-center text-muted py-4">
+                    <i class="la la-inbox" style="font-size:32px;"></i>
+                    <p class="mb-0">Henüz geri bildirim yok.</p>
+                </td>
+            </tr>`);
+            return;
+        }
+
+        for (var i = 0; i < data.length; i++) {
+            var item = data[i];
+
+
+            if (!item.isRead) ++unreadCount;
+            if (item.subject == "Öneri") ++suggestionCount;
+            if (item.subject == "Şikayet") ++complaintCount;
+
+            var subjectClass = "badge-default";
+            if (item.subject == "İstek") subjectClass = "badge-info";
+            else if (item.subject == "Öneri") subjectClass = "badge-warning";
+            else if (item.subject == "Şikayet") subjectClass = "badge-danger";
+
+            var rowClass = item.isRead ? "" : "fb-unread";
+            var statusBadge = item.isRead
+                ? `<span class="badge badge-success">Okundu</span>`
+                : `<span class="badge badge-primary">Okunmadı</span>`;
+            var readButton = item.isRead
+                ? `<a href="/Admin/FeedBacks/MarkAsUnread/${item.feedbackId}" class="btn btn-warning btn-sm" title="Okunmadı Olarak İşaretle"><i class="la la-undo"></i> Okunmadı</a>`
+                : `<a href="/Admin/FeedBacks/MarkAsRead/${item.feedbackId}" class="btn btn-success btn-sm" title="Okundu Olarak İşaretle"><i class="la la-check"></i> Okundu</a>`;
+
+            var date = new Date(item.sendDate).toLocaleString("tr-TR", { day: "2-digit", month: "2-digit", year: "numeric", hour: "2-digit", minute: "2-digit" });
+
+            $("#feedbackList").append(`
+            <tr class="${rowClass}">
+                <td><strong>${i + 1}</strong></td>
+                <td><strong>${escapeHtml(item.nameSurname)}</strong></td>
+                <td class="text-muted">${escapeHtml(item.mail)}</td>
+                <td><span class="badge ${subjectClass}">${escapeHtml(item.subject)}</span></td>
+                <td class="text-muted" style="max-width:280px;">${escapeHtml(item.content)}</td>
+                <td style="white-space:nowrap;">${date}</td>
+                <td>${statusBadge}</td>
+                <td class="text-center" style="white-space:nowrap;">
+                    ${readButton}
+                    <a href="/Admin/FeedBacks/DeleteFeedBack/${item.feedbackId}" class="btn btn-danger btn-sm" title="Sil"><i class="la la-trash"></i> Sil</a>
+                </td>
+            </tr>`);
+        }
+
+        $("#totalFeedbackCount").text(data.length);
+        $("#unreadFeedbackCount").text(unreadCount);
+        $("#suggestionCount").text(suggestionCount);
+        $("#complaintCount").text(complaintCount);
+    });
+
+
+
+    function escapeHtml(text) {
+        return $("<div>").text(text).html();
+    }
+
+
+
+    FeedBackConnection.start().then(function () {
+        FeedBackConnection.invoke("SendFeedBack");
+        setInterval(function () {
+            if (FeedBackConnection.state === signalR.HubConnectionState.Connected) {
+                FeedBackConnection.invoke("SendFeedBack");
+            }
+        }, 5000);
+    });
+
+
+</script>

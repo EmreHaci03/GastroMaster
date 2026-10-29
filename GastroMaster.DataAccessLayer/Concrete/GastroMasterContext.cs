@@ -1,9 +1,10 @@
 ﻿using GastroMaster.EntityLayer.Entities;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace GastroMaster.DataAccessLayer.Concrete
 {
-    public class GastroMasterContext:DbContext
+    public class GastroMasterContext:IdentityDbContext<AppUser,AppRole,string>
     {
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -27,6 +28,7 @@ namespace GastroMaster.DataAccessLayer.Concrete
         public DbSet<Slider> Sliders { get; set; }
         public DbSet<Notification> Notifications { get; set; }
         public DbSet<Basket> Baskets { get; set; }
+        public DbSet<FeedBack> FeedBacks { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

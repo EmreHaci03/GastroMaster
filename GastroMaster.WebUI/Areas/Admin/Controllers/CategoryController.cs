@@ -1,4 +1,5 @@
 ﻿using GastroMaster.DtoLayer.DTOS.CategoryDtos;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GastroMaster.WebUI.Areas.Admin.Controllers

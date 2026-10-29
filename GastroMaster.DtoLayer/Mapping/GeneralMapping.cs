@@ -10,6 +10,7 @@ using GastroMaster.DtoLayer.DTOS.ContactDtos;
 using GastroMaster.DtoLayer.DTOS.DashboardDtos;
 using GastroMaster.DtoLayer.DTOS.DiscountDtos;
 using GastroMaster.DtoLayer.DTOS.FeatureDtos;
+using GastroMaster.DtoLayer.DTOS.FeedBackDtos;
 using GastroMaster.DtoLayer.DTOS.MenuTableDtos;
 using GastroMaster.DtoLayer.DTOS.NewsletterDtos;
 using GastroMaster.DtoLayer.DTOS.NotificationDtos;
@@ -189,6 +190,15 @@ namespace GastroMaster.DtoLayer.Mapping
             CreateMap<Newsletter, GetNewsletterByIdDto>().ReverseMap();
             CreateMap<Newsletter, ResultNewsletterDto>().ReverseMap();
             //Newsletter//
+
+
+            //FeedBack//
+            CreateMap<FeedBack, ResultFeedBackDto>().ReverseMap();
+            CreateMap<FeedBack, UpdateFeedBackDto>().ReverseMap();
+            CreateMap<FeedBack, GetFeedBackByIdDto>().ReverseMap();
+            CreateMap<FeedBack, CreateFeedBackDto>().ReverseMap();
+            //FeedBack//
+
 
 
             //Basket//

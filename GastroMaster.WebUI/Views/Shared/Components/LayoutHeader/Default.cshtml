@@ -14,7 +14,23 @@
                 <span class="online-dot"></span>
                 <span id="OnlineCount">0</span> kişi sitede
             </span>
+
             <a href="/Baskets/Index" class="icon-btn" aria-label="Sepet"><i class="fa fa-shopping-bag"></i></a>
+
+            @if (User.Identity.IsAuthenticated)
+            {
+                @if (User.IsInRole("Admin"))
+                {
+                    <a href="/Admin/Dashboard/Index" class="icon-btn" title="Admin paneli" aria-label="Admin paneli"><i class="fa fa-dashboard"></i></a>
+                }
+                <span class="user-pill"><i class="fa fa-user-circle"></i> @User.Identity.Name</span>
+                <a href="/Account/Logout/" class="icon-btn" title="Çıkış yap" aria-label="Çıkış yap"><i class="fa fa-sign-out"></i></a>
+            }
+            else
+            {
+                <a href="/Account/Login/" class="icon-btn" title="Giriş yap" aria-label="Giriş yap"><i class="fa fa-user"></i></a>
+            }
+
             <a href="/#rezervasyon" class="btn btn-primary">Masa ayırt</a>
             <button class="icon-btn menu-toggle" id="menuToggle" aria-label="Menüyü aç" aria-expanded="false"><i class="fa fa-bars"></i></button>
         </div>

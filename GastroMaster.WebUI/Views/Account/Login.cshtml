@@ -1,0 +1,31 @@
+﻿@model LoginDto
+@{
+    ViewData["Title"] = "Giriş Yap";
+    Layout = "~/Views/Shared/_UILayout.cshtml";
+}
+
+<section class="section">
+    <div class="container" style="max-width:460px;">
+        <div class="section-head" style="margin-bottom:28px;">
+            <h2>Giriş yap</h2>
+            <p>Hesabın yok mu? <a href="/Account/Register/" style="color:var(--ketchup); font-weight:700;">Kayıt ol</a></p>
+        </div>
+
+        <form method="post" class="book-form">
+            <div asp-validation-summary="ModelOnly" style="color:var(--ketchup); margin-bottom:14px;"></div>
+            <div class="form-grid">
+                <div class="field full">
+                    <label asp-for="UserName">Kullanıcı adı</label>
+                    <input asp-for="UserName" />
+                    <span asp-validation-for="UserName" style="color:var(--ketchup); font-size:13px;"></span>
+                </div>
+                <div class="field full">
+                    <label asp-for="Password">Şifre</label>
+                    <input asp-for="Password" type="password" />
+                    <span asp-validation-for="Password" style="color:var(--ketchup); font-size:13px;"></span>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary">Giriş yap</button>
+        </form>
+    </div>
+</section>

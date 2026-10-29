@@ -2,6 +2,7 @@
 using GastroMaster.BusinessLayer.Abstract;
 using GastroMaster.DtoLayer.DTOS.BookingDtos;
 using GastroMaster.DtoLayer.DTOS.DiscountDtos;
+using GastroMaster.DtoLayer.DTOS.FeedBackDtos;
 using GastroMaster.DtoLayer.DTOS.MenuTableDtos;
 using GastroMaster.DtoLayer.DTOS.NewsletterDtos;
 using GastroMaster.DtoLayer.DTOS.NotificationDtos;
@@ -22,8 +23,9 @@ namespace GastroMaster.WebApi.Hubs
         private readonly INotificationService _notificationService;
         private readonly IBookingService _bookingService;
         private readonly INewsletterService _newsletterService;
+        private readonly IFeedBackService _feedBackService;
         private readonly IMapper _mapper;
-        public SignalRHub(IStatisticService statisticService, ICashRegisterService cashRegisterService, IOrderService orderService, IMenuTableService menuTableService, IOrderDetailService orderDetailService, IMapper mapper, IProductService productService, IDiscountService discountService, INotificationService notificationService, IBookingService bookingService, INewsletterService newsletterService)
+        public SignalRHub(IStatisticService statisticService, ICashRegisterService cashRegisterService, IOrderService orderService, IMenuTableService menuTableService, IOrderDetailService orderDetailService, IMapper mapper, IProductService productService, IDiscountService discountService, INotificationService notificationService, IBookingService bookingService, INewsletterService newsletterService, IFeedBackService feedBackService)
         {
             _statisticService = statisticService;
             _cashRegisterService = cashRegisterService;
@@ -36,6 +38,7 @@ namespace GastroMaster.WebApi.Hubs
             _notificationService = notificationService;
             _bookingService = bookingService;
             _newsletterService = newsletterService;
+            _feedBackService = feedBackService;
         }
 
         public async Task SendStatistics()
@@ -174,6 +177,17 @@ namespace GastroMaster.WebApi.Hubs
             Client--;
             await Clients.All.SendAsync("ReceiveClientCount", Client);
             await base.OnDisconnectedAsync(exception);
+        }
+        public async Task SendMessage(string user,string message)
+        {
+            await Clients.All.SendAsync("ReceiveMessage",user,message);
+        }
+
+        public async Task SendFeedBack()
+        {
+            var FeedBackList = await _feedBackService.TGetAllAsync();
+            var result = _mapper.Map<List<ResultFeedBackDto>>(FeedBackList);
+            await Clients.Caller.SendAsync("ReceiveFeedBack", result);
         }
     }
 }

@@ -1,0 +1,340 @@
+﻿@{
+    ViewData["Title"] = "Geri Bildirim";
+    Layout = "~/Views/Shared/_UILayout.cshtml";
+}
+
+<style>
+    .fb-hero {
+        background: var(--char);
+        color: var(--paper);
+        padding: 70px 0 80px;
+    }
+
+        .fb-hero .crumb {
+            font-size: 14px;
+            color: rgba(250,250,247,.6);
+            margin-bottom: 14px;
+        }
+
+            .fb-hero .crumb a:hover {
+                color: var(--mustard);
+            }
+
+        .fb-hero h1 {
+            font-family: var(--display);
+            font-weight: 900;
+            font-size: clamp(48px, 7vw, 96px);
+            line-height: .9;
+            text-transform: uppercase;
+        }
+
+            .fb-hero h1 .stroke {
+                color: transparent;
+                -webkit-text-stroke: 2px var(--mustard);
+            }
+
+        .fb-hero p {
+            margin-top: 18px;
+            max-width: 50ch;
+            color: rgba(250,250,247,.7);
+        }
+
+    .fb .container {
+        display: grid;
+        grid-template-columns: 1.6fr 1fr;
+        gap: 32px;
+        align-items: start;
+    }
+
+    .fb-card {
+        background: #fff;
+        border: 1px solid var(--line);
+        border-radius: 22px;
+        padding: 36px;
+    }
+
+        .fb-card h2 {
+            font-family: var(--display);
+            font-size: 34px;
+            font-weight: 900;
+            line-height: 1;
+            margin-bottom: 8px;
+        }
+
+        .fb-card > p {
+            color: var(--muted);
+            margin-bottom: 28px;
+        }
+
+    .fb-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 18px;
+    }
+
+    .fb-group {
+        margin-bottom: 18px;
+    }
+
+        .fb-group label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .fb-group input,
+        .fb-group textarea {
+            width: 100%;
+            font: inherit;
+            padding: 14px 18px;
+            border: 1.5px solid var(--line);
+            border-radius: 14px;
+            background: var(--paper);
+            color: var(--char);
+        }
+
+        .fb-group textarea {
+            min-height: 160px;
+            resize: vertical;
+        }
+
+            .fb-group input:focus,
+            .fb-group textarea:focus {
+                outline: none;
+                border-color: var(--char);
+                background: #fff;
+            }
+
+    .fb-subjects {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+
+        .fb-subjects input {
+            display: none;
+        }
+
+        .fb-subjects label {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin: 0;
+            padding: 10px 18px;
+            border: 1.5px solid var(--line);
+            border-radius: 999px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all .2s;
+        }
+
+            .fb-subjects label:hover {
+                border-color: var(--char);
+            }
+
+        .fb-subjects input:checked + label {
+            background: var(--char);
+            border-color: var(--char);
+            color: var(--paper);
+        }
+
+            .fb-subjects input:checked + label i {
+                color: var(--mustard);
+            }
+
+    .fb-submit {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        border: 0;
+        border-radius: 999px;
+        padding: 16px 32px;
+        background: var(--ketchup);
+        color: #fff;
+        font: inherit;
+        font-weight: 700;
+        cursor: pointer;
+        transition: background .2s;
+    }
+
+        .fb-submit:hover {
+            background: var(--ketchup-dark);
+        }
+
+    .fb-alert {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 14px 18px;
+        border-radius: 14px;
+        background: rgba(61,220,132,.12);
+        color: #1d8a4e;
+        font-weight: 600;
+        margin-bottom: 24px;
+    }
+
+    .fb-info {
+        background: var(--char);
+        color: var(--paper);
+        border-radius: 22px;
+        padding: 30px;
+        display: flex;
+        flex-direction: column;
+        gap: 22px;
+    }
+
+        .fb-info h3 {
+            font-family: var(--display);
+            font-size: 34px;
+            font-weight: 900;
+            line-height: 1;
+        }
+
+        .fb-info .info-row {
+            display: flex;
+            gap: 14px;
+        }
+
+            .fb-info .info-row i {
+                width: 42px;
+                height: 42px;
+                flex: none;
+                border-radius: 12px;
+                background: var(--char-soft);
+                color: var(--mustard);
+                display: grid;
+                place-items: center;
+                font-size: 18px;
+            }
+
+            .fb-info .info-row strong {
+                display: block;
+            }
+
+            .fb-info .info-row span {
+                font-size: 14px;
+                color: rgba(250,250,247,.7);
+            }
+
+        .fb-info .live-link {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 18px;
+            border-radius: 14px;
+            background: var(--mustard);
+            color: var(--char);
+            font-weight: 700;
+        }
+
+    @@media (max-width: 980px) {
+        .fb .container {
+            grid-template-columns: 1fr;
+        }
+
+        .fb-row {
+            grid-template-columns: 1fr;
+        }
+        .fb-group input[readonly] {
+            background: #ececec;
+            color: var(--muted);
+            cursor: not-allowed;
+        }
+    }
+</style>
+
+<!-- ==================== HERO ==================== -->
+<section class="fb-hero">
+    <div class="container">
+        <div class="crumb"><a href="/">Ana Sayfa</a> / Geri Bildirim</div>
+        <h1>Fikrin<br /><span class="stroke">bizim için</span><br />değerli.</h1>
+        <p>İstek, öneri ya da şikayetin mi var? Yaz bize, her mesajı tek tek okuyoruz.</p>
+    </div>
+</section>
+
+<!-- ==================== FORM ==================== -->
+<section class="section fb">
+    <div class="container">
+
+        <div class="fb-card">
+            <h2>Bize yaz</h2>
+            <p>Formu doldur, ekibimiz en kısa sürede inceleyecek.</p>
+
+            @if (TempData["FeedbackMessage"] != null)
+            {
+                <div class="fb-alert">
+                    <i class="fa fa-check-circle"></i>
+                    @TempData["FeedbackMessage"]
+                </div>
+            }
+            @if (!User.Identity.IsAuthenticated)
+            {
+                <div class="fb-login">
+                    <div class="fb-login-icon"><i class="fa fa-lock"></i></div>
+                    <h4>Önce giriş yapmalısın</h4>
+                    <p>Geri bildirim gönderebilmek için hesabına giriş yap. Hesabın yoksa hemen ücretsiz oluşturabilirsin.</p>
+                    <div class="fb-login-actions">
+                        <a href="/Account/Login/" class="fb-submit"><i class="fa fa-sign-in"></i> Giriş Yap</a>
+                        <a href="/Account/Register/" class="fb-outline"><i class="fa fa-user-plus"></i> Kayıt Ol</a>
+                    </div>
+                </div>
+            }
+            else
+            {
+        <form action="/Feedback/CreateFeedBack/" method="post">
+            @Html.AntiForgeryToken()
+            <div class="fb-row">
+                <div class="fb-group">
+                    <label for="NameSurname">Ad Soyad</label>
+                    <input type="text" id="NameSurname" name="NameSurname" placeholder="Adın ve soyadın" maxlength="100" required  readonly
+                           value="@(User.Identity.IsAuthenticated ? User.Identity.Name : "")" />
+                </div>
+                <div class="fb-group">
+                    <label for="Mail">E-posta</label>
+                    <input type="email" id="Mail" name="Mail" placeholder="ornek@mail.com" maxlength="100" required />
+                </div>
+            </div>
+
+            <div class="fb-group">
+                <label>Konu</label>
+                <div class="fb-subjects">
+                    <input type="radio" id="subRequest" name="Subject" value="İstek" checked />
+                    <label for="subRequest"><i class="fa fa-hand-paper-o"></i> İstek</label>
+
+                    <input type="radio" id="subSuggestion" name="Subject" value="Öneri" />
+                    <label for="subSuggestion"><i class="fa fa-lightbulb-o"></i> Öneri</label>
+
+                    <input type="radio" id="subComplaint" name="Subject" value="Şikayet" />
+                    <label for="subComplaint"><i class="fa fa-exclamation-circle"></i> Şikayet</label>
+
+                    <input type="radio" id="subOther" name="Subject" value="Diğer" />
+                    <label for="subOther"><i class="fa fa-ellipsis-h"></i> Diğer</label>
+                </div>
+            </div>
+
+            <div class="fb-group">
+                <label for="Content">Mesajın</label>
+                <textarea id="Content" name="Content" placeholder="Düşüncelerini buraya yaz..." maxlength="1000" required></textarea>
+            </div>
+
+            <button type="submit" class="fb-submit"><i class="fa fa-paper-plane"></i> Gönder</button>
+           </form>
+                    }
+            </div>
+
+        <aside class="fb-info">
+            <h3>Neler yazabilirsin?</h3>
+
+            <div class="info-row"><i class="fa fa-hand-paper-o"></i><div><strong>İstek</strong><span>Menüde görmek istediğin bir ürün ya da hizmet</span></div></div>
+            <div class="info-row"><i class="fa fa-lightbulb-o"></i><div><strong>Öneri</strong><span>Deneyimini daha iyi yapacak bir fikrin</span></div></div>
+            <div class="info-row"><i class="fa fa-exclamation-circle"></i><div><strong>Şikayet</strong><span>Yaşadığın bir sorun, hemen ilgileniyoruz</span></div></div>
+
+            <a href="/Message/Index" class="live-link">
+                Hemen cevap mı lazım? Canlı Destek
+                <i class="fa fa-arrow-right"></i>
+            </a>
+        </aside>
+
+    </div>
+</section>

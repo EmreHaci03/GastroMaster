@@ -1,0 +1,90 @@
+﻿@{
+    ViewData["Title"] = "Sayfa Bulunamadı";
+    Layout = "~/Views/Shared/_UILayout.cshtml";
+}
+
+<style>
+    .error-page {
+        background: var(--char);
+        color: var(--paper);
+        padding: 100px 0 120px;
+        text-align: center;
+        overflow: hidden;
+    }
+
+    .error-code {
+        font-family: var(--display);
+        font-weight: 900;
+        font-size: clamp(120px, 22vw, 260px);
+        line-height: .85;
+        color: transparent;
+        -webkit-text-stroke: 3px var(--mustard);
+    }
+
+    .error-page h1 {
+        font-family: var(--display);
+        font-weight: 900;
+        font-size: clamp(32px, 5vw, 56px);
+        text-transform: uppercase;
+        margin-top: 20px;
+    }
+
+    .error-page p {
+        max-width: 46ch;
+        margin: 16px auto 36px;
+        color: rgba(250,250,247,.7);
+    }
+
+    .error-actions {
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 14px;
+    }
+
+    .error-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        padding: 16px 30px;
+        border-radius: 999px;
+        font-weight: 700;
+        background: var(--ketchup);
+        color: #fff;
+        transition: background .2s;
+    }
+
+        .error-btn:hover {
+            background: var(--ketchup-dark);
+            color: #fff;
+        }
+
+    .error-btn-outline {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        padding: 15px 30px;
+        border-radius: 999px;
+        font-weight: 700;
+        border: 1.5px solid rgba(250,250,247,.4);
+        color: var(--paper);
+        transition: all .2s;
+    }
+
+        .error-btn-outline:hover {
+            border-color: var(--mustard);
+            color: var(--mustard);
+        }
+</style>
+
+<section class="error-page">
+    <div class="container">
+        <div class="error-code">404</div>
+        <h1>Bu tabak boş çıktı</h1>
+        <p>Aradığın sayfa menüden kaldırılmış ya da hiç var olmamış olabilir. Ama mutfağımız açık, ana sayfadan devam edebilirsin.</p>
+        <div class="error-actions">
+            <a href="/" class="error-btn"><i class="fa fa-home"></i> Ana Sayfa</a>
+            <a href="/Menu/Index" class="error-btn-outline"><i class="fa fa-cutlery"></i> Menüye Göz At</a>
+        </div>
+    </div>
+</section>
