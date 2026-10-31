@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using FluentValidation;
 using GastroMaster.BusinessLayer.Abstract;
 using GastroMaster.DtoLayer.DTOS.SliderDtos;
 using GastroMaster.EntityLayer.Entities;
@@ -12,11 +13,15 @@ namespace GastroMaster.WebApi.Controllers
     {
         private readonly ISliderService _sliderService;
         private readonly IMapper _mapper;
+        private readonly IValidator<CreateSliderDto> _validator;
+        private readonly IValidator<UpdateSliderDto> _updateValidator;
 
-        public SliderController(ISliderService sliderService, IMapper mapper)
+        public SliderController(ISliderService sliderService, IMapper mapper, IValidator<CreateSliderDto> validator, IValidator<UpdateSliderDto> updateValidator)
         {
             _sliderService = sliderService;
             _mapper = mapper;
+            _validator = validator;
+            _updateValidator = updateValidator;
         }
 
         [HttpGet]
@@ -38,6 +43,10 @@ namespace GastroMaster.WebApi.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateSlider(CreateSliderDto createSliderDto)
         {
+            var validationResult=_validator.Validate(createSliderDto);
+            if (!validationResult.IsValid)
+                return BadRequest(validationResult.Errors);
+
             var value = _mapper.Map<Slider>(createSliderDto);
             await _sliderService.TInsertAsync(value);
             return Ok("Slider eklendi");
@@ -46,6 +55,9 @@ namespace GastroMaster.WebApi.Controllers
         [HttpPut]
         public async Task<IActionResult> UpdateSlider(UpdateSliderDto updateSliderDto)
         {
+            var validationResult = _updateValidator.Validate(updateSliderDto);
+            if (!validationResult.IsValid)
+                return BadRequest(validationResult.Errors);
             var value = _mapper.Map<Slider>(updateSliderDto);
             await _sliderService.TUpdateAsync(value);
             return Ok("Slider güncellendi");

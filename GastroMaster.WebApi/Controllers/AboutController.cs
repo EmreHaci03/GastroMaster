@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using FluentValidation;
 using GastroMaster.BusinessLayer.Abstract;
 using GastroMaster.DtoLayer.DTOS.AboutDtos;
 using GastroMaster.EntityLayer.Entities;
@@ -13,11 +14,15 @@ namespace GastroMaster.WebApi.Controllers
     {
         private readonly IAboutService aboutService;
         private readonly IMapper mapper;
+        private readonly IValidator<CreateAboutDto> _validator;
+        private readonly IValidator<UpdateAboutDto> _UpdateValidator;
 
-        public AboutController(IAboutService aboutService, IMapper mapper)
+        public AboutController(IAboutService aboutService, IMapper mapper, IValidator<CreateAboutDto> validator, IValidator<UpdateAboutDto> updateValidator)
         {
             this.aboutService = aboutService;
             this.mapper = mapper;
+            _validator = validator;
+            _UpdateValidator = updateValidator;
         }
 
         [HttpGet]
@@ -39,6 +44,11 @@ namespace GastroMaster.WebApi.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateAbout(CreateAboutDto createAboutDto)
         {
+            var validationResult = _validator.Validate(createAboutDto);
+            if (!validationResult.IsValid)
+            {
+                return BadRequest(validationResult.Errors.Select(x => new {x.PropertyName,x.ErrorMessage}));
+            }
             var value = mapper.Map<About>(createAboutDto);
             await aboutService.TInsertAsync(value);
             return Ok("Hakkımızda alanı eklendi");
@@ -47,6 +57,10 @@ namespace GastroMaster.WebApi.Controllers
         [HttpPut]
         public async Task<IActionResult> UpdateAbout(UpdateAboutDto updateAboutDto)
         {
+            var validationResult = _UpdateValidator.Validate(updateAboutDto);
+            if (!validationResult.IsValid)
+                return BadRequest(validationResult.Errors.Select(x => new { x.PropertyName, x.ErrorMessage }));
+
             var value = mapper.Map<About>(updateAboutDto);
             await aboutService.TUpdateAsync(value);
             return Ok("Hakkımızda alanı güncellendi");

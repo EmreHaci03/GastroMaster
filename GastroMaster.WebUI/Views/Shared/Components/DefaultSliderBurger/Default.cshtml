@@ -10,34 +10,3 @@
         </span>
     </div>
 </div>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/8.0.7/signalr.min.js"></script>
-
-<script>
-    var sliderConnection = new signalR.HubConnectionBuilder()
-        .withUrl("https://localhost:7139/SignalRHub")
-        .withAutomaticReconnect()
-        .build();
-
-    function setSliderValue(id, value) {
-        var element = document.getElementById(id);
-        if (element) element.innerText = value;
-    }
-
-    sliderConnection.on("ReceiveSliderBurger", function (data) {
-        console.log(data);
-        if (!data) return;
-        setSliderValue("sliderBurgerName", data.productName);
-        setSliderValue("sliderBurgerPrice", "₺" + data.price.toLocaleString("tr-TR", { maximumFractionDigits: 0 }));
-
-        var image = document.getElementById("sliderBurgerImage");
-        if (image) image.src = data.imageUrl;
-    });
-    sliderConnection.start().then(function () {
-        sliderConnection.invoke("DefaultStatistic");
-        setInterval(function () {
-            if (sliderConnection.state == signalR.HubConnectionState.Connected) {
-                sliderConnection.invoke("DefaultStatistic");
-            }
-        }, 5000);
-    });
-</script>

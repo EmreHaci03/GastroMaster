@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using FluentValidation;
 using GastroMaster.BusinessLayer.Abstract;
 using GastroMaster.DtoLayer.DTOS.CategoryDtos;
 using GastroMaster.EntityLayer.Entities;
@@ -13,11 +14,15 @@ namespace GastroMaster.WebApi.Controllers
     {
         private readonly ICategoryService categoryService;
         private readonly IMapper mapper;
+        private readonly IValidator<CreateCategoryDto> _validator;
+        private readonly IValidator<UpdateCategoryDto> _updateValidator;
 
-        public CategoryController(ICategoryService categoryService, IMapper mapper)
+        public CategoryController(ICategoryService categoryService, IMapper mapper, IValidator<CreateCategoryDto> validator, IValidator<UpdateCategoryDto> updateValidator)
         {
             this.categoryService = categoryService;
             this.mapper = mapper;
+            _validator = validator;
+            _updateValidator = updateValidator;
         }
 
         [HttpGet]
@@ -39,6 +44,10 @@ namespace GastroMaster.WebApi.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateCategory(CreateCategoryDto createCategoryDto)
         {
+            var validationResult = _validator.Validate(createCategoryDto);
+            if (!validationResult.IsValid)
+                return BadRequest(validationResult.Errors);
+
             var value = mapper.Map<Category>(createCategoryDto);
             await categoryService.TInsertAsync(value);
             return Ok("Kategori eklendi");
@@ -47,6 +56,10 @@ namespace GastroMaster.WebApi.Controllers
         [HttpPut]
         public async Task<IActionResult> UpdateCategory(UpdateCategoryDto updateCategoryDto)
         {
+            var validationResult = _updateValidator.Validate(updateCategoryDto);
+            if (!validationResult.IsValid)
+                return BadRequest(validationResult.Errors);
+
             var value = mapper.Map<Category>(updateCategoryDto);
             await categoryService.TUpdateAsync(value);
             return Ok("Kategori güncellendi");

@@ -1,4 +1,5 @@
 ﻿using GastroMaster.DtoLayer.DTOS.FeatureDtos;
+using GastroMaster.DtoLayer.DTOS.ValidationDtos;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GastroMaster.WebUI.Areas.Admin.Controllers
@@ -15,8 +16,8 @@ namespace GastroMaster.WebUI.Areas.Admin.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var client = httpClientFactory.CreateClient();
-            var responseMessage = await client.GetAsync("https://localhost:7139/api/Feature");
+            var client = httpClientFactory.CreateClient("GastroMasterApi");
+            var responseMessage = await client.GetAsync("Feature");
             if (responseMessage.IsSuccessStatusCode)
             {
                 var values = await responseMessage.Content.ReadFromJsonAsync<List<ResultFeatureDto>>();
@@ -34,20 +35,23 @@ namespace GastroMaster.WebUI.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateFeature(CreateFeatureDto createFeatureDto)
         {
-            var client = httpClientFactory.CreateClient();
-            var responseMessage = await client.PostAsJsonAsync("https://localhost:7139/api/Feature", createFeatureDto);
+            var client = httpClientFactory.CreateClient("GastroMasterApi");
+            var responseMessage = await client.PostAsJsonAsync("Feature", createFeatureDto);
             if (responseMessage.IsSuccessStatusCode)
             {
                 return RedirectToAction(nameof(Index));
             }
+            var values = await responseMessage.Content.ReadFromJsonAsync<List<ValidationErrorDto>>();
+            foreach (var item in values)
+                ModelState.AddModelError(item.PropertyName, item.ErrorMessage);
             return View(createFeatureDto);
         }
 
         [HttpGet]
         public async Task<IActionResult> UpdateFeature(int id)
         {
-            var client = httpClientFactory.CreateClient();
-            var responseMessage = await client.GetAsync($"https://localhost:7139/api/Feature/{id}");
+            var client = httpClientFactory.CreateClient("GastroMasterApi");
+            var responseMessage = await client.GetAsync($"Feature/{id}");
             if (responseMessage.IsSuccessStatusCode)
             {
                 var value = await responseMessage.Content.ReadFromJsonAsync<UpdateFeatureDto>();
@@ -59,19 +63,22 @@ namespace GastroMaster.WebUI.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> UpdateFeature(UpdateFeatureDto updateFeatureDto)
         {
-            var client = httpClientFactory.CreateClient();
-            var responseMessage = await client.PutAsJsonAsync("https://localhost:7139/api/Feature", updateFeatureDto);
+            var client = httpClientFactory.CreateClient("GastroMasterApi");
+            var responseMessage = await client.PutAsJsonAsync("Feature", updateFeatureDto);
             if (responseMessage.IsSuccessStatusCode)
             {
                 return RedirectToAction(nameof(Index));
             }
+            var values = await responseMessage.Content.ReadFromJsonAsync<List<ValidationErrorDto>>();
+            foreach (var item in values)
+                ModelState.AddModelError(item.PropertyName, item.ErrorMessage);
             return View(updateFeatureDto);
         }
 
         public async Task<IActionResult> DeleteFeature(int id)
         {
-            var client = httpClientFactory.CreateClient();
-            await client.DeleteAsync($"https://localhost:7139/api/Feature/{id}");
+            var client = httpClientFactory.CreateClient("GastroMasterApi");
+            await client.DeleteAsync($"Feature/{id}");
             return RedirectToAction(nameof(Index));
         }
     }

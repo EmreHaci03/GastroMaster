@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
 using GastroMaster.BusinessLayer.Abstract;
+using GastroMaster.DtoLayer.DTOS.AboutDtos;
+using GastroMaster.DtoLayer.DTOS.AboutItemDtos;
 using GastroMaster.DtoLayer.DTOS.BookingDtos;
 using GastroMaster.DtoLayer.DTOS.DiscountDtos;
 using GastroMaster.DtoLayer.DTOS.FeedBackDtos;
@@ -7,6 +9,7 @@ using GastroMaster.DtoLayer.DTOS.MenuTableDtos;
 using GastroMaster.DtoLayer.DTOS.NewsletterDtos;
 using GastroMaster.DtoLayer.DTOS.NotificationDtos;
 using GastroMaster.DtoLayer.DTOS.ProductDtos;
+using GastroMaster.DtoLayer.DTOS.TimeLineDtos;
 using Microsoft.AspNetCore.SignalR;
 
 namespace GastroMaster.WebApi.Hubs
@@ -24,8 +27,11 @@ namespace GastroMaster.WebApi.Hubs
         private readonly IBookingService _bookingService;
         private readonly INewsletterService _newsletterService;
         private readonly IFeedBackService _feedBackService;
+        private readonly IAboutItemService _aboutItemService;
+        private readonly IAboutService _aboutService;
+        private readonly ITimelineService _timelineService;   
         private readonly IMapper _mapper;
-        public SignalRHub(IStatisticService statisticService, ICashRegisterService cashRegisterService, IOrderService orderService, IMenuTableService menuTableService, IOrderDetailService orderDetailService, IMapper mapper, IProductService productService, IDiscountService discountService, INotificationService notificationService, IBookingService bookingService, INewsletterService newsletterService, IFeedBackService feedBackService)
+        public SignalRHub(IStatisticService statisticService, ICashRegisterService cashRegisterService, IOrderService orderService, IMenuTableService menuTableService, IOrderDetailService orderDetailService, IMapper mapper, IProductService productService, IDiscountService discountService, INotificationService notificationService, IBookingService bookingService, INewsletterService newsletterService, IFeedBackService feedBackService, IAboutItemService aboutItemService, IAboutService aboutService, ITimelineService timelineService)
         {
             _statisticService = statisticService;
             _cashRegisterService = cashRegisterService;
@@ -39,6 +45,9 @@ namespace GastroMaster.WebApi.Hubs
             _bookingService = bookingService;
             _newsletterService = newsletterService;
             _feedBackService = feedBackService;
+            _aboutItemService = aboutItemService;
+            _aboutService = aboutService;
+            _timelineService = timelineService;
         }
 
         public async Task SendStatistics()
@@ -188,6 +197,24 @@ namespace GastroMaster.WebApi.Hubs
             var FeedBackList = await _feedBackService.TGetAllAsync();
             var result = _mapper.Map<List<ResultFeedBackDto>>(FeedBackList);
             await Clients.Caller.SendAsync("ReceiveFeedBack", result);
+        }
+        public async Task SendAboutItem()
+        {
+            var aboutItemList=await _aboutItemService.TGetAllAsync();
+            var result = _mapper.Map<List<ResultAboutItemDto>>(aboutItemList);
+            await Clients.All.SendAsync("ReceiveAboutItemList", result);
+        }
+        public async Task SendAbout()
+        {
+            var GetAbout = await _aboutService.TGetAllAsync();
+            var result=_mapper.Map<List<ResultAboutDto>>(GetAbout);
+            await Clients.All.SendAsync("ReceiveAboutList", result);
+        }
+        public async Task SendTimeLine()
+        {
+            var timeLine = await _timelineService.TGetAllAsync();
+            var result = _mapper.Map<List<ResultTimeLineDto>>(timeLine);
+            await Clients.All.SendAsync("ReceiveTimeLine", result);
         }
     }
 }

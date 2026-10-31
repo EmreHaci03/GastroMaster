@@ -1,4 +1,5 @@
 ﻿using GastroMaster.DtoLayer.DTOS.DiscountDtos;
+using GastroMaster.DtoLayer.DTOS.ValidationDtos;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GastroMaster.WebUI.Areas.Admin.Controllers
@@ -15,8 +16,8 @@ namespace GastroMaster.WebUI.Areas.Admin.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var client = httpClientFactory.CreateClient();
-            var responseMessage = await client.GetAsync("https://localhost:7139/api/Discount");
+            var client = httpClientFactory.CreateClient("GastroMasterApi");
+            var responseMessage = await client.GetAsync("Discount");
             if (responseMessage.IsSuccessStatusCode)
             {
                 var values = await responseMessage.Content.ReadFromJsonAsync<List<ResultDiscountDto>>();
@@ -50,20 +51,23 @@ namespace GastroMaster.WebUI.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateDiscount(CreateDiscountDto createDiscountDto)
         {
-            var client = httpClientFactory.CreateClient();
-            var responseMessage = await client.PostAsJsonAsync("https://localhost:7139/api/Discount", createDiscountDto);
+            var client = httpClientFactory.CreateClient("GastroMasterApi");
+            var responseMessage = await client.PostAsJsonAsync("Discount", createDiscountDto);
             if (responseMessage.IsSuccessStatusCode)
             {
                 return RedirectToAction("Index");
             }
+            var values = await responseMessage.Content.ReadFromJsonAsync<List<ValidationErrorDto>>();
+            foreach (var item in values)
+                ModelState.AddModelError(item.PropertyName, item.ErrorMessage);
             return View(createDiscountDto);
         }
 
         [HttpGet]
         public async Task<IActionResult> UpdateDiscount(int id)
         {
-            var client = httpClientFactory.CreateClient();
-            var responseMessage = await client.GetAsync($"https://localhost:7139/api/Discount/{id}");
+            var client = httpClientFactory.CreateClient("GastroMasterApi");
+            var responseMessage = await client.GetAsync($"Discount/{id}");
             if (responseMessage.IsSuccessStatusCode)
             {
                 var value = await responseMessage.Content.ReadFromJsonAsync<UpdateDiscountDto>();
@@ -75,19 +79,22 @@ namespace GastroMaster.WebUI.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> UpdateDiscount(UpdateDiscountDto updateDiscountDto)
         {
-            var client = httpClientFactory.CreateClient();
-            var responseMessage = await client.PutAsJsonAsync("https://localhost:7139/api/Discount", updateDiscountDto);
+            var client = httpClientFactory.CreateClient("GastroMasterApi");
+            var responseMessage = await client.PutAsJsonAsync("Discount", updateDiscountDto);
             if (responseMessage.IsSuccessStatusCode)
             {
                 return RedirectToAction("Index");
             }
+            var values = await responseMessage.Content.ReadFromJsonAsync<List<ValidationErrorDto>>();
+            foreach (var item in values)
+                ModelState.AddModelError(item.PropertyName, item.ErrorMessage);
             return View(updateDiscountDto);
         }
 
         public async Task<IActionResult> DeleteDiscount(int id)
         {
-            var client = httpClientFactory.CreateClient();
-            await client.DeleteAsync($"https://localhost:7139/api/Discount/{id}");
+            var client = httpClientFactory.CreateClient("GastroMasterApi");
+            await client.DeleteAsync($"Discount/{id}");
             return RedirectToAction("Index");
         }
     }

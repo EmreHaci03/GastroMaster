@@ -1,6 +1,6 @@
 ﻿<div class="main-header">
     <div class="logo-header">
-        <a href="index.html" class="logo">
+        <a href="/Admin/Dashboard/Index/" class="logo">
             Ready Dashboard
         </a>
         <button class="navbar-toggler sidenav-toggler ml-auto" type="button" data-toggle="collapse" data-target="collapse" aria-controls="sidebar" aria-expanded="false" aria-label="Toggle navigation">
@@ -13,7 +13,7 @@
 
             <form class="navbar-left navbar-form nav-search mr-md-3" action="">
                 <div class="input-group">
-                    <input type="text" placeholder="Search ..." class="form-control">
+                    <input type="text" placeholder="Ara ..." class="form-control">
                     <div class="input-group-append">
                         <span class="input-group-text">
                             <i class="la la-search search-icon"></i>
@@ -22,17 +22,6 @@
                 </div>
             </form>
             <ul class="navbar-nav topbar-nav ml-md-auto align-items-center">
-                <li class="nav-item dropdown hidden-caret">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <i class="la la-envelope"></i>
-                    </a>
-                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <a class="dropdown-item" href="#">Action</a>
-                        <a class="dropdown-item" href="#">Another action</a>
-                        <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="#">Something else here</a>
-                    </div>
-                </li>
                 @await Component.InvokeAsync("AdminLayoutNotification")
                 <li class="nav-item dropdown">
                     <a class="dropdown-toggle profile-pic" data-toggle="dropdown" href="#" aria-expanded="false"> <img src="/Ready-Bootstrap-Dashboard-master/assets/img/profile.jpg" alt="user-img" width="36" class="img-circle"><span>Hizrian</span></span> </a>
@@ -41,19 +30,17 @@
                             <div class="user-box">
                                 <div class="u-img"><img src="/Ready-Bootstrap-Dashboard-master/assets/img/profile.jpg" alt="user"></div>
                                 <div class="u-text">
-                                    <h4>Hizrian</h4>
-                                    <p class="text-muted">hello@themekita.com</p><a href="profile.html" class="btn btn-rounded btn-danger btn-sm">View Profile</a>
+                                    <h4>@User.Identity.Name</h4>
+                                    <p class="text-muted">@ViewBag.Email</p><a href="/Admin/Setting/Index/" class="btn btn-rounded btn-danger btn-sm">Profili Gör</a>
                                 </div>
                             </div>
                         </li>
                         <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="#"><i class="ti-user"></i> My Profile</a>
-                        <a class="dropdown-item" href="#"></i> My Balance</a>
-                        <a class="dropdown-item" href="#"><i class="ti-email"></i> Inbox</a>
+                        <a class="dropdown-item" href="/Admin/Dashboard/Index/"><i class="ti-user"></i> Dashboard</a>
                         <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="#"><i class="ti-settings"></i> Account Setting</a>
+                        <a class="dropdown-item" href="/Admin/Setting/Index/"><i class="ti-settings"></i> Account Setting</a>
                         <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="#"><i class="fa fa-power-off"></i> Logout</a>
+                        <a class="dropdown-item" asp-area="" asp-controller="Account" asp-action="LogOut"><i class="fa fa-power-off"></i> Çıkış Yap</a>
                     </ul>
                     <!-- /.dropdown-user -->
                 </li>

@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using FluentValidation;
 using GastroMaster.BusinessLayer.Abstract;
 using GastroMaster.DtoLayer.DTOS.ContactDtos;
 using GastroMaster.DtoLayer.DTOS.ProductDtos;
@@ -14,11 +15,13 @@ namespace GastroMaster.WebApi.Controllers
     {
         private readonly IProductService _productService;
         private readonly IMapper _mapper;
+        private readonly IValidator<CreateProductDto> _validator;
 
-        public ProductController(IProductService productService, IMapper mapper)
+        public ProductController(IProductService productService, IMapper mapper, IValidator<CreateProductDto> validator)
         {
             _productService = productService;
             _mapper = mapper;
+            _validator = validator;
         }
 
         [HttpGet]
@@ -64,6 +67,9 @@ namespace GastroMaster.WebApi.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateProduct(CreateProductDto dto)
         {
+            var validationResult = _validator.Validate(dto);
+            if (!validationResult.IsValid)
+                return BadRequest(validationResult.Errors);
             var value = _mapper.Map<Product>(dto);
             await _productService.TInsertAsync(value);
             return Ok("Ürün Eklendi");

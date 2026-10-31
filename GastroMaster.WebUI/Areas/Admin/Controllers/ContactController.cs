@@ -15,8 +15,8 @@ namespace GastroMaster.WebUI.Areas.Admin.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var client = httpClientFactory.CreateClient();
-            var responseMessage = await client.GetAsync("https://localhost:7139/api/Contact");
+            var client = httpClientFactory.CreateClient("GastroMasterApi");
+            var responseMessage = await client.GetAsync("Contact");
             if (responseMessage.IsSuccessStatusCode)
             {
                 var values = await responseMessage.Content.ReadFromJsonAsync<List<ResultContactDto>>();
@@ -34,8 +34,8 @@ namespace GastroMaster.WebUI.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateContact(CreateContactDto createContactDto)
         {
-            var client = httpClientFactory.CreateClient();
-            var responseMessage = await client.PostAsJsonAsync("https://localhost:7139/api/Contact", createContactDto);
+            var client = httpClientFactory.CreateClient("GastroMasterApi");
+            var responseMessage = await client.PostAsJsonAsync("Contact", createContactDto);
             if (responseMessage.IsSuccessStatusCode)
             {
                 return RedirectToAction(nameof(Index));
@@ -46,8 +46,8 @@ namespace GastroMaster.WebUI.Areas.Admin.Controllers
         [HttpGet]
         public async Task<IActionResult> UpdateContact(int id)
         {
-            var client = httpClientFactory.CreateClient();
-            var responseMessage = await client.GetAsync($"https://localhost:7139/api/Contact/{id}");
+            var client = httpClientFactory.CreateClient("GastroMasterApi");
+            var responseMessage = await client.GetAsync($"Contact/{id}");
             if (responseMessage.IsSuccessStatusCode)
             {
                 var value = await responseMessage.Content.ReadFromJsonAsync<UpdateContactDto>();
@@ -59,8 +59,8 @@ namespace GastroMaster.WebUI.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> UpdateContact(UpdateContactDto updateContactDto)
         {
-            var client = httpClientFactory.CreateClient();
-            var responseMessage = await client.PutAsJsonAsync("https://localhost:7139/api/Contact", updateContactDto);
+            var client = httpClientFactory.CreateClient("GastroMasterApi");
+            var responseMessage = await client.PutAsJsonAsync("Contact", updateContactDto);
             if (responseMessage.IsSuccessStatusCode)
             {
                 return RedirectToAction(nameof(Index));
@@ -70,8 +70,8 @@ namespace GastroMaster.WebUI.Areas.Admin.Controllers
 
         public async Task<IActionResult> DeleteContact(int id)
         {
-            var client = httpClientFactory.CreateClient();
-            await client.DeleteAsync($"https://localhost:7139/api/Contact/{id}");
+            var client = httpClientFactory.CreateClient("GastroMasterApi");
+            await client.DeleteAsync($"Contact/{id}");
             return RedirectToAction(nameof(Index));
         }
     }

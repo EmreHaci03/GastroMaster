@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using FluentValidation;
 using GastroMaster.BusinessLayer.Abstract;
 using GastroMaster.DtoLayer.DTOS.TestimonialDtos;
 using GastroMaster.EntityLayer.Entities;
@@ -12,11 +13,15 @@ namespace GastroMaster.WebApi.Controllers
     {
         private readonly ITestimonialService testimonialService;
         private readonly IMapper mapper;
+        private readonly IValidator<CreateTestimonialDto> _validator;
+        private readonly IValidator<UpdateTestimonialDto> _updateValidator;
 
-        public TestimonialController(ITestimonialService testimonialService, IMapper mapper)
+        public TestimonialController(ITestimonialService testimonialService, IMapper mapper, IValidator<CreateTestimonialDto> validator, IValidator<UpdateTestimonialDto> updateValidator)
         {
             this.testimonialService = testimonialService;
             this.mapper = mapper;
+            _validator = validator;
+            _updateValidator = updateValidator;
         }
 
         [HttpGet]
@@ -38,6 +43,9 @@ namespace GastroMaster.WebApi.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateTestimonial(CreateTestimonialDto createTestimonialDto)
         {
+            var validationResult = _validator.Validate(createTestimonialDto);
+            if (!validationResult.IsValid)
+                return BadRequest(validationResult.Errors);
             var value = mapper.Map<Testimonial>(createTestimonialDto);
             await testimonialService.TInsertAsync(value);
             return Ok("Referans eklendi");
@@ -46,6 +54,9 @@ namespace GastroMaster.WebApi.Controllers
         [HttpPut]
         public async Task<IActionResult> UpdateTestimonial(UpdateTestimonialDto updateTestimonialDto)
         {
+            var validationResult = _updateValidator.Validate(updateTestimonialDto);
+            if (!validationResult.IsValid)
+                return BadRequest(validationResult.Errors);
             var value = mapper.Map<Testimonial>(updateTestimonialDto);
             await testimonialService.TUpdateAsync(value);
             return Ok("Referans güncellendi");

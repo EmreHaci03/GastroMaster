@@ -1,6 +1,8 @@
 ﻿using GastroMaster.DtoLayer.DTOS.CategoryDtos;
+using GastroMaster.DtoLayer.DTOS.ValidationDtos;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 
 namespace GastroMaster.WebUI.Areas.Admin.Controllers
 {
@@ -16,8 +18,8 @@ namespace GastroMaster.WebUI.Areas.Admin.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var client = httpClientFactory.CreateClient();
-            var responseMessage = await client.GetAsync("https://localhost:7139/api/Category");
+            var client = httpClientFactory.CreateClient("GastroMasterApi");
+            var responseMessage = await client.GetAsync("Category");
             if (responseMessage.IsSuccessStatusCode)
             {
                 var values = await responseMessage.Content.ReadFromJsonAsync<List<ResultCategoryDto>>();
@@ -35,20 +37,23 @@ namespace GastroMaster.WebUI.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateCategory(CreateCategoryDto createCategoryDto)
         {
-            var client = httpClientFactory.CreateClient();
-            var responseMessage = await client.PostAsJsonAsync("https://localhost:7139/api/Category", createCategoryDto);
+            var client = httpClientFactory.CreateClient("GastroMasterApi");
+            var responseMessage = await client.PostAsJsonAsync("Category", createCategoryDto);
             if (responseMessage.IsSuccessStatusCode)
             {
                 return RedirectToAction(nameof(Index));
             }
+            var values = await responseMessage.Content.ReadFromJsonAsync<List<ValidationErrorDto>>();
+            foreach (var item in values)
+                ModelState.AddModelError(item.PropertyName, item.ErrorMessage);
             return View(createCategoryDto);
         }
 
         [HttpGet]
         public async Task<IActionResult> UpdateCategory(int id)
         {
-            var client = httpClientFactory.CreateClient();
-            var responseMessage = await client.GetAsync($"https://localhost:7139/api/Category/{id}");
+            var client = httpClientFactory.CreateClient("GastroMasterApi");
+            var responseMessage = await client.GetAsync($"Category/{id}");
             if (responseMessage.IsSuccessStatusCode)
             {
                 var value = await responseMessage.Content.ReadFromJsonAsync<UpdateCategoryDto>();
@@ -60,19 +65,22 @@ namespace GastroMaster.WebUI.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> UpdateCategory(UpdateCategoryDto updateCategoryDto)
         {
-            var client = httpClientFactory.CreateClient();
-            var responseMessage = await client.PutAsJsonAsync("https://localhost:7139/api/Category", updateCategoryDto);
+            var client = httpClientFactory.CreateClient("GastroMasterApi");
+            var responseMessage = await client.PutAsJsonAsync("Category", updateCategoryDto);
             if (responseMessage.IsSuccessStatusCode)
             {
                 return RedirectToAction(nameof(Index));
             }
+            var values = await responseMessage.Content.ReadFromJsonAsync<List<ValidationErrorDto>>();
+            foreach (var item in values)
+                ModelState.AddModelError(item.PropertyName, item.ErrorMessage);
             return View(updateCategoryDto);
         }
 
         public async Task<IActionResult> DeleteCategory(int id)
         {
-            var client = httpClientFactory.CreateClient();
-            await client.DeleteAsync($"https://localhost:7139/api/Category/{id}");
+            var client = httpClientFactory.CreateClient("GastroMasterApi");
+            await client.DeleteAsync($"Category/{id}");
             return RedirectToAction(nameof(Index));
         }
     }

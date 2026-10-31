@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using GastroMaster.DtoLayer.DTOS.BookingDtos;
+using Microsoft.AspNetCore.Mvc;
 
 namespace GastroMaster.WebUI.ViewComponents.Default
 {

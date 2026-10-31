@@ -17,8 +17,8 @@ namespace GastroMaster.WebUI.Areas.Admin.Controllers
         [HttpGet]
         public async Task<IActionResult> Index()
         {
-            var client = _httpClientFactory.CreateClient();
-            var responseMessage = await client.GetAsync("https://localhost:7139/api/Product/GetProductListWithCategory");
+            var client = _httpClientFactory.CreateClient("GastroMasterApi");
+            var responseMessage = await client.GetAsync("Product/GetProductListWithCategory");
             if (responseMessage.IsSuccessStatusCode)
             {
                 var values = await responseMessage.Content.ReadFromJsonAsync<List<ResultProductWithCategoryDto>>();
@@ -30,8 +30,8 @@ namespace GastroMaster.WebUI.Areas.Admin.Controllers
         [HttpGet]
         public async Task<IActionResult> CreateProduct()
         {
-            var client= _httpClientFactory.CreateClient();
-            var responseMessage = await client.GetAsync("https://localhost:7139/api/Category");
+            var client= _httpClientFactory.CreateClient("GastroMasterApi");
+            var responseMessage = await client.GetAsync("Category");
             if (responseMessage.IsSuccessStatusCode)
             {
                 var values = await responseMessage.Content.ReadFromJsonAsync<List<ResultCategoryDto>>() ?? new();
@@ -43,8 +43,8 @@ namespace GastroMaster.WebUI.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateProduct(CreateProductDto dto)
         {
-            var client=_httpClientFactory.CreateClient();
-            var responseMessage = await client.PostAsJsonAsync("https://localhost:7139/api/Product", dto);
+            var client=_httpClientFactory.CreateClient("GastroMasterApi");
+            var responseMessage = await client.PostAsJsonAsync("Product", dto);
             if (responseMessage.IsSuccessStatusCode)
                 return RedirectToAction(nameof(Index));
 
@@ -53,15 +53,15 @@ namespace GastroMaster.WebUI.Areas.Admin.Controllers
         [HttpGet]
         public async Task<IActionResult> UpdateProduct(int id)
         {
-            var client = _httpClientFactory.CreateClient();
-            var categoryResponseMessage = await client.GetAsync("https://localhost:7139/api/Category");
+            var client = _httpClientFactory.CreateClient("GastroMasterApi");
+            var categoryResponseMessage = await client.GetAsync("Category");
             if (categoryResponseMessage.IsSuccessStatusCode)
             {
                 var categories = await categoryResponseMessage.Content.ReadFromJsonAsync<List<ResultCategoryDto>>() ?? new();
                 ViewBag.Categories = categories;
             }
 
-            var responseMessage = await client.GetAsync($"https://localhost:7139/api/Product/{id}");
+            var responseMessage = await client.GetAsync($"Product/{id}");
             if (responseMessage.IsSuccessStatusCode)
             {
                 var value = await responseMessage.Content.ReadFromJsonAsync<UpdateProductDto>();
@@ -75,20 +75,17 @@ namespace GastroMaster.WebUI.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> UpdateProduct(UpdateProductDto dto)
         {
-            var client = _httpClientFactory.CreateClient();
-            var responseMessage = await client.PutAsJsonAsync("https://localhost:7139/api/Product", dto);
+            var client = _httpClientFactory.CreateClient("GastroMasterApi");
+            var responseMessage = await client.PutAsJsonAsync("Product", dto);
             if (responseMessage.IsSuccessStatusCode)
                 return RedirectToAction(nameof(Index));
 
             return View(dto);
         }
-
-
-    
         public async Task<IActionResult> DeleteProduct(int id)
         {
-            var client= _httpClientFactory.CreateClient();
-            var responseMessage = await client.DeleteAsync($"https://localhost:7139/api/Product/{id}");
+            var client= _httpClientFactory.CreateClient("GastroMasterApi");
+            var responseMessage = await client.DeleteAsync($"Product/{id}");
             if (responseMessage.IsSuccessStatusCode)
                 return RedirectToAction(nameof(Index));
 

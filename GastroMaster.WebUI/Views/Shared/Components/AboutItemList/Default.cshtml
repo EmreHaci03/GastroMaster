@@ -1,26 +1,42 @@
-﻿@model List<ResultAboutItemDto>
-
-@{
-    string[] icons = { "fa-leaf", "fa-fire", "fa-clock-o", "fa-heart", "fa-star", "fa-cutlery" };
-    int count = 0;
-}
-
-<section class="section">
+﻿<section class="section">
     <div class="container">
         <div class="section-head">
             <h2>Neye önem veriyoruz?</h2>
             <p>Mutfağa giren her şey için kurallarımız var.</p>
         </div>
-        <div class="values-grid">
-            @foreach (var item in Model)
-            {
-                <div class="value-card">
-                    <i class="fa @icons[count % icons.Length]"></i>
-                    <h3>@item.Title</h3>
-                    <p>@item.Description</p>
-                </div>
-                count++;
-            }
+        <div class="values-grid" id="aboutItemList">
         </div>
     </div>
 </section>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/8.0.7/signalr.min.js"></script>
+<script>
+    var aboutConnection = new signalR.HubConnectionBuilder()
+        .withUrl("https://localhost:7139/SignalRHub")
+        .withAutomaticReconnect()
+        .build();
+
+    aboutConnection.on("ReceiveAboutItemList", function (data) {
+        $("#aboutItemList").empty();
+        for (var i = 0; i < data.length; i++) {
+            $("#aboutItemList").append(`
+            <div class="value-card">
+            <i class="fa fa-leaf"></i>
+            <h3>${data[i].title}</h3>
+            <p>${data[i].description}</p>
+            </div>
+            `);
+        };
+    });
+
+
+    aboutConnection.start().then(function () {
+        aboutConnection.invoke("SendAboutItem");
+        setInterval(function () {
+            if (aboutConnection.state == signalR.HubConnectionState.Connected) {
+                aboutConnection.invoke("SendAboutItem");
+            }
+        }, 5000);
+    });
+</script>

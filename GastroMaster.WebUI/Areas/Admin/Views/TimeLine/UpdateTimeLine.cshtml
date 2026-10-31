@@ -1,0 +1,53 @@
+﻿@model UpdateTimeLineDto
+
+@{
+    ViewData["Title"] = "Kayıt Güncelle";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="content">
+    <div class="container-fluid">
+        <h4 class="page-title">Kayıt Güncelle</h4>
+
+        <div class="row">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">Kayıt Bilgileri</div>
+                        <div class="card-category">"@Model.Title" kaydını düzenliyorsunuz</div>
+                    </div>
+                    <form method="post">
+                        <input type="hidden" asp-for="TimelineId" />
+                        <div class="card-body">
+                            <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+
+                            <div class="form-group">
+                                <label asp-for="Year">Yıl</label>
+                                <input type="number" asp-for="Year" class="form-control" />
+                                <span asp-validation-for="Year" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="Title">Başlık</label>
+                                <input type="text" asp-for="Title" class="form-control" />
+                                <span asp-validation-for="Title" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="Description">Açıklama</label>
+                                <textarea asp-for="Description" class="form-control" rows="4"></textarea>
+                                <span asp-validation-for="Description" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="card-action">
+                            <button type="submit" class="btn btn-success">
+                                <i class="la la-check"></i> Güncelle
+                            </button>
+                            <a href="/Admin/TimeLine/Index" class="btn btn-danger">
+                                <i class="la la-close"></i> Vazgeç
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

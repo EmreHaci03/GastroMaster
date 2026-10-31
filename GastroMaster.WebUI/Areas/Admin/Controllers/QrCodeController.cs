@@ -1,0 +1,14 @@
+﻿using Microsoft.AspNetCore.Mvc;
+
+namespace GastroMaster.WebUI.Areas.Admin.Controllers
+{
+    [Area("Admin")]
+
+    public class QrCodeController : Controller
+    {
+        public IActionResult Index()
+        {
+            return View();
+        }
+    }
+}

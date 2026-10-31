@@ -29,6 +29,7 @@ builder.Services.AddIdentity<AppUser, AppRole>()
     .AddErrorDescriber<CustomIdentityErrorDescriber>()
     .AddEntityFrameworkStores<GastroMasterContext>();
 
+
 builder.Services.ConfigureApplicationCookie(options =>
 {
     options.LoginPath = "/Account/Login";
@@ -40,10 +41,6 @@ builder.Services.ConfigureApplicationCookie(options =>
         return Task.CompletedTask;
     };
 });
-
-
-
-
 var app = builder.Build();
 
 if (!app.Environment.IsDevelopment())

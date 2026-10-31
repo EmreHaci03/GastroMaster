@@ -1,4 +1,5 @@
 ﻿using GastroMaster.DtoLayer.DTOS.SliderDtos;
+using GastroMaster.DtoLayer.DTOS.ValidationDtos;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GastroMaster.WebUI.Areas.Admin.Controllers
@@ -40,6 +41,9 @@ namespace GastroMaster.WebUI.Areas.Admin.Controllers
             {
                 return RedirectToAction(nameof(Index));
             }
+            var values = await responseMessage.Content.ReadFromJsonAsync<List<ValidationErrorDto>>();
+            foreach (var item in values)
+                ModelState.AddModelError(item.PropertyName, item.ErrorMessage);
             return View(dto);
         }
 
@@ -75,6 +79,9 @@ namespace GastroMaster.WebUI.Areas.Admin.Controllers
             if (responseMessage.IsSuccessStatusCode)
                 return RedirectToAction(nameof(Index));
 
+            var values = await responseMessage.Content.ReadFromJsonAsync<List<ValidationErrorDto>>();
+            foreach (var item in values)
+                ModelState.AddModelError(item.PropertyName, item.ErrorMessage);
             return View(dto);
         }
     }

@@ -14,14 +14,7 @@ namespace GastroMaster.WebUI.ViewComponents.About
 
         public async Task<IViewComponentResult> InvokeAsync()
         {
-            var client = _httpClientFactory.CreateClient("GastroMasterApi");
-            var responseMessage = await client.GetAsync("AboutItem");
-            if (responseMessage.IsSuccessStatusCode)
-            {
-                var values = await responseMessage.Content.ReadFromJsonAsync<List<ResultAboutItemDto>>();
-                return View(values);
-            }
-            return View(new List<ResultAboutItemDto>());
+            return View();
         }
     }
 }

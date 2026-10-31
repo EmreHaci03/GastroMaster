@@ -19,14 +19,20 @@
                     <form method="post">
                         <input type="hidden" asp-for="SliderId" />
                         <div class="card-body">
+                            <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+
                             <div class="form-group">
                                 <label asp-for="Title">Başlık</label>
                                 <input type="text" asp-for="Title" class="form-control" required />
                                 <small class="form-text text-muted">Birinci kelime üst satıra, ikinci kelime vurgulu orta satıra, kalanı alt satıra yazılır.</small>
+                                <span asp-validation-for="Title" class="text-danger small"></span>
+
                             </div>
                             <div class="form-group">
                                 <label asp-for="Description">Açıklama</label>
                                 <textarea asp-for="Description" class="form-control" rows="4" required></textarea>
+                                <span asp-validation-for="Description" class="text-danger small"></span>
+
                             </div>
                         </div>
                         <div class="card-action">

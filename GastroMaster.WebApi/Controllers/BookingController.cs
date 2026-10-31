@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using FluentValidation;
 using GastroMaster.BusinessLayer.Abstract;
 using GastroMaster.DtoLayer.DTOS.BookingDtos;
 using GastroMaster.EntityLayer.Entities;
@@ -13,11 +14,15 @@ namespace GastroMaster.WebApi.Controllers
     {
         private readonly IBookingService bookingService;
         private readonly IMapper mapper;
+        private readonly IValidator<CreateBookingDto> _validator;
+        private readonly IValidator<UpdateBookingDto> _updateValidator;
 
-        public BookingController(IBookingService bookingService, IMapper mapper)
+        public BookingController(IBookingService bookingService, IMapper mapper, IValidator<CreateBookingDto> validator, IValidator<UpdateBookingDto> updateValidator)
         {
             this.bookingService = bookingService;
             this.mapper = mapper;
+            _validator = validator;
+            _updateValidator = updateValidator;
         }
 
         [HttpGet]
@@ -76,6 +81,10 @@ namespace GastroMaster.WebApi.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateBooking(CreateBookingDto createBookingDto)
         {
+            var validationResult=_validator.Validate(createBookingDto);
+            if (!validationResult.IsValid)
+                return BadRequest(validationResult.Errors.Select(x => new { x.PropertyName, x.ErrorMessage }));
+
             var alreadyBooking = await bookingService.TIsAlreadyBooking(createBookingDto.Date);
             if (alreadyBooking)
             {
@@ -93,6 +102,10 @@ namespace GastroMaster.WebApi.Controllers
         [HttpPut]
         public async Task<IActionResult> UpdateBooking(UpdateBookingDto updateBookingDto)
         {
+            var validationResult = _updateValidator.Validate(updateBookingDto);
+            if (!validationResult.IsValid)
+                return BadRequest(validationResult.Errors.Select(x => new { x.PropertyName, x.ErrorMessage }));
+
             var value = mapper.Map<Booking>(updateBookingDto);
             await bookingService.TUpdateAsync(value);
             return Ok("Rezervasyon güncellendi");

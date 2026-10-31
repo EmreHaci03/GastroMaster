@@ -1,4 +1,5 @@
 ﻿using GastroMaster.DtoLayer.DTOS.SocialMediaDtos;
+using GastroMaster.DtoLayer.DTOS.ValidationDtos;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GastroMaster.WebUI.Areas.Admin.Controllers
@@ -15,8 +16,8 @@ namespace GastroMaster.WebUI.Areas.Admin.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var client = httpClientFactory.CreateClient();
-            var responseMessage = await client.GetAsync("https://localhost:7139/api/SocialMedia");
+            var client = httpClientFactory.CreateClient("GastroMasterApi");
+            var responseMessage = await client.GetAsync("SocialMedia");
             if (responseMessage.IsSuccessStatusCode)
             {
                 var values = await responseMessage.Content.ReadFromJsonAsync<List<ResultSocialMediaDto>>();
@@ -34,20 +35,23 @@ namespace GastroMaster.WebUI.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateSocialMedia(CreateSocialMediaDto createSocialMediaDto)
         {
-            var client = httpClientFactory.CreateClient();
-            var responseMessage = await client.PostAsJsonAsync("https://localhost:7139/api/SocialMedia", createSocialMediaDto);
+            var client = httpClientFactory.CreateClient("GastroMasterApi");
+            var responseMessage = await client.PostAsJsonAsync("SocialMedia", createSocialMediaDto);
             if (responseMessage.IsSuccessStatusCode)
             {
                 return RedirectToAction(nameof(Index));
             }
+            var values = await responseMessage.Content.ReadFromJsonAsync<List<ValidationErrorDto>>();
+            foreach (var item in values)
+                ModelState.AddModelError(item.PropertyName, item.ErrorMessage);
             return View(createSocialMediaDto);
         }
 
         [HttpGet]
         public async Task<IActionResult> UpdateSocialMedia(int id)
         {
-            var client = httpClientFactory.CreateClient();
-            var responseMessage = await client.GetAsync($"https://localhost:7139/api/SocialMedia/{id}");
+            var client = httpClientFactory.CreateClient("GastroMasterApi");
+            var responseMessage = await client.GetAsync($"SocialMedia/{id}");
             if (responseMessage.IsSuccessStatusCode)
             {
                 var value = await responseMessage.Content.ReadFromJsonAsync<UpdateSocialMediaDto>();
@@ -59,19 +63,22 @@ namespace GastroMaster.WebUI.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> UpdateSocialMedia(UpdateSocialMediaDto updateSocialMediaDto)
         {
-            var client = httpClientFactory.CreateClient();
-            var responseMessage = await client.PutAsJsonAsync("https://localhost:7139/api/SocialMedia", updateSocialMediaDto);
+            var client = httpClientFactory.CreateClient("GastroMasterApi");
+            var responseMessage = await client.PutAsJsonAsync("SocialMedia", updateSocialMediaDto);
             if (responseMessage.IsSuccessStatusCode)
             {
                 return RedirectToAction(nameof(Index));
             }
+            var values = await responseMessage.Content.ReadFromJsonAsync<List<ValidationErrorDto>>();
+            foreach (var item in values)
+                ModelState.AddModelError(item.PropertyName, item.ErrorMessage);
             return View(updateSocialMediaDto);
         }
 
         public async Task<IActionResult> DeleteSocialMedia(int id)
         {
-            var client = httpClientFactory.CreateClient();
-            await client.DeleteAsync($"https://localhost:7139/api/SocialMedia/{id}");
+            var client = httpClientFactory.CreateClient("GastroMasterApi");
+            await client.DeleteAsync($"SocialMedia/{id}");
             return RedirectToAction(nameof(Index));
         }
     }

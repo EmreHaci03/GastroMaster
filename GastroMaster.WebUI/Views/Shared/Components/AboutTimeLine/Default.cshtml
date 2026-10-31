@@ -1,0 +1,36 @@
+﻿<section class="section timeline">
+    <div class="container">
+        <div class="section-head">
+            <h2>Yol haritamız</h2>
+        </div>
+        <div class="timeline-grid" id="timelineList">
+            
+        </div>
+    </div>
+</section>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/8.0.7/signalr.min.js"></script>
+<script>
+    var timeLineConnection = new signalR.HubConnectionBuilder()
+        .withUrl("https://localhost:7139/SignalRHub")
+        .withAutomaticReconnect()
+        .build();
+
+    timeLineConnection.on("ReceiveTimeLine", function (data) {
+        $("#timelineList").empty();
+        for (var i = 0; i < data.length; i++) {
+            $("#timelineList").append(`
+            <div class="timeline-item">
+            <strong>${data[i].year}</strong>
+            <h3>${data[i].title}</h3>
+            <p>${data[i].description}.</p>
+            </div>`);
+        }
+    });
+
+
+
+    timeLineConnection.start().then(function () {
+        timeLineConnection.invoke("SendTimeLine"); 
+    });
+</script>

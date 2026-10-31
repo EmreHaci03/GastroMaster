@@ -21,6 +21,7 @@ using GastroMaster.DtoLayer.DTOS.SliderDtos;
 using GastroMaster.DtoLayer.DTOS.SocialMediaDtos;
 using GastroMaster.DtoLayer.DTOS.StatisticDtos;
 using GastroMaster.DtoLayer.DTOS.TestimonialDtos;
+using GastroMaster.DtoLayer.DTOS.TimeLineDtos;
 using GastroMaster.EntityLayer.Entities;
 
 namespace GastroMaster.DtoLayer.Mapping
@@ -52,6 +53,13 @@ namespace GastroMaster.DtoLayer.Mapping
             CreateMap<Booking, UpdateBookingDto>().ReverseMap();
             CreateMap<Booking, GetBookingByIdDto>().ReverseMap();
             //Booking//
+
+            //TimeLine//
+            CreateMap<Timeline, ResultTimeLineDto>().ReverseMap();
+            CreateMap<Timeline, CreateTimeLineDto>().ReverseMap();
+            CreateMap<Timeline, UpdateTimeLineDto>().ReverseMap();
+            CreateMap<Timeline, GetTimeLineByIdDto>().ReverseMap();
+            //TimeLine//
 
             //Notification//
             CreateMap<Notification, ResultNotificationDto>().ReverseMap();

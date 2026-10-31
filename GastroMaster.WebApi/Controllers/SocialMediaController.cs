@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using FluentValidation;
 using GastroMaster.BusinessLayer.Abstract;
 using GastroMaster.DtoLayer.DTOS.SocialMediaDtos;
 using GastroMaster.EntityLayer.Entities;
@@ -13,11 +14,15 @@ namespace GastroMaster.WebApi.Controllers
     {
         private readonly ISocialMediaService socialMediaService;
         private readonly IMapper mapper;
+        private readonly IValidator<CreateSocialMediaDto> _validator;
+        private readonly IValidator<UpdateSocialMediaDto> _updateValidator;
 
-        public SocialMediaController(ISocialMediaService socialMediaService, IMapper mapper)
+        public SocialMediaController(ISocialMediaService socialMediaService, IMapper mapper, IValidator<CreateSocialMediaDto> validator, IValidator<UpdateSocialMediaDto> updateValidator)
         {
             this.socialMediaService = socialMediaService;
             this.mapper = mapper;
+            _validator = validator;
+            _updateValidator = updateValidator;
         }
 
         [HttpGet]
@@ -39,6 +44,9 @@ namespace GastroMaster.WebApi.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateSocialMedia(CreateSocialMediaDto createSocialMediaDto)
         {
+            var validationResult = _validator.Validate(createSocialMediaDto);
+            if (!validationResult.IsValid)
+                return BadRequest(validationResult.Errors.Select(x => new { x.PropertyName, x.ErrorMessage }));
             var value = mapper.Map<SocialMedia>(createSocialMediaDto);
             await socialMediaService.TInsertAsync(value);
             return Ok("Sosyal medya eklendi");
@@ -47,6 +55,9 @@ namespace GastroMaster.WebApi.Controllers
         [HttpPut]
         public async Task<IActionResult> UpdateSocialMedia(UpdateSocialMediaDto updateSocialMediaDto)
         {
+            var validationResult = _updateValidator.Validate(updateSocialMediaDto);
+            if (!validationResult.IsValid)
+                return BadRequest(validationResult.Errors.Select(x => new {x.PropertyName,x.ErrorMessage}));
             var value = mapper.Map<SocialMedia>(updateSocialMediaDto);
             await socialMediaService.TUpdateAsync(value);
             return Ok("Sosyal medya güncellendi");

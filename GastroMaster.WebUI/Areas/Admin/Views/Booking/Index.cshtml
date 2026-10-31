@@ -88,7 +88,6 @@
         <div class="row">
             <div class="col-md-4">
                 <div class="card card-stats card-primary">
-                    w
                     <div class="card-body">
                         <div class="row">
                             <div class="col-5">
@@ -225,10 +224,19 @@
         .build();
 
     bookingConnection.on("ReceiveBookingList", function (data) {
+
         var count = 0;
+        var totalPerson = 0;
+        var todayCount = 0;
+        var today = new Date().toDateString(); // new Date() Şu Anki Tarih Ve Saat
         $("#bookingList").empty();
         for (var i = 0; i < data.length; i++) {
             count++;
+            totalPerson += data[i].personCount;
+            if (new Date(data[i].date).toDateString() == today) todayCount++;
+            var mailButton = data[i].status === "Rezervasyon Onaylandı"
+                ? `<a href="/Admin/Booking/SendBookingMail/${data[i].bookingId}" class="btn btn-info btn-sm"><i class="la la-envelope"></i> Mail Gönder</a>`
+                : "";
             $("#bookingList").append(`<tr>
     <td>${count}</td>
     <td><strong>${data[i].name}</strong></td>
@@ -239,12 +247,16 @@
     <td>${new Date(data[i].date).toLocaleString("tr-TR")}</td>
     <td><span class="badge ${data[i].status === "Rezervasyon Onaylandı" ? "badge-success" : data[i].status === "Rezervasyon İptal Edildi" ? "badge-danger" : "badge-warning"}">${data[i].status}</span></td>
     <td class="text-center" style="white-space:nowrap;">
+    ${mailButton}
     <a href="/Admin/Booking/BookingStatusApproved/${data[i].bookingId}" class="btn btn-success btn-sm"><i class="la la-check"></i> Onayla</a>
     <a href="/Admin/Booking/BookingStatusCancelled/${data[i].bookingId}" class="btn btn-default btn-sm"><i class="la la-close"></i> İptal</a>
-<a href="/Admin/Booking/BookingStatusPending/${data[i].bookingId}" class="btn btn-warning btn-sm"><i class="la la-clock-o"></i> Beklemeye Al</a>
-<a href="/Admin/Booking/DeleteBooking/${data[i].bookingId}" class="btn btn-danger btn-sm"><i class="la la-trash"></i> Sil</a>
+    <a href="/Admin/Booking/BookingStatusPending/${data[i].bookingId}" class="btn btn-warning btn-sm"><i class="la la-clock-o"></i> Beklemeye Al</a>
+    <a href="/Admin/Booking/DeleteBooking/${data[i].bookingId}" class="btn btn-danger btn-sm"><i class="la la-trash"></i> Sil</a>
 </td>
 </tr>`);
+            $("#TotalBookingCount").text(data.length);
+            $("#TotalPersonCount").text(totalPerson);
+            $("#TodayBookingCount").text(todayCount);
         }
     });
 

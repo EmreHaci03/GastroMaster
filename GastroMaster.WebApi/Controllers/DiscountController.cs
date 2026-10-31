@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using FluentValidation;
 using GastroMaster.BusinessLayer.Abstract;
 using GastroMaster.DtoLayer.DTOS.DiscountDtos;
 using GastroMaster.EntityLayer.Entities;
@@ -13,11 +14,15 @@ namespace GastroMaster.WebApi.Controllers
     {
         private readonly IDiscountService discountService;
         private readonly IMapper mapper;
+        private readonly IValidator<CreateDiscountDto> _validator;
+        private readonly IValidator<UpdateDiscountDto> _updateValidator;
 
-        public DiscountController(IDiscountService discountService, IMapper mapper)
+        public DiscountController(IDiscountService discountService, IMapper mapper, IValidator<CreateDiscountDto> validator, IValidator<UpdateDiscountDto> updateValidator)
         {
             this.discountService = discountService;
             this.mapper = mapper;
+            _validator = validator;
+            _updateValidator = updateValidator;
         }
 
         [HttpGet]
@@ -60,6 +65,10 @@ namespace GastroMaster.WebApi.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateDiscount(CreateDiscountDto createDiscountDto)
         {
+            var validationResult = _validator.Validate(createDiscountDto);
+            if (!validationResult.IsValid)
+                return BadRequest(validationResult.Errors.Select(x => new { x.PropertyName, x.ErrorMessage }));
+
             var value = mapper.Map<Discount>(createDiscountDto);
             await discountService.TInsertAsync(value);
             return Ok("İndirim eklendi");
@@ -68,6 +77,9 @@ namespace GastroMaster.WebApi.Controllers
         [HttpPut]
         public async Task<IActionResult> UpdateDiscount(UpdateDiscountDto updateDiscountDto)
         {
+            var validationResult=_updateValidator.Validate(updateDiscountDto);
+            if (!validationResult.IsValid)
+                return BadRequest(validationResult.Errors.Select(x => new {x.PropertyName,x.ErrorMessage}));
             var value = mapper.Map<Discount>(updateDiscountDto);
             await discountService.TUpdateAsync(value);
             return Ok("İndirim güncellendi");

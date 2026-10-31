@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using FluentValidation;
 using GastroMaster.BusinessLayer.Abstract;
 using GastroMaster.DtoLayer.DTOS.FeatureDtos;
 using GastroMaster.EntityLayer.Entities;
@@ -13,11 +14,15 @@ namespace GastroMaster.WebApi.Controllers
     {
         private readonly IFeatureService featureService;
         private readonly IMapper mapper;
+        private readonly IValidator<CreateFeatureDto> _validator;
+        private readonly IValidator<UpdateFeatureDto> _updateValidator;
 
-        public FeatureController(IFeatureService featureService, IMapper mapper)
+        public FeatureController(IFeatureService featureService, IMapper mapper, IValidator<CreateFeatureDto> validator, IValidator<UpdateFeatureDto> updateValidator)
         {
             this.featureService = featureService;
             this.mapper = mapper;
+            _validator = validator;
+            _updateValidator = updateValidator;
         }
 
         [HttpGet]
@@ -39,6 +44,10 @@ namespace GastroMaster.WebApi.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateFeature(CreateFeatureDto createFeatureDto)
         {
+            var validationResult = _validator.Validate(createFeatureDto);
+            if (!validationResult.IsValid)
+                return BadRequest(validationResult.Errors.Select(x => new {x.PropertyName,x.ErrorMessage}));
+
             var value = mapper.Map<Feature>(createFeatureDto);
             await featureService.TInsertAsync(value);
             return Ok("Öne çıkan alan eklendi");
@@ -47,6 +56,11 @@ namespace GastroMaster.WebApi.Controllers
         [HttpPut]
         public async Task<IActionResult> UpdateFeature(UpdateFeatureDto updateFeatureDto)
         {
+            var validationResult = _updateValidator.Validate(updateFeatureDto);
+            if (!validationResult.IsValid)
+                return BadRequest(validationResult.Errors.Select(x => new { x.PropertyName, x.ErrorMessage }));
+            
+
             var value = mapper.Map<Feature>(updateFeatureDto);
             await featureService.TUpdateAsync(value);
             return Ok("Öne çıkan alan güncellendi");

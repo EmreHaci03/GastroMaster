@@ -1,6 +1,9 @@
+using FluentValidation;
+using GastroMaster.BusinessLayer.FluentValidation.AboutValidator;
 using GastroMaster.DataAccessLayer.Concrete;
 using GastroMaster.WebApi.Extensions;
 using GastroMaster.WebApi.Hubs;
+using Microsoft.AspNetCore.Mvc;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,8 +23,12 @@ builder.Services.AddCors(options =>
     });
 });
 builder.Services.AddSignalR();
-
+builder.Services.AddValidatorsFromAssemblyContaining<CreateAboutValidator>();
 builder.Services.ServiceRegistiration();
+builder.Services.Configure<ApiBehaviorOptions>(options =>
+{
+    options.SuppressModelStateInvalidFilter = true;
+});
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
