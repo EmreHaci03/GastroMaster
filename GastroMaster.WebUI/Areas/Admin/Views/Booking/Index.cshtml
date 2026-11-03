@@ -1,4 +1,4 @@
-﻿@{
+﻿wwwww@{
     ViewData["Title"] = "Rezervasyonlar";
     Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
 }
@@ -153,6 +153,9 @@
                             <div class="card-title">Rezervasyon Listesi</div>
                             <div class="card-category">Müşteri rezervasyonlarını buradan yönetebilirsiniz</div>
                         </div>
+                        <a href="/Admin/Booking/ExportToExcel/" class="btn btn-success">
+                            <i class="la la-file-excel-o"></i> Excel'e Aktar
+                        </a>
                     </div>
                     <div class="card-body">
                         <div class="table-responsive">
@@ -254,10 +257,11 @@
     <a href="/Admin/Booking/DeleteBooking/${data[i].bookingId}" class="btn btn-danger btn-sm"><i class="la la-trash"></i> Sil</a>
 </td>
 </tr>`);
-            $("#TotalBookingCount").text(data.length);
-            $("#TotalPersonCount").text(totalPerson);
-            $("#TodayBookingCount").text(todayCount);
         }
+
+        $("#TotalBookingCount").text(data.length);
+        $("#TotalPersonCount").text(totalPerson);
+        $("#TodayBookingCount").text(todayCount);
     });
 
     bookingConnection.start().then(function () {
@@ -267,9 +271,7 @@
                 bookingConnection.invoke("SendBooking");
             }
         }, 10000);
-    })
-
-
+    });
 
     function setDeleteModal(button) {
         document.getElementById("deleteName").innerText = button.getAttribute("data-name");

@@ -1,9 +1,11 @@
 ﻿using GastroMaster.DtoLayer.DTOS.MenuTableDtos;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GastroMaster.WebUI.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize(Roles = "Admin")]
     public class MenuTableController : Controller
     {
         private readonly IHttpClientFactory _httpClientFactory;

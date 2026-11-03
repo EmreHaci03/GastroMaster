@@ -22,6 +22,7 @@ using GastroMaster.DtoLayer.DTOS.SocialMediaDtos;
 using GastroMaster.DtoLayer.DTOS.StatisticDtos;
 using GastroMaster.DtoLayer.DTOS.TestimonialDtos;
 using GastroMaster.DtoLayer.DTOS.TimeLineDtos;
+using GastroMaster.DtoLayer.DTOS.UserDtos;
 using GastroMaster.EntityLayer.Entities;
 
 namespace GastroMaster.DtoLayer.Mapping
@@ -39,6 +40,11 @@ namespace GastroMaster.DtoLayer.Mapping
             CreateMap<About, GetAboutByIdDto>().ReverseMap();
             //About//
 
+
+            CreateMap<AppUser, UserWithRolesDto>()
+                .ForMember(x => x.UserId, o => o.MapFrom(y => y.Id))
+                .ForMember(x => x.NameSurname, o => o.MapFrom(y => y.Name + " " + y.Surname))
+                .ForMember(x => x.Roles, o => o.Ignore());
 
             //AboutItem//
             CreateMap<AboutItem, ResultAboutItemDto>().ReverseMap();

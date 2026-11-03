@@ -1,0 +1,243 @@
+﻿@model RoleAssignDto
+
+@{
+    ViewData["Title"] = "Rol Ata";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<style>
+    .assign-user {
+        text-align: center;
+        padding: 30px 20px;
+    }
+
+    .assign-avatar {
+        width: 90px;
+        height: 90px;
+        margin: 0 auto 16px;
+        border-radius: 50%;
+        background: rgba(21, 114, 232, .12);
+        color: #1572e8;
+        font-size: 36px;
+        font-weight: 700;
+        text-transform: uppercase;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .assign-user h4 {
+        font-weight: 700;
+        margin-bottom: 4px;
+    }
+
+    .assign-user p {
+        color: #8d9498;
+        margin-bottom: 0;
+    }
+
+    .assign-info {
+        margin-top: 20px;
+        padding-top: 16px;
+        border-top: 1px solid #ebedf2;
+        text-align: left;
+        font-size: 13px;
+        color: #8d9498;
+        display: flex;
+        gap: 10px;
+    }
+
+        .assign-info i {
+            font-size: 18px;
+            color: #ffad46;
+        }
+
+    .role-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+        gap: 14px;
+    }
+
+    .role-card {
+        position: relative;
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        padding: 18px;
+        border: 2px solid #ebedf2;
+        border-radius: 12px;
+        cursor: pointer;
+        transition: all .2s;
+        margin: 0;
+        background: #fff;
+    }
+
+        .role-card:hover {
+            border-color: #b9d4f8;
+        }
+
+        .role-card input[type="checkbox"] {
+            position: absolute;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .role-card .role-card-icon {
+            width: 44px;
+            height: 44px;
+            flex: none;
+            border-radius: 50%;
+            background: #f4f5f8;
+            color: #8d9498;
+            font-size: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all .2s;
+        }
+
+        .role-card .role-card-text strong {
+            display: block;
+            font-size: 15px;
+        }
+
+        .role-card .role-card-text small {
+            color: #8d9498;
+        }
+
+        .role-card .role-card-check {
+            margin-left: auto;
+            width: 24px;
+            height: 24px;
+            flex: none;
+            border-radius: 50%;
+            border: 2px solid #d5d9dd;
+            color: transparent;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            transition: all .2s;
+        }
+
+        .role-card.selected {
+            border-color: #1572e8;
+            background: rgba(21, 114, 232, .04);
+        }
+
+            .role-card.selected .role-card-icon {
+                background: rgba(21, 114, 232, .12);
+                color: #1572e8;
+            }
+
+            .role-card.selected .role-card-check {
+                background: #1572e8;
+                border-color: #1572e8;
+                color: #fff;
+            }
+
+        .role-card.admin.selected {
+            border-color: #f3545d;
+            background: rgba(243, 84, 93, .04);
+        }
+
+            .role-card.admin.selected .role-card-icon {
+                background: rgba(243, 84, 93, .12);
+                color: #f3545d;
+            }
+
+            .role-card.admin.selected .role-card-check {
+                background: #f3545d;
+                border-color: #f3545d;
+            }
+
+    .assign-summary {
+        margin-top: 18px;
+        font-size: 13px;
+        color: #8d9498;
+    }
+</style>
+
+<div class="content">
+    <div class="container-fluid">
+        <h4 class="page-title">Rol Ata</h4>
+
+        <form method="post">
+            <input type="hidden" asp-for="UserId" />
+            <input type="hidden" asp-for="UserName" />
+
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="card">
+                        <div class="card-body assign-user">
+                            <div class="assign-avatar">@(string.IsNullOrEmpty(Model.UserName) ? "?" : Model.UserName.Substring(0, 1))</div>
+                            <h4>@Model.UserName</h4>
+                            <p>Rolleri düzenleniyor</p>
+                            <div class="assign-info">
+                                <i class="la la-info-circle"></i>
+                                <span>Değişikliklerin geçerli olması için kullanıcının çıkış yapıp tekrar giriş yapması gerekir.</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-8">
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-title">Roller</div>
+                            <div class="card-category">Kullanıcının sahip olacağı rollere tıklayarak seçin</div>
+                        </div>
+                        <div class="card-body">
+                            <div class="role-grid">
+                                @for (int i = 0; i < Model.roleChecks.Count; i++)
+                                {
+                                    var isAdmin = Model.roleChecks[i].RoleName == "Admin";
+                                    <label class="role-card @(isAdmin ? "admin" : "") @(Model.roleChecks[i].IsSelected ? "selected" : "")">
+                                        <input type="hidden" asp-for="roleChecks[i].RoleId" />
+                                        <input type="hidden" asp-for="roleChecks[i].RoleName" />
+                                        <input type="checkbox" asp-for="roleChecks[i].IsSelected" />
+                                        <div class="role-card-icon"><i class="la @(isAdmin ? "la-shield" : "la-user")"></i></div>
+                                        <div class="role-card-text">
+                                            <strong>@Model.roleChecks[i].RoleName</strong>
+                                            <small>@(isAdmin ? "Panele tam erişim" : "Standart rol")</small>
+                                        </div>
+                                        <div class="role-card-check"><i class="la la-check"></i></div>
+                                    </label>
+                                }
+                            </div>
+                            <div class="assign-summary">
+                                <i class="la la-check-square"></i> <span id="selectedCount">0</span> rol seçili
+                            </div>
+                        </div>
+                        <div class="card-action">
+                            <button type="submit" class="btn btn-success">
+                                <i class="la la-check"></i> Kaydet
+                            </button>
+                            <a href="/Admin/Role/UserList" class="btn btn-danger">
+                                <i class="la la-close"></i> Vazgeç
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    function updateRoleCards() {
+        var count = 0;
+        document.querySelectorAll(".role-card").forEach(function (card) {
+            var checkbox = card.querySelector("input[type='checkbox']");
+            card.classList.toggle("selected", checkbox.checked);
+            if (checkbox.checked) count++;
+        });
+        document.getElementById("selectedCount").innerText = count;
+    }
+
+    document.querySelectorAll(".role-card input[type='checkbox']").forEach(function (checkbox) {
+        checkbox.addEventListener("change", updateRoleCards);
+    });
+
+    updateRoleCards();
+</script>

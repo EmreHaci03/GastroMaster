@@ -1,0 +1,43 @@
+﻿@model UpdateRoleDto
+
+@{
+    ViewData["Title"] = "Rol Güncelle";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="content">
+    <div class="container-fluid">
+        <h4 class="page-title">Rol Güncelle</h4>
+
+        <div class="row">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">Rol Bilgileri</div>
+                        <div class="card-category">"@Model.RoleName" rolünü düzenliyorsunuz</div>
+                    </div>
+                    <form method="post">
+                        <input type="hidden" asp-for="RoleId" />
+                        <div class="card-body">
+                            <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+
+                            <div class="form-group">
+                                <label asp-for="RoleName">Rol Adı</label>
+                                <input type="text" asp-for="RoleName" class="form-control" />
+                                <span asp-validation-for="RoleName" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="card-action">
+                            <button type="submit" class="btn btn-success">
+                                <i class="la la-check"></i> Güncelle
+                            </button>
+                            <a href="/Admin/Role/Index" class="btn btn-danger">
+                                <i class="la la-close"></i> Vazgeç
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

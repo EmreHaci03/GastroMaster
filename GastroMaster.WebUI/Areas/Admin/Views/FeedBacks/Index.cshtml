@@ -93,9 +93,19 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="card">
-                    <div class="card-header">
-                        <div class="card-title">Gelen Geri Bildirimler</div>
-                        <div class="card-category">Sitedeki geri bildirim formundan gelen istek, öneri ve şikayetler</div>
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <div>
+                            <div class="card-title">Gelen Geri Bildirimler</div>
+                            <div class="card-category">Sitedeki geri bildirim formundan gelen istek, öneri ve şikayetler</div>
+                        </div>
+                        <div>
+                            <a href="/Admin/FeedBacks/ExportToExcel/" class="btn btn-success">
+                                <i class="la la-file-excel-o"></i> Excel'e Aktar
+                            </a>
+                            <a href="/Admin/AI/FeedbackAnalysis/" class="btn btn-primary">
+                                <i class="la la-magic"></i> AI ile Analiz Et
+                            </a>
+                        </div>
                     </div>
                     <div class="card-body">
                         <div class="table-responsive">

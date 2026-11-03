@@ -1,10 +1,12 @@
 ﻿using GastroMaster.DtoLayer.DTOS.AboutItemDtos;
 using GastroMaster.DtoLayer.DTOS.ValidationDtos;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GastroMaster.WebUI.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize(Roles = "Admin")]
     public class AboutItemController : Controller
     {
         private readonly IHttpClientFactory _httpClientFactory;

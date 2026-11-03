@@ -268,6 +268,15 @@
                     @TempData["FeedbackMessage"]
                 </div>
             }
+
+
+            @if (TempData["FeedbackError"] != null)
+            {
+                <div class="fb-alert" style="background:rgba(215,38,47,.1); color:#d7262f;">
+                    <i class="fa fa-ban"></i>
+                    @TempData["FeedbackError"]
+                </div>
+            }
             @if (!User.Identity.IsAuthenticated)
             {
                 <div class="fb-login">
@@ -282,46 +291,46 @@
             }
             else
             {
-        <form action="/Feedback/CreateFeedBack/" method="post">
-            @Html.AntiForgeryToken()
-            <div class="fb-row">
-                <div class="fb-group">
-                    <label for="NameSurname">Ad Soyad</label>
-                    <input type="text" id="NameSurname" name="NameSurname" placeholder="Adın ve soyadın" maxlength="100" required  readonly
-                           value="@(User.Identity.IsAuthenticated ? User.Identity.Name : "")" />
-                </div>
-                <div class="fb-group">
-                    <label for="Mail">E-posta</label>
-                    <input type="email" id="Mail" name="Mail" placeholder="ornek@mail.com" maxlength="100" required />
-                </div>
-            </div>
+                <form action="/Feedback/CreateFeedBack/" method="post">
+                    @Html.AntiForgeryToken()
+                    <div class="fb-row">
+                        <div class="fb-group">
+                            <label for="NameSurname">Ad Soyad</label>
+                            <input type="text" id="NameSurname" name="NameSurname" placeholder="Adın ve soyadın" maxlength="100" required readonly
+                                   value="@(User.Identity.IsAuthenticated ? User.Identity.Name : "")" />
+                        </div>
+                        <div class="fb-group">
+                            <label for="Mail">E-posta</label>
+                            <input type="email" id="Mail" name="Mail" placeholder="ornek@mail.com" maxlength="100" required />
+                        </div>
+                    </div>
 
-            <div class="fb-group">
-                <label>Konu</label>
-                <div class="fb-subjects">
-                    <input type="radio" id="subRequest" name="Subject" value="İstek" checked />
-                    <label for="subRequest"><i class="fa fa-hand-paper-o"></i> İstek</label>
+                    <div class="fb-group">
+                        <label>Konu</label>
+                        <div class="fb-subjects">
+                            <input type="radio" id="subRequest" name="Subject" value="İstek" checked />
+                            <label for="subRequest"><i class="fa fa-hand-paper-o"></i> İstek</label>
 
-                    <input type="radio" id="subSuggestion" name="Subject" value="Öneri" />
-                    <label for="subSuggestion"><i class="fa fa-lightbulb-o"></i> Öneri</label>
+                            <input type="radio" id="subSuggestion" name="Subject" value="Öneri" />
+                            <label for="subSuggestion"><i class="fa fa-lightbulb-o"></i> Öneri</label>
 
-                    <input type="radio" id="subComplaint" name="Subject" value="Şikayet" />
-                    <label for="subComplaint"><i class="fa fa-exclamation-circle"></i> Şikayet</label>
+                            <input type="radio" id="subComplaint" name="Subject" value="Şikayet" />
+                            <label for="subComplaint"><i class="fa fa-exclamation-circle"></i> Şikayet</label>
 
-                    <input type="radio" id="subOther" name="Subject" value="Diğer" />
-                    <label for="subOther"><i class="fa fa-ellipsis-h"></i> Diğer</label>
-                </div>
-            </div>
+                            <input type="radio" id="subOther" name="Subject" value="Diğer" />
+                            <label for="subOther"><i class="fa fa-ellipsis-h"></i> Diğer</label>
+                        </div>
+                    </div>
 
-            <div class="fb-group">
-                <label for="Content">Mesajın</label>
-                <textarea id="Content" name="Content" placeholder="Düşüncelerini buraya yaz..." maxlength="1000" required></textarea>
-            </div>
+                    <div class="fb-group">
+                        <label for="Content">Mesajın</label>
+                        <textarea id="Content" name="Content" placeholder="Düşüncelerini buraya yaz..." maxlength="1000" required></textarea>
+                    </div>
 
-            <button type="submit" class="fb-submit"><i class="fa fa-paper-plane"></i> Gönder</button>
-           </form>
-                    }
-            </div>
+                    <button type="submit" class="fb-submit"><i class="fa fa-paper-plane"></i> Gönder</button>
+                </form>
+            }
+        </div>
 
         <aside class="fb-info">
             <h3>Neler yazabilirsin?</h3>

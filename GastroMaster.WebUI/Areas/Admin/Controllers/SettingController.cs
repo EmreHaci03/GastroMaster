@@ -1,11 +1,13 @@
 ﻿using GastroMaster.DtoLayer.DTOS.UserDtos;
 using GastroMaster.EntityLayer.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GastroMaster.WebUI.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize(Roles = "Admin")]
     public class SettingController : Controller
     {
         private readonly UserManager<AppUser> _userManager;

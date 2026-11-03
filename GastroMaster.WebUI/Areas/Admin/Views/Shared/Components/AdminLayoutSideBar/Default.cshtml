@@ -1,4 +1,47 @@
-﻿<div class="sidebar">
+﻿<style>
+    .ai-toggle {
+        position: relative;
+    }
+
+    .ai-caret {
+        position: absolute;
+        right: 20px;
+        top: 50%;
+        transform: translateY(-50%);
+        transition: transform .2s;
+        font-size: 14px;
+    }
+
+    .ai-toggle[aria-expanded="true"] .ai-caret {
+        transform: translateY(-50%) rotate(180deg);
+    }
+
+    .ai-submenu {
+        flex-direction: column;
+        padding: 4px 0 8px 0;
+        margin: 0;
+    }
+
+        .ai-submenu li a {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 20px 8px 55px;
+            font-size: 13px;
+            color: #8d9498;
+            transition: color .2s;
+        }
+
+            .ai-submenu li a:hover {
+                color: #1572e8;
+                text-decoration: none;
+            }
+
+            .ai-submenu li a i {
+                font-size: 16px;
+            }
+</style>
+<div class="sidebar">
     <div class="scrollbar-inner sidebar-wrapper">
         <div class="user">
             <div class="photo">
@@ -31,6 +74,32 @@
                     <i class="la la-dashboard"></i>
                     <p>Dashboard</p>
                 </a>
+            </li>
+            <li class="nav-item">
+                <a data-toggle="collapse" href="#aiMenu" aria-expanded="false" class="ai-toggle">
+                    <i class="la la-magic"></i>
+                    <p>Yapay Zekâ</p>
+                    <span class="ai-caret la la-angle-down"></span>
+                </a>
+                <div class="collapse" id="aiMenu">
+                    <ul class="nav ai-submenu">
+                        <li>
+                            <a href="/Admin/AI/AIChat/">
+                                <i class="la la-comments"></i> Asistan
+                            </a>
+                        </li>
+                        <li>
+                            <a href="/Admin/AI/BookingAnalysis/">
+                                <i class="la la-calendar"></i> Rezervasyon Analizi
+                            </a>
+                        </li>
+                        <li>
+                            <a href="/Admin/AI/MenuAnalysis/">
+                                <i class="la la-cutlery"></i> Menü Analizi
+                            </a>
+                        </li>
+                    </ul>
+                </div>
             </li>
             <li class="nav-item">
                 <a asp-area="" asp-action="Index" asp-controller="Default" target="_blank">

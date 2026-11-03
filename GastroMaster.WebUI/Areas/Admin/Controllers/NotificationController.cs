@@ -1,9 +1,12 @@
-﻿using GastroMaster.DtoLayer.DTOS.NotificationDtos;
+﻿using ClosedXML.Excel;
+using GastroMaster.DtoLayer.DTOS.NotificationDtos;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GastroMaster.WebUI.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize(Roles = "Admin")]
     public class NotificationController : Controller
     {
         private readonly IHttpClientFactory _httpClientFactory;
@@ -18,6 +21,7 @@ namespace GastroMaster.WebUI.Areas.Admin.Controllers
         {
             return View();
         }
+
 
         [HttpGet]
         public async Task<IActionResult> DeleteNotification(int id)

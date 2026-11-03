@@ -1,0 +1,42 @@
+﻿@model CreateRoleDto
+
+@{
+    ViewData["Title"] = "Yeni Rol";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="content">
+    <div class="container-fluid">
+        <h4 class="page-title">Yeni Rol</h4>
+
+        <div class="row">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">Rol Bilgileri</div>
+                        <div class="card-category">Sisteme yeni bir rol ekleyin</div>
+                    </div>
+                    <form method="post">
+                        <div class="card-body">
+                            <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+
+                            <div class="form-group">
+                                <label asp-for="RoleName">Rol Adı</label>
+                                <input type="text" asp-for="RoleName" class="form-control" placeholder="Örn: Garson" />
+                                <span asp-validation-for="RoleName" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="card-action">
+                            <button type="submit" class="btn btn-success">
+                                <i class="la la-check"></i> Kaydet
+                            </button>
+                            <a href="/Admin/Role/Index" class="btn btn-danger">
+                                <i class="la la-close"></i> Vazgeç
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

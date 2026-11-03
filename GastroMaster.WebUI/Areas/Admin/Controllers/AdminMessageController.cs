@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace GastroMaster.WebUI.Areas.Admin.Controllers
 {
     [Area("Admin")]
-    [Authorize]
+    [Authorize(Roles = "Admin")]
     public class AdminMessageController : Controller
     {
         public IActionResult Index()

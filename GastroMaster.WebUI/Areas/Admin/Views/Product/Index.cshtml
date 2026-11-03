@@ -224,9 +224,14 @@
                             <div class="card-title">Ürün Listesi</div>
                             <div class="card-category">Menüdeki tüm ürünleri buradan yönetebilirsiniz</div>
                         </div>
-                        <a href="/Admin/Product/CreateProduct" class="btn btn-primary">
-                            <i class="la la-plus"></i> Yeni Ürün
-                        </a>
+                        <div>
+                            <a href="/Admin/Product/ExportToExcel" class="btn btn-success">
+                                <i class="la la-file-excel-o"></i> Excel'e Aktar
+                            </a>
+                            <a href="/Admin/Product/CreateProduct" class="btn btn-primary">
+                                <i class="la la-plus"></i> Yeni Ürün
+                            </a>
+                        </div>
                     </div>
                     <div class="card-body">
                         @if (Model.Any())

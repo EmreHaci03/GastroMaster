@@ -1,12 +1,15 @@
-﻿using GastroMaster.DtoLayer.DTOS.BookingDtos;
+﻿using ClosedXML.Excel;
+using GastroMaster.DtoLayer.DTOS.BookingDtos;
 using MailKit.Net.Smtp;
 using MailKit.Security;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MimeKit;
 
 namespace GastroMaster.WebUI.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize(Roles = "Admin")]
     public class BookingController : Controller
     {
         private readonly IHttpClientFactory _httpClientFactory;
@@ -22,6 +25,63 @@ namespace GastroMaster.WebUI.Areas.Admin.Controllers
         public IActionResult Index()
         {
             return View();
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> ExportToExcel()
+        {
+            var client = _httpClientFactory.CreateClient("GastroMasterApi");
+            var booking = await client.GetFromJsonAsync<List<ResultBookingDto>>("Booking");
+
+
+            using (var workBook = new XLWorkbook())
+            {
+                var worksheet = workBook.Worksheets.Add("Rezervasyonlar");
+
+                worksheet.Cell(1, 1).Value = "ID";
+                worksheet.Cell(1, 2).Value = "Ad Soyad";
+                worksheet.Cell(1, 3).Value = "Telefon";
+                worksheet.Cell(1, 4).Value = "Mail";
+                worksheet.Cell(1, 5).Value = "Kişi Sayısı";
+                worksheet.Cell(1, 6).Value = "Tarih";
+                worksheet.Cell(1, 7).Value = "Durum";
+                worksheet.Cell(1, 8).Value = "Açıklama";
+
+                var headerRow = worksheet.Row(1);
+                headerRow.Style.Font.Bold = true;
+                headerRow.Style.Fill.BackgroundColor = XLColor.FromHtml("#e67e22");
+                headerRow.Style.Font.FontColor = XLColor.White;
+
+                int row = 2;
+                foreach(var item in booking)
+                {
+                    worksheet.Cell(row, 1).Value = item.BookingId;
+                    worksheet.Cell(row, 2).Value = item.Name;
+                    worksheet.Cell(row, 3).Value = item.Phone;
+                    worksheet.Cell(row, 4).Value = item.Mail;
+                    worksheet.Cell(row, 5).Value = item.PersonCount;
+                    worksheet.Cell(row, 6).Value = item.Date;
+                    worksheet.Cell(row, 7).Value = item.Status;
+                    worksheet.Cell(row, 8).Value = item.Description;
+                }
+
+                worksheet.Columns().AdjustToContents();  //Sütun genişliklerini otomatik ayarlıyoruz
+
+                worksheet.SheetView.FreezeRows(1);  //    kullanıcı aşağı kaydırsa bile başlıklar üstte sabit kalır
+
+                using(var stream=new MemoryStream())
+                {
+                    workBook.SaveAs(stream);
+
+                    var content=stream.ToArray();
+
+                    return File(
+                  content,
+                  "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",    // Excel dosyasının standart MIME tipi
+                  $"Rezervasyonlar{DateTime.Now:yyyyMMdd_HHmm}.xlsx"
+                  );
+                }
+            }
         }
 
         [HttpGet]

@@ -195,9 +195,14 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="card">
-                    <div class="card-header">
-                        <div class="card-title">Abone Listesi</div>
-                        <div class="card-category">Bültene abone olan tüm mail adreslerini buradan yönetebilirsiniz</div>
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <div>
+                            <div class="card-title">Abone Listesi</div>
+                            <div class="card-category">Bültene abone olan tüm mail adreslerini buradan yönetebilirsiniz</div>
+                        </div>
+                        <a href="/Admin/Newsletter/ExportToExcel/" class="btn btn-success">
+                            <i class="la la-file-excel-o"></i> Excel'e Aktar
+                        </a>
                     </div>
                     <div class="card-body">
                         <input type="text" id="mailSearch" class="form-control mail-search" placeholder="Mail adresinde ara..." />

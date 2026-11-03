@@ -3,13 +3,19 @@ using GastroMaster.EntityLayer.Entities;
 using GastroMaster.WebUI.Models.IdentityDescriber;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Net.Http.Headers;
 
 var builder = WebApplication.CreateBuilder(args);
+
+
+// POST, PUT ve DELETE isteklerinde antiforgery token'ý otomatik doðrular
 
 builder.Services.AddControllersWithViews(options =>
 {
     options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute());
 });
+
+// [AllowAnonymous] olmayan bütün sayfalar giriþ gerektirir
 
 builder.Services.AddAuthorization(options =>
 {
@@ -24,6 +30,22 @@ builder.Services.AddHttpClient("GastroMasterApi", client =>
 {
     client.BaseAddress = new Uri(builder.Configuration["ApiSettings:BaseUrl"]);
 });
+
+builder.Services.AddHttpClient("AnthropicApi", client =>
+{
+    client.BaseAddress = new Uri("https://api.anthropic.com/");
+    client.DefaultRequestHeaders.Add("x-api-key", builder.Configuration["Anthropic:ApiKey"]);
+    client.DefaultRequestHeaders.Add("anthropic-version", "2023-06-01");
+});
+
+builder.Services.AddHttpClient("OpenAIApi", client =>
+{
+    client.BaseAddress = new Uri("https://api.openai.com/");
+    client.DefaultRequestHeaders.Authorization =new AuthenticationHeaderValue("Bearer", builder.Configuration["OpenAI:ApiKey"]);
+});
+
+
+
 builder.Services.AddHttpClient();
 builder.Services.AddIdentity<AppUser, AppRole>()
     .AddErrorDescriber<CustomIdentityErrorDescriber>()
