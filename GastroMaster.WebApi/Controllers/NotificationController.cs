@@ -2,12 +2,13 @@
 using GastroMaster.BusinessLayer.Abstract;
 using GastroMaster.DtoLayer.DTOS.NotificationDtos;
 using GastroMaster.EntityLayer.Entities;
-using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GastroMaster.WebApi.Controllers
 {
     [Route("api/[controller]")]
+    [Authorize(Roles ="Admin")]
     [ApiController]
     public class NotificationController : ControllerBase
     {

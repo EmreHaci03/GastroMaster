@@ -2,12 +2,14 @@
 using GastroMaster.BusinessLayer.Abstract;
 using GastroMaster.DtoLayer.DTOS.OrderDtos;
 using GastroMaster.EntityLayer.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GastroMaster.WebApi.Controllers
 {
     [Route("api/[controller]")]
+    [Authorize(Roles = "Admin")]
     [ApiController]
     public class OrderController : ControllerBase
     {
@@ -35,14 +37,20 @@ namespace GastroMaster.WebApi.Controllers
             var result = mapper.Map<List<DailyRevenueDto>>(values);
             return Ok(result);
         }
-
-
-
         [HttpGet("GetOrderWithDetail")]
         public async Task<IActionResult> GetOrderWithDetail()
         {
             var values = await orderService.TGetOrderWithDetail();
             var result = mapper.Map<List<ResultOrderDto>>(values);
+            return Ok(result);
+        }
+
+
+        [HttpGet("GetOrderByMenuTable")]
+        public async Task<IActionResult> GetOrderByMenuTableId(int id)
+        {
+            var values = await orderService.TGetOrderByMenuTable(id);
+            var result = mapper.Map<GetOrderByIdDto>(values);
             return Ok(result);
         }
 

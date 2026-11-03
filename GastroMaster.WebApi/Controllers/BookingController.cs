@@ -3,12 +3,14 @@ using FluentValidation;
 using GastroMaster.BusinessLayer.Abstract;
 using GastroMaster.DtoLayer.DTOS.BookingDtos;
 using GastroMaster.EntityLayer.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GastroMaster.WebApi.Controllers
 {
     [Route("api/[controller]")]
+    [Authorize(Roles ="Admin")]
     [ApiController]
     public class BookingController : ControllerBase
     {
@@ -24,7 +26,7 @@ namespace GastroMaster.WebApi.Controllers
             _validator = validator;
             _updateValidator = updateValidator;
         }
-
+   
         [HttpGet]
         public async Task<IActionResult> BookingList()
         {
@@ -77,7 +79,7 @@ namespace GastroMaster.WebApi.Controllers
             var result = mapper.Map<GetBookingByIdDto>(value);
             return Ok(result);
         }
-
+        [AllowAnonymous]
         [HttpPost]
         public async Task<IActionResult> CreateBooking(CreateBookingDto createBookingDto)
         {

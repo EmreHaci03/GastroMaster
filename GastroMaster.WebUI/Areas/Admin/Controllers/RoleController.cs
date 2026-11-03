@@ -1,4 +1,6 @@
-﻿using GastroMaster.DtoLayer.DTOS.AppRoleDtos;
+﻿using ClosedXML.Excel;
+using DocumentFormat.OpenXml.Spreadsheet;
+using GastroMaster.DtoLayer.DTOS.AppRoleDtos;
 using GastroMaster.DtoLayer.DTOS.UserDtos;
 using GastroMaster.EntityLayer.Entities;
 using Microsoft.AspNetCore.Authorization;
@@ -54,6 +56,62 @@ namespace GastroMaster.WebUI.Areas.Admin.Controllers
             }
 
             return View(result);
+        }
+        [HttpGet]
+        public async Task<IActionResult> ExportToExcel()
+        {
+            var user = await _userManager.Users.ToListAsync();
+            using(var workBook=new XLWorkbook())
+            {
+                var workSheet = workBook.Worksheets.Add("Kullanıcılar");
+
+                workSheet.Cell(1, 1).Value = "ID";
+                workSheet.Cell(1, 1).Value = "Ad ";
+                workSheet.Cell(1, 1).Value = "Soyad";
+                workSheet.Cell(1, 1).Value = "Kullanıcı Adı";
+                workSheet.Cell(1, 1).Value = "Mail";
+                workSheet.Cell(1, 1).Value = "Telefon Numarası";
+
+
+
+                int row = 2;
+
+                var headerRow = workSheet.Row(1);
+                headerRow.Style.Font.Bold = true;
+                headerRow.Style.Fill.BackgroundColor = XLColor.FromHtml("#e67e22");
+                headerRow.Style.Font.FontColor = XLColor.White;
+
+                foreach (var item in user)
+                {
+                    workSheet.Cell(row, 1).Value = item.Name;
+                    workSheet.Cell(row, 2).Value = item.Surname;
+                    workSheet.Cell(row, 3).Value = item.UserName;
+                    workSheet.Cell(row, 4).Value = item.Email;
+                    workSheet.Cell(row, 1).Value = item.PhoneNumber;
+                    row++;
+                }
+
+
+                workSheet.Columns().AdjustToContents();
+
+                workSheet.SheetView.FreezeRows(1);
+
+                using (var stream =new MemoryStream())
+                {
+                    workBook.SaveAs(stream);
+                    var content=stream.ToArray();
+
+
+                    return File(
+                  content,
+                  "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",    // Excel dosyasının standart MIME tipi
+                  $"Kullanıcılar{DateTime.Now:yyyyMMdd_HHmm}.xlsx"
+                  );
+                }
+
+
+            }
+
         }
         [HttpGet]
         public IActionResult CreateRole()

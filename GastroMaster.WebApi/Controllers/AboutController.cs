@@ -3,6 +3,7 @@ using FluentValidation;
 using GastroMaster.BusinessLayer.Abstract;
 using GastroMaster.DtoLayer.DTOS.AboutDtos;
 using GastroMaster.EntityLayer.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,6 +11,8 @@ namespace GastroMaster.WebApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Roles = "Admin")]
+
     public class AboutController : ControllerBase
     {
         private readonly IAboutService aboutService;
@@ -24,7 +27,7 @@ namespace GastroMaster.WebApi.Controllers
             _validator = validator;
             _UpdateValidator = updateValidator;
         }
-
+        [AllowAnonymous]
         [HttpGet]
         public async Task<IActionResult> AboutList()
         {
@@ -65,7 +68,6 @@ namespace GastroMaster.WebApi.Controllers
             await aboutService.TUpdateAsync(value);
             return Ok("Hakkımızda alanı güncellendi");
         }
-
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteAbout(int id)
         {

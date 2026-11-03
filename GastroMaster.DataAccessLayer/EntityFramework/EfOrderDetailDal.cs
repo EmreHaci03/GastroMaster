@@ -28,6 +28,11 @@ namespace GastroMaster.DataAccessLayer.EntityFramework
             }).ToListAsync();
         }
 
+        public async Task<List<OrderDetail>> GetOrderDetailByOrderId(int orderId)
+        {
+            return await _context.OrderDetails.Include(x => x.Product).ThenInclude(x => x.Category).Where(x => x.OrderId == orderId).ToListAsync();
+        }
+
         public async Task<List<TopSellingProductModels>> GetTopSellingProductsAsync()
         {
             return await _context.OrderDetails.Include(x=>x.Product).ThenInclude(x=>x.Category).GroupBy(x => new {x.Product.ProductName,x.Product.Category.CategoryName}).Select(x => new TopSellingProductModels

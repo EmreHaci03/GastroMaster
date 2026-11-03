@@ -9,6 +9,7 @@ namespace GastroMaster.BusinessLayer.Abstract
         Task<decimal> TGetTodayRevenueAsync();
         Task<int> TGetClosedOrderCountAsync();
         Task<int> TGetOccupiedMenuTableCountAsync();
+        Task<Order> TGetOrderByMenuTable(int id);
         Task<List<DailyRevenueModel>> TGetLastWeekDailyRevenueAsync();
     }
 }

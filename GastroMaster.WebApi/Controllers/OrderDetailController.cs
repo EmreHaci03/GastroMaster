@@ -2,33 +2,55 @@
 using GastroMaster.BusinessLayer.Abstract;
 using GastroMaster.DtoLayer.DTOS.DashboardDtos;
 using GastroMaster.DtoLayer.DTOS.OrderDetailDtos;
-using GastroMaster.DtoLayer.DTOS.OrderDtos;
 using GastroMaster.EntityLayer.Entities;
-using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GastroMaster.WebApi.Controllers
 {
     [Route("api/[controller]")]
+    [Authorize(Roles = "Admin")]
     [ApiController]
     public class OrderDetailController : ControllerBase
     {
         private readonly IOrderDetailService orderDetailService;
+        private readonly IOrderService _orderService;
+        private readonly IMenuTableService _menuTableService;
         private readonly IMapper mapper;
 
-        public OrderDetailController(IOrderDetailService orderDetailService, IMapper mapper)
+        public OrderDetailController(IOrderDetailService orderDetailService, IMapper mapper, IMenuTableService menuTableService, IOrderService orderService)
         {
             this.orderDetailService = orderDetailService;
             this.mapper = mapper;
+            _menuTableService = menuTableService;
+            _orderService = orderService;
         }
 
-        [HttpGet] // 
+        [HttpGet] 
         public async Task<IActionResult> OrderDetailList()
         {
             var values = await orderDetailService.TGetAllAsync();
             var result = mapper.Map<List<ResultOrderDetailDto>>(values);
             return Ok(result);
         }
+
+        [HttpGet("GetOrdersByMenuTable/{menuTableId}")]
+        public async Task<IActionResult> GetOrdersByMenuTableId(int menuTableId)
+        {
+            var menuTable = await _menuTableService.TGetByIdAsync(menuTableId);
+            if (menuTable == null)
+                return NotFound("Masa Bulunamadı");
+
+            var order = await _orderService.TGetOrderByMenuTable(menuTableId);
+            if (order == null)
+                return NotFound("Bu masada açık sipariş yok");
+
+            var orderDetails = await orderDetailService.TGetOrderDetailByOrderId(order.OrderId);
+            var result = mapper.Map<List<GetOrderDetailWithDetailDto>>(orderDetails);
+            return Ok(result);
+        }
+
+
         [HttpGet("GetLastOrders")]
         public async Task<IActionResult> GetLastOrders()
         {
@@ -61,6 +83,7 @@ namespace GastroMaster.WebApi.Controllers
             return Ok(result);
         }
         [HttpGet("GetOrderDetailByProduct/{productId}")]
+
         public async Task<IActionResult> GetOrderDetailByProduct(int productId)
         {
             var values = await orderDetailService.TOrderDetailWithDetailByProductId(productId);

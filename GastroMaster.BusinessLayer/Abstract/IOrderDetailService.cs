@@ -10,6 +10,7 @@ namespace GastroMaster.BusinessLayer.Abstract
         Task<OrderDetail> TOrderDetailWithDetailById(int id);
         Task<OrderDetail> TOrderDetailWithDetailByProductId(int id);
         Task<List<GetLastOrderModel>> TGetLastOrders();
+        Task<List<OrderDetail>> TGetOrderDetailByOrderId(int orderId);
         Task<List<TopSellingProductModels>> TGetTopSellingProductsAsync();
     }
 }

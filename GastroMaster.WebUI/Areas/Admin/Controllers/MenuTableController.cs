@@ -1,4 +1,5 @@
 ﻿using GastroMaster.DtoLayer.DTOS.MenuTableDtos;
+using GastroMaster.DtoLayer.DTOS.OrderDetailDtos;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -18,6 +19,18 @@ namespace GastroMaster.WebUI.Areas.Admin.Controllers
         public async Task<IActionResult> Index()
         {
             return View();
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetTableOrders(int id)
+        {
+            var client = _httpClientFactory.CreateClient("GastroMasterApi");
+            var responseMessage = await client.GetAsync($"OrderDetail/GetOrdersByMenuTable/{id}");
+            if (!responseMessage.IsSuccessStatusCode)
+                return Json(new List<GetOrderDetailWithDetailDto>());
+
+            var values = await responseMessage.Content.ReadFromJsonAsync<List<GetOrderDetailWithDetailDto>>();
+            return Json(values);
         }
 
         [HttpGet]

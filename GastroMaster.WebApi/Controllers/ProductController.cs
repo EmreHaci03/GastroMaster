@@ -1,15 +1,15 @@
 ﻿using AutoMapper;
 using FluentValidation;
 using GastroMaster.BusinessLayer.Abstract;
-using GastroMaster.DtoLayer.DTOS.ContactDtos;
 using GastroMaster.DtoLayer.DTOS.ProductDtos;
 using GastroMaster.EntityLayer.Entities;
-using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GastroMaster.WebApi.Controllers
 {
     [Route("api/[controller]")]
+    [Authorize(Roles = "Admin")]
     [ApiController]
     public class ProductController : ControllerBase
     {
@@ -24,6 +24,7 @@ namespace GastroMaster.WebApi.Controllers
             _validator = validator;
         }
 
+        [AllowAnonymous]
         [HttpGet]
         public async Task<IActionResult> ProductList()
         {
@@ -32,6 +33,7 @@ namespace GastroMaster.WebApi.Controllers
             return Ok(result);
         }
 
+        [AllowAnonymous]
         [HttpGet("GetMostExpensiveBurger")]
         public async Task<IActionResult> MostExpensiveBurger()
         {
@@ -40,6 +42,7 @@ namespace GastroMaster.WebApi.Controllers
             return Ok(result);
         }
 
+        [AllowAnonymous]
         [HttpGet("{id}")]
         public async Task<IActionResult> GetProductById(int id)
         {
@@ -48,6 +51,7 @@ namespace GastroMaster.WebApi.Controllers
             return Ok(result);
         }
 
+        [AllowAnonymous]
         [HttpGet("GetProductListWithCategory")]
         public async Task<IActionResult> GetProductListWithCategory()
         {
@@ -56,6 +60,7 @@ namespace GastroMaster.WebApi.Controllers
             return Ok(result);
         }
 
+        [AllowAnonymous]
         [HttpGet("GetProductListWithCategoryById")]
         public async Task<IActionResult> GetProductListWithCategoryById(int id)
         {
@@ -69,7 +74,7 @@ namespace GastroMaster.WebApi.Controllers
         {
             var validationResult = _validator.Validate(dto);
             if (!validationResult.IsValid)
-                return BadRequest(validationResult.Errors);
+                return BadRequest(validationResult.Errors.Select(x => new { x.PropertyName, x.ErrorMessage }));
             var value = _mapper.Map<Product>(dto);
             await _productService.TInsertAsync(value);
             return Ok("Ürün Eklendi");
@@ -90,7 +95,5 @@ namespace GastroMaster.WebApi.Controllers
             await _productService.TDeleteAsync(value);
             return Ok("Ürün Silindi");
         }
-
-
     }
 }

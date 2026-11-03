@@ -1,6 +1,4 @@
-﻿
-
-@{
+﻿@{
     ViewData["Title"] = "Masalar";
     Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
 }
@@ -238,8 +236,7 @@
                         </a>
                     </div>
                     <div class="card-body">
-                        <div class="table-grid" id="menuTableList"> 
-
+                        <div class="table-grid" id="menuTableList">
                         </div>
                     </div>
                 </div>
@@ -275,6 +272,39 @@
     </div>
 </div>
 
+<div class="modal fade" id="ordersModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content" style="border:none; border-radius:12px;">
+            <div class="modal-header" style="border-bottom:1px solid #ebedf2;">
+                <h5 class="modal-title" style="font-weight:600;">
+                    <i class="la la-list"></i> <span id="ordersTitle"></span>
+                </h5>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="table-responsive">
+                    <table class="table table-hover mb-0">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Ürün</th>
+                                <th class="text-center">Adet</th>
+                                <th class="text-right">Birim Fiyat</th>
+                                <th class="text-right">Tutar</th>
+                            </tr>
+                        </thead>
+                        <tbody id="ordersList"></tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer" style="border-top:1px solid #ebedf2; justify-content:space-between;">
+                <strong>Toplam</strong>
+                <strong style="font-size:20px;">₺<span id="ordersTotal">0</span></strong>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script>
     var MenuTableConnection = new signalR.HubConnectionBuilder()
         .withUrl("https://localhost:7139/SignalRHub")
@@ -299,6 +329,15 @@
                     ? `<span class="badge badge-danger"><i class="la la-users"></i> Dolu</span>`
                     : `<span class="badge badge-success"><i class="la la-check"></i> Boş</span>`;
 
+            var ordersButton = isFull
+                ? `<button type="button" class="btn btn-info btn-sm" title="Siparişler"
+                        data-toggle="modal" data-target="#ordersModal"
+                        data-id="${item.menuTableId}" data-name="${item.name}"
+                        onclick="showTableOrders(this)">
+                        <i class="la la-list"></i>
+                   </button>`
+                : "";
+
             if (item.status && isFull) full++;
             if (item.status && !isFull) empty++;
 
@@ -311,6 +350,7 @@
                 ${badge}
                 <span class="order-status">${item.orderStatus}</span>
                 <div class="table-actions">
+                    ${ordersButton}
                     <a href="/Admin/MenuTable/UpdateMenuTable/${item.menuTableId}" class="btn btn-warning btn-sm" title="Güncelle">
                         <i class="la la-edit"></i>
                     </a>
@@ -343,5 +383,43 @@
     function setDeleteModal(button) {
         document.getElementById("deleteName").innerText = button.getAttribute("data-name");
         document.getElementById("deleteConfirm").setAttribute("href", button.getAttribute("data-url"));
+    }
+
+    function formatPrice(value) {
+        return Number(value).toLocaleString("tr-TR", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    }
+
+    function showTableOrders(button) {
+        var id = button.getAttribute("data-id");
+        var name = button.getAttribute("data-name");
+
+        $("#ordersTitle").text(name + " Siparişleri");
+        $("#ordersTotal").text("0,00");
+        $("#ordersList").html(`<tr><td colspan="5" class="text-center text-muted py-4"><i class="la la-spinner la-spin"></i> Yükleniyor...</td></tr>`);
+
+        $.get("/Admin/MenuTable/GetTableOrders/" + id, function (data) {
+            $("#ordersList").empty();
+
+            if (data.length == 0) {
+                $("#ordersList").append(`<tr><td colspan="5" class="text-center text-muted py-4">Bu masada açık sipariş yok.</td></tr>`);
+                return;
+            }
+
+            var total = 0;
+            for (var i = 0; i < data.length; i++) {
+                total += data[i].totalPrice;
+                $("#ordersList").append(`
+                <tr>
+                    <td>${i + 1}</td>
+                    <td><strong>${data[i].product}</strong></td>
+                    <td class="text-center">${data[i].count}</td>
+                    <td class="text-right">₺${formatPrice(data[i].unitPrice)}</td>
+                    <td class="text-right">₺${formatPrice(data[i].totalPrice)}</td>
+                </tr>`);
+            }
+            $("#ordersTotal").text(formatPrice(total));
+        }).fail(function () {
+            $("#ordersList").html(`<tr><td colspan="5" class="text-center text-danger py-4">Siparişler yüklenemedi.</td></tr>`);
+        });
     }
 </script>

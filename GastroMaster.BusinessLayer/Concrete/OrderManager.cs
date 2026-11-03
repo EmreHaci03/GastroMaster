@@ -69,5 +69,10 @@ namespace GastroMaster.BusinessLayer.Concrete
         {
             return await _orderDal.GetLastWeekDailyRevenueAsync();
         }
+
+        public async Task<Order> TGetOrderByMenuTable(int id)
+        {
+            return await _orderDal.GetOrderByMenuTable(id);
+        }
     }
 }

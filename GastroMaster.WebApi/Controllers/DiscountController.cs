@@ -3,12 +3,15 @@ using FluentValidation;
 using GastroMaster.BusinessLayer.Abstract;
 using GastroMaster.DtoLayer.DTOS.DiscountDtos;
 using GastroMaster.EntityLayer.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GastroMaster.WebApi.Controllers
 {
     [Route("api/[controller]")]
+    [Authorize(Roles = "Admin")]
+
     [ApiController]
     public class DiscountController : ControllerBase
     {
@@ -32,6 +35,7 @@ namespace GastroMaster.WebApi.Controllers
             var result = mapper.Map<List<ResultDiscountDto>>(values);
             return Ok(result);
         }
+        [AllowAnonymous]
         [HttpGet("GetTrueDiscountStatus")]
         public async Task<IActionResult> GetTrueDiscountStatus()
         {

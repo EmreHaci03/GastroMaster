@@ -3,11 +3,13 @@ using FluentValidation;
 using GastroMaster.BusinessLayer.Abstract;
 using GastroMaster.DtoLayer.DTOS.TestimonialDtos;
 using GastroMaster.EntityLayer.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GastroMaster.WebApi.Controllers
 {
     [Route("api/[controller]")]
+    [Authorize(Roles = "Admin")]
     [ApiController]
     public class TestimonialController : ControllerBase
     {
@@ -23,7 +25,7 @@ namespace GastroMaster.WebApi.Controllers
             _validator = validator;
             _updateValidator = updateValidator;
         }
-
+        [AllowAnonymous]
         [HttpGet]
         public async Task<IActionResult> TestimonialList()
         {

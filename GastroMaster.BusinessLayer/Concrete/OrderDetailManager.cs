@@ -64,5 +64,10 @@ namespace GastroMaster.BusinessLayer.Concrete
         {
             return await _orderDetailDal.GetLastOrders();
         }
+
+        public async Task<List<OrderDetail>> TGetOrderDetailByOrderId(int orderId)
+        {
+            return await _orderDetailDal.GetOrderDetailByOrderId(orderId);
+        }
     }
 }

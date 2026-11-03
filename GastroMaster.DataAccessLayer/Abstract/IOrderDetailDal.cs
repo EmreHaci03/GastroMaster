@@ -8,6 +8,7 @@ namespace GastroMaster.DataAccessLayer.Abstract
         Task<OrderDetail> OrderDetailWithDetailById(int id);
         Task<List<GetLastOrderModel>> GetLastOrders();
         Task<OrderDetail> OrderDetailWithDetailByProductId(int id);
+        Task<List<OrderDetail>> GetOrderDetailByOrderId(int orderId);
         Task<List<TopSellingProductModels>> GetTopSellingProductsAsync();
     }
 }

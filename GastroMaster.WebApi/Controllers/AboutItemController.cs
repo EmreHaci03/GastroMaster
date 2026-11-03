@@ -4,12 +4,14 @@ using GastroMaster.BusinessLayer.Abstract;
 using GastroMaster.BusinessLayer.FluentValidation.AboutItemValidator;
 using GastroMaster.DtoLayer.DTOS.AboutItemDtos;
 using GastroMaster.EntityLayer.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GastroMaster.WebApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Roles ="Admin")]
     public class AboutItemController : ControllerBase
     {
         private readonly IAboutItemService _aboutItemService;
@@ -24,7 +26,7 @@ namespace GastroMaster.WebApi.Controllers
             _validator = validator;
             _updateValidator = updateValidator;
         }
-
+        [AllowAnonymous]
         [HttpGet]
         public async Task<IActionResult> AboutItemList()
         {
@@ -32,7 +34,7 @@ namespace GastroMaster.WebApi.Controllers
             var result = _mapper.Map<List<ResultAboutItemDto>>(values);
             return Ok(result);
         }
-
+        [AllowAnonymous]
         [HttpGet("{id}")]
         public async Task<IActionResult> GetAboutItemById(int id)
         {

@@ -1,6 +1,7 @@
 using GastroMaster.DataAccessLayer.Concrete;
 using GastroMaster.EntityLayer.Entities;
 using GastroMaster.WebUI.Models.IdentityDescriber;
+using GastroMaster.WebUI.Service;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Net.Http.Headers;
@@ -26,10 +27,14 @@ builder.Services.AddAuthorization(options =>
 
 builder.Services.AddDbContext<GastroMasterContext>();
 
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddScoped<JwtTokenGenerator>();
+builder.Services.AddTransient<JwtTokenHandler>();
+
 builder.Services.AddHttpClient("GastroMasterApi", client =>
 {
-    client.BaseAddress = new Uri(builder.Configuration["ApiSettings:BaseUrl"]);
-});
+    client.BaseAddress = new Uri("https://localhost:7139/api/");
+}).AddHttpMessageHandler<JwtTokenHandler>();
 
 builder.Services.AddHttpClient("AnthropicApi", client =>
 {

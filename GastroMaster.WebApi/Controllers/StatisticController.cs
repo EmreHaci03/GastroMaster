@@ -3,11 +3,13 @@ using GastroMaster.BusinessLayer.Abstract;
 using GastroMaster.DataAccessLayer.Models;
 using GastroMaster.DtoLayer.DTOS.OrderDtos;
 using GastroMaster.DtoLayer.DTOS.StatisticDtos;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GastroMaster.WebApi.Controllers
 {
     [Route("api/[controller]")]
+    [Authorize(Roles = "Admin")]
     [ApiController]
     public class StatisticController : ControllerBase
     {

@@ -58,5 +58,12 @@ namespace GastroMaster.DataAccessLayer.EntityFramework
                     Revenue = x.Sum(o => o.TotalPrice)
                 }).ToListAsync();
         }
+
+        public async Task<Order> GetOrderByMenuTable(int id)
+        {
+            var values = await _context.Orders.Where(x => x.Description == "Müşteri Masada" && x.MenuTableId == id).FirstOrDefaultAsync();
+            return values;
+
+        }
     }
 }

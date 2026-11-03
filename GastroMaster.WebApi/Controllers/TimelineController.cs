@@ -3,11 +3,13 @@ using FluentValidation;
 using GastroMaster.BusinessLayer.Abstract;
 using GastroMaster.DtoLayer.DTOS.TimeLineDtos;
 using GastroMaster.EntityLayer.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GastroMaster.WebApi.Controllers
 {
     [Route("api/[controller]")]
+    [Authorize(Roles ="Admin")]
     [ApiController]
     public class TimelineController : ControllerBase
     {
@@ -23,7 +25,7 @@ namespace GastroMaster.WebApi.Controllers
             _createValidator = createValidator;
             _updateValidator = updateValidator;
         }
-
+        [AllowAnonymous]
         [HttpGet]
         public async Task<IActionResult> TimelineList()
         {
