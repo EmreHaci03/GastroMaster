@@ -44,7 +44,7 @@ Masa doluluk durumları, kasa, günlük kazanç ve sipariş istatistikleri Signa
 
 - Slider, indirimler, hakkımızda ve yol haritası (timeline) bölümleri
 - Kategoriye göre filtrelenebilen menü
-- Masaya özel QR kod ile sepete ürün ekleme
+- Giriş yapmış kullanıcılar için sepete ürün ekleme ve sepetten ürün silme
 - Rezervasyon formu
 - Müşteri yorumları ve bülten aboneliği
 - SignalR tabanlı canlı destek
@@ -233,15 +233,9 @@ Solution'a sağ tıklayıp **Configure Startup Projects** üzerinden `GastroMast
 - Web API: `https://localhost:7139`
 - Web UI: `https://localhost:7065`
 
-### 📱 QR ile Sipariş Testi
+### 📱 Masaya Özel QR Kod
 
-Admin panelindeki **Masalar** sayfasından her masa için QR kod oluşturulabilir. QR kod, masanın numarasını içeren bir adres barındırır ve okutulduğunda masa bilgisi cookie'ye yazılır; sepete eklenen ürünler o masaya bağlanır. Bilgisayarda test etmek için:
-
-```
-https://localhost:7065/Default/Index?tableId=5
-```
-
-QR okutulmadan (masa seçilmeden) sepete ürün eklenemez.
+Admin panelindeki **Masalar** sayfasından her masa için, masanın numarasını içeren masaya özel bir QR kod oluşturulabilir ve PNG olarak indirilebilir.
 
 ---
 
@@ -250,15 +244,12 @@ QR okutulmadan (masa seçilmeden) sepete ürün eklenemez.
 - Kullanıcılar ASP.NET Core Identity ile kayıt olur ve giriş yapar. Başarısız denemelerde hesap geçici olarak kilitlenir.
 - Giriş başarılı olduğunda WebUI bir **JWT** üretir ve `HttpOnly` cookie içinde saklar.
 - Bir `DelegatingHandler`, API'ye giden her isteğe bu token'ı **Bearer** olarak ekler.
-- API tarafında controller'lar `[Authorize(Roles = "Admin")]` ile korunur; herkese açık işlemler (menü, rezervasyon, sepet vb.) `[AllowAnonymous]` ile açılır.
+- API tarafında controller'lar `[Authorize(Roles = "Admin")]` ile korunur; herkese açık işlemler (menü, rezervasyon vb.) `[AllowAnonymous]` ile açılır.
 - WebUI'da global yetkilendirme politikası ve otomatik CSRF (Antiforgery) doğrulaması uygulanır.
 
 | Rol | Erişim |
 |---|---|
 | Admin | Yönetim paneli: tüm içerik, masa, rezervasyon, rol, rapor ve AI ekranları |
-| Üye | Genel site + geri bildirim gönderme |
-| Ziyaretçi | Genel site: menü, rezervasyon, sepet ve canlı destek |
+| Üye | Genel site + sepet işlemleri ve geri bildirim gönderme |
+| Ziyaretçi | Genel site: menü, rezervasyon ve canlı destek |
 
----
-
-**GastroMaster** · Made with ☕ and C#
