@@ -45,7 +45,8 @@ Masa doluluk durumları, kasa, günlük kazanç ve sipariş istatistikleri Signa
 - Slider, indirimler, hakkımızda ve yol haritası (timeline) bölümleri
 - Kategoriye göre filtrelenebilen menü
 - Giriş yapmış kullanıcılar için sepete ürün ekleme ve sepetten ürün silme
-- Rezervasyon formu
+- Rezervasyon formu (seçilen tarih ve saat doluysa kullanıcıyı uyaran müsaitlik kontrolü ile)
+- Rezervasyon onaylandığında müşteriye tüm rezervasyon bilgilerini içeren **otomatik onay maili** (MailKit + Gmail SMTP)
 - Müşteri yorumları ve bülten aboneliği
 - SignalR tabanlı canlı destek
 - Giriş yapmış kullanıcılar için geri bildirim formu (OpenAI Moderation ile uygunsuz içerik kontrolü)
