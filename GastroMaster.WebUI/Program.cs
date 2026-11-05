@@ -24,6 +24,7 @@ builder.Services.AddAuthorization(options =>
     .RequireAuthenticatedUser()
     .Build();
 });
+QuestPDF.Settings.License = QuestPDF.Infrastructure.LicenseType.Community;
 
 builder.Services.AddDbContext<GastroMasterContext>();
 

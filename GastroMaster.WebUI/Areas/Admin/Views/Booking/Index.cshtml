@@ -1,4 +1,4 @@
-﻿wwwww@{
+﻿@{
     ViewData["Title"] = "Rezervasyonlar";
     Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
 }
@@ -153,9 +153,14 @@
                             <div class="card-title">Rezervasyon Listesi</div>
                             <div class="card-category">Müşteri rezervasyonlarını buradan yönetebilirsiniz</div>
                         </div>
-                        <a href="/Admin/Booking/ExportToExcel/" class="btn btn-success">
-                            <i class="la la-file-excel-o"></i> Excel'e Aktar
-                        </a>
+                        <div>
+                            <a href="/Admin/Booking/ExportToExcel" class="btn btn-success">
+                                <i class="la la-file-excel-o"></i> Excel'e Aktar
+                            </a>
+                            <a href="/Admin/Booking/ExportToPdf" class="btn btn-danger">
+                                <i class="la la-file-pdf-o"></i> PDF'e Aktar
+                            </a>
+                        </div>
                     </div>
                     <div class="card-body">
                         <div class="table-responsive">

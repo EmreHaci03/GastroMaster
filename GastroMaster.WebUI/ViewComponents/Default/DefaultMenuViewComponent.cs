@@ -14,6 +14,7 @@ namespace GastroMaster.WebUI.ViewComponents.Default
 
         public async Task<IViewComponentResult> InvokeAsync()
         {
+
             var client = _httpClientFactory.CreateClient("GastroMasterApi");
             var responseMessage = await client.GetAsync("Product/GetProductListWithCategory");
             if (responseMessage.IsSuccessStatusCode)

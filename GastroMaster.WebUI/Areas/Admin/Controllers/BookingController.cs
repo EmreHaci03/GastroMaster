@@ -5,6 +5,8 @@ using MailKit.Security;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MimeKit;
+using QuestPDF.Fluent;
+using QuestPDF.Helpers;
 
 namespace GastroMaster.WebUI.Areas.Admin.Controllers
 {
@@ -25,6 +27,82 @@ namespace GastroMaster.WebUI.Areas.Admin.Controllers
         public IActionResult Index()
         {
             return View();
+        }
+        [HttpGet]
+        public async Task<IActionResult> ExportToPdf()
+        {
+            var client = _httpClientFactory.CreateClient("GastroMasterApi");
+            var values = await client.GetFromJsonAsync<List<ResultBookingDto>>("Booking");
+            values = values.OrderByDescending(x => x.Date).ToList();
+
+            var pdf = Document.Create(container =>
+            {
+                container.Page(page =>
+                {
+                    page.Size(PageSizes.A4.Landscape());
+                    page.Margin(30);
+                    page.DefaultTextStyle(x => x.FontSize(10));
+
+                    page.Header().Column(column =>
+                    {
+                        column.Item().Text("GastroMaster").FontSize(20).Bold().FontColor("#1572e8");
+                        column.Item().Text("Rezervasyon Raporu").FontSize(14).SemiBold();
+                        column.Item().Text($"Oluşturulma: {DateTime.Now:dd.MM.yyyy HH:mm} · Toplam {values.Count} rezervasyon").FontColor(Colors.Grey.Darken1);
+                        column.Item().PaddingVertical(8).LineHorizontal(1).LineColor(Colors.Grey.Lighten2);
+                    });
+
+                    page.Content().Table(table =>
+                    {
+                        table.ColumnsDefinition(columns =>
+                        {
+                            columns.ConstantColumn(30);
+                            columns.RelativeColumn(2);
+                            columns.RelativeColumn(2);
+                            columns.RelativeColumn(3);
+                            columns.ConstantColumn(40);
+                            columns.RelativeColumn(2);
+                            columns.RelativeColumn(2);
+                        });
+
+                        table.Header(header =>
+                        {
+                            header.Cell().Background("#1572e8").Padding(6).Text("#").FontColor(Colors.White).Bold();
+                            header.Cell().Background("#1572e8").Padding(6).Text("Ad Soyad").FontColor(Colors.White).Bold();
+                            header.Cell().Background("#1572e8").Padding(6).Text("Telefon").FontColor(Colors.White).Bold();
+                            header.Cell().Background("#1572e8").Padding(6).Text("E-posta").FontColor(Colors.White).Bold();
+                            header.Cell().Background("#1572e8").Padding(6).Text("Kişi").FontColor(Colors.White).Bold();
+                            header.Cell().Background("#1572e8").Padding(6).Text("Tarih").FontColor(Colors.White).Bold();
+                            header.Cell().Background("#1572e8").Padding(6).Text("Durum").FontColor(Colors.White).Bold();
+                        });
+
+                        int count = 0;
+                        foreach (var item in values)
+                        {
+                            count++;
+                            var background = count % 2 == 0 ? Colors.Grey.Lighten4 : Colors.White;
+
+                            table.Cell().Background(background).Padding(6).Text(count.ToString());
+                            table.Cell().Background(background).Padding(6).Text(item.Name);
+                            table.Cell().Background(background).Padding(6).Text(item.Phone);
+                            table.Cell().Background(background).Padding(6).Text(item.Mail);
+                            table.Cell().Background(background).Padding(6).Text(item.PersonCount.ToString());
+                            table.Cell().Background(background).Padding(6).Text(item.Date.ToString("dd.MM.yyyy HH:mm"));
+                            table.Cell().Background(background).Padding(6).Text(item.Status);
+                        }
+                    });
+
+                    page.Footer().AlignCenter().Text(text =>
+                    {
+                        text.Span("Sayfa ");
+                        text.CurrentPageNumber();
+                        text.Span(" / ");
+                        text.TotalPages();
+                    });
+                });
+            }).GeneratePdf();
+
+            var fileName = $"Rezervasyonlar-{DateTime.Now:dd-MM-yyyy}.pdf";
+            return File(pdf, "application/pdf", fileName);
         }
 
         [HttpGet]

@@ -305,6 +305,26 @@
     </div>
 </div>
 
+<div class="modal fade" id="qrModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content" style="border:none; border-radius:12px;">
+            <div class="modal-body text-center" style="padding:35px 30px 20px;">
+                <h4 id="qrTitle" style="font-weight:600;"></h4>
+                <p class="text-muted mb-3">Müşteri bu kodu okutunca menü bu masaya bağlı açılır</p>
+                <img id="qrImage" src="" style="width:260px; height:260px;" />
+            </div>
+            <div class="modal-footer" style="border-top:none; justify-content:center; padding:0 30px 30px;">
+                <button type="button" class="btn btn-default" data-dismiss="modal">
+                    <i class="la la-close"></i> Kapat
+                </button>
+                <a href="#" id="qrDownload" class="btn btn-primary">
+                    <i class="la la-download"></i> İndir
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script>
     var MenuTableConnection = new signalR.HubConnectionBuilder()
         .withUrl("https://localhost:7139/SignalRHub")
@@ -351,6 +371,12 @@
                 <span class="order-status">${item.orderStatus}</span>
                 <div class="table-actions">
                     ${ordersButton}
+                    <button type="button" class="btn btn-default btn-sm" title="QR Kod"
+                            data-toggle="modal" data-target="#qrModal"
+                            data-id="${item.menuTableId}" data-name="${item.name}"
+                            onclick="showQr(this)">
+                        <i class="la la-qrcode"></i>
+                    </button>
                     <a href="/Admin/MenuTable/UpdateMenuTable/${item.menuTableId}" class="btn btn-warning btn-sm" title="Güncelle">
                         <i class="la la-edit"></i>
                     </a>
@@ -383,6 +409,15 @@
     function setDeleteModal(button) {
         document.getElementById("deleteName").innerText = button.getAttribute("data-name");
         document.getElementById("deleteConfirm").setAttribute("href", button.getAttribute("data-url"));
+    }
+
+    function showQr(button) {
+        var id = button.getAttribute("data-id");
+        var name = button.getAttribute("data-name");
+
+        $("#qrTitle").text(name);
+        $("#qrImage").attr("src", "/Admin/MenuTable/QrCode/" + id);
+        $("#qrDownload").attr("href", "/Admin/MenuTable/QrCode/" + id);
     }
 
     function formatPrice(value) {

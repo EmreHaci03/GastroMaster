@@ -367,7 +367,7 @@
     <div class="container">
         <div class="crumb"><a href="/">Ana Sayfa</a> / Sepetim</div>
         <h1>Sepetin<br /><span class="stroke">hazır</span></h1>
-        <span class="table-pill"><i class="fa fa-cutlery"></i> <span id="basketTableName">Masa 4</span></span>
+        <span class="table-pill"><i class="fa fa-cutlery"></i> <span id="basketTableName">Masa @ViewBag.TableId</span></span>
     </div>
 </section>
 
@@ -429,7 +429,7 @@
 
             <div class="summary-row total"><span>Toplam</span><strong>₺<span id="basketTotal">@Model.Sum(x => x.TotalPrice).ToString("N0")</span></strong></div>
 
-            <a href="#" class="btn btn-primary"><i class="fa fa-check"></i> Siparişi ver</a>
+            <a href="/Baskets/Index" class="btn btn-primary"><i class="fa fa-check"></i> Siparişi ver</a>
             <a href="/#menu" class="btn btn-ghost">Menüye dön</a>
 
             <p class="summary-note"><i class="fa fa-clock-o"></i> Siparişin ortalama 15 dakikada masanda.</p>

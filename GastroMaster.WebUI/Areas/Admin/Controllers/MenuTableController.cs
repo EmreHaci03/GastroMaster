@@ -1,7 +1,11 @@
 ﻿using GastroMaster.DtoLayer.DTOS.MenuTableDtos;
 using GastroMaster.DtoLayer.DTOS.OrderDetailDtos;
+using GastroMaster.DtoLayer.DTOS.ProductDtos;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using QRCoder;
+using QuestPDF.Fluent;
+using QuestPDF.Helpers;
 
 namespace GastroMaster.WebUI.Areas.Admin.Controllers
 {
@@ -21,6 +25,23 @@ namespace GastroMaster.WebUI.Areas.Admin.Controllers
             return View();
         }
 
+        [HttpGet]
+        public IActionResult QrCode(int id)
+        {
+            var url = $"{Request.Scheme}://{Request.Host}/Default/Index?tableId={id}";
+
+            using (var qrGenerator = new QRCodeGenerator())
+            {
+                using(var qrCodeData=qrGenerator.CreateQrCode(url, QRCodeGenerator.ECCLevel.Q))
+                {
+                    var qrCode = new PngByteQRCode(qrCodeData);
+
+                    var qrBytes = qrCode.GetGraphic(20);
+
+                    return File(qrBytes, "image/png", $"Masa-{id}-QR.png");
+                }
+            }            
+        }
         [HttpGet]
         public async Task<IActionResult> GetTableOrders(int id)
         {
